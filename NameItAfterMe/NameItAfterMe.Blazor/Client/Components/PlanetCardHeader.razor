@@ -1,0 +1,21 @@
+﻿<MudCardHeader>
+    <CardHeaderAvatar>
+        <MudIcon 
+            Color="Color.Dark" 
+            Icon="@Icons.Material.Filled.RocketLaunch" 
+            Size="Size.Large" />
+    </CardHeaderAvatar>
+    <CardHeaderContent>
+        <MudText Typo="Typo.body1">@Name</MudText>
+        <MudText Typo="Typo.body2">Current Name</MudText>
+    </CardHeaderContent>
+    <CardHeaderActions>
+        <MudIconButton 
+            Icon="@Icons.Material.Filled.Settings" 
+            Color="Color.Default" />
+    </CardHeaderActions>
+</MudCardHeader>
+
+@code {
+    [Parameter, EditorRequired] public string Name { get; set; }        
+}

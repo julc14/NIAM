@@ -1,0 +1,30 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">NameItAfterMe.Blazor</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+
+    <MudPaper Width="250px" Class="d-inline-flex py-3" Elevation="1">
+        <MudNavMenu Class="mud-width-full">
+            <MudText Typo="Typo.h6" Class="px-4">Material</MudText>
+            <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Icons</MudText>
+            <MudDivider Class="my-2" />
+            <MudNavLink Href="" Icon="@Icons.Filled.Dashboard">Home</MudNavLink>
+            <MudNavLink Href="/starnaming" Icon="@Icons.Filled.Storage">Star Naming</MudNavLink>
+            <MudNavLink Href="/counter" Icon="@Icons.Filled.Receipt" Disabled="true">Counter</MudNavLink>
+            <MudNavLink Href="/fetchdata" Icon="@Icons.Filled.AccessTime" Disabled="true">Fetch data</MudNavLink>
+        </MudNavMenu>
+    </MudPaper>
+
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private void ToggleNavMenu() => collapseNavMenu = !collapseNavMenu;
+}

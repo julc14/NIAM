@@ -1,0 +1,70 @@
+﻿@page "/starnaming"
+
+@using System.Text.Json
+@using NameItAfterMe.Application.UseCases.Exoplanets
+
+@inject HttpClient httpClient;
+
+<div style="height:auto;overflow:scroll;" tabindex="-1">
+    <NameItAfterMe.Blazor.Client.Util.InfiniteScrolling ItemsProvider=@GetItems >
+        <ItemTemplate Context="item">
+            <MudContainer MaxWidth="MaxWidth.Small" Class="pa-2">
+                <PlanetCard Name=@item.Name />
+            </MudContainer>
+        </ItemTemplate>
+        <LoadingTemplate>
+            <MudCard>
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="408.03px"/>
+                <MudCardContent>
+                    <MudSkeleton Width="30%" Height="42px;" />
+                    <MudSkeleton Width="80%" />
+                    <MudSkeleton Width="100%" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+                    <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+                </MudCardActions>
+            </MudCard>
+        </LoadingTemplate>
+        
+    </NameItAfterMe.Blazor.Client.Util.InfiniteScrolling>
+    
+</div>
+
+@code {
+
+    private int _maxPlanetsPerPage = 15;
+    private int _currentPage = 1;
+
+    private bool _isQuerying = true;
+
+    async Task<IEnumerable<ExoplanetDto>> GetItems(InfiniteScrollingItemsProviderRequest request)
+    {
+        return
+            await httpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>(
+                $"Exoplanet?startIndex={request.StartIndex}&Size=4",
+                new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    });
+    }
+
+    private async ValueTask<ItemsProviderResult<ExoplanetDto>> LoadEmployees(
+        ItemsProviderRequest request)
+    {
+        var planets = 
+            await httpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>(
+                $"Exoplanet?startIndex={request.StartIndex}&Size={request.Count}",
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
+
+        var results = new ItemsProviderResult<ExoplanetDto>(planets, 30);
+
+        return results;
+    }
+
+}
+
+    

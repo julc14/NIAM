@@ -1,0 +1,47 @@
+﻿<MudCard>
+    <PlanetCardHeader Name=@Name />
+    <PlanetImage />
+    <PlanetCardActions OnSaveClick="onSaveClick" />
+</MudCard>
+
+<MudOverlay @bind-Visible="isVisible" DarkBackground="true" LightBackground="true" >
+    <MudGrid>
+        <MudItem xs=12 >
+            <MudPaper Outlined="true" Class="pa-16 ma-2" MinWidth="1500px">
+                <MudForm @ref="form" >
+                    <MudTextField T="string" Label="FirstName" Required="true" RequiredError="First name is required!"/>
+                    <MudTextField T="string" Label="LastName" Required="false" AdornmentText="Optional" />            
+                </MudForm>   
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudOverlay>
+
+@code {
+
+    [Parameter] public string Name { get; set; }
+
+    private bool isVisible = false;
+
+    private void onSaveClick()
+    {
+        isVisible = true;
+    }
+
+    MudForm form;
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+    }
+
+    private string PasswordMatch(string arg)
+    {
+
+        return null;
+    }
+}
