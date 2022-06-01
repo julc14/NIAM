@@ -1,6 +1,5 @@
 using NameItAfterMe.Application;
 using NameItAfterMe.Infrastructure;
-using NameItAfterMe.Persistance;
 using NameItAfterMe.Server;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +12,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddPersistance(builder.Configuration);
 
 var app = builder.Build();
 
