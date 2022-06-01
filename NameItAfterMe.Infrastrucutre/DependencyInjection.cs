@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NameItAfterMe.Application.Abstractions;
 using Refit;
@@ -12,6 +13,8 @@ public static class DependencyInjection
     {
         // if key is missing use a DEMO key.
         var apiKey = configuration.GetValue("NasaApiKey", "DEMO_KEY");
+
+        var settings = configuration.GetRequiredSection(nameof(ExoplanetSettings)).Get<ExoplanetSettings>();
 
         return services
 
@@ -30,6 +33,12 @@ public static class DependencyInjection
             // instead maintain clear boundaries between infra and application services.
             .AddTransient<IPictureOfTheDayRepository, PictureOfTheDayRepository>()
             .AddTransient<IExoplanetApi, ExoplanetRepository>()
+
+            // add cosmos
+            .AddDbContext<ExoplanetContext>(options => options.UseCosmos(
+                $"AccountEndpoint={settings.AccountEndpoint};AccountKey={settings.AccountKey};",
+                databaseName: settings.Name))
+            .AddScoped<IExoplanetContext>(sp => sp.GetRequiredService<ExoplanetContext>())
 
             // add general infra.
             .AddAutoMapper(e => e.AddMaps(typeof(DependencyInjection).Assembly))
