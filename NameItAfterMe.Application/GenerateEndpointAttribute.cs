@@ -1,7 +1,7 @@
 ﻿namespace NameItAfterMe.Application;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class WebHostedUseCaseAttribute : Attribute
+public class GenerateEndpointAttribute : Attribute
 {
     public string? Route { get; init; }
     public string? ContentType { get; init; }

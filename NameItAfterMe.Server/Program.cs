@@ -34,15 +34,16 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// automaticlly host each marked use case as an endpoint.
-app.UseEndpoints(builder => builder.MapUseCasesFromAssembly(
-    typeof(WebHostedUseCaseAttribute).Assembly,
+app.UseEndpoints(builder =>
+{
+    builder.MapUseCasesFromAssembly(typeof(GenerateEndpointAttribute).Assembly,
     options =>
     {
         options.ParseRequestPropertiesFromBody();
         options.ParseRequestPropertiesFromRouteData();
         options.ParseRequestPropertiesFromQueryParameters();
-    }));
+    });
+});
 
 app.MapRazorPages();
 app.MapFallbackToFile("index.html");

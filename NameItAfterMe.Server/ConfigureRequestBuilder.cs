@@ -3,33 +3,34 @@ using System.ComponentModel;
 
 namespace NameItAfterMe.Server;
 
-public class ConfigureRequestBuilder : IConfigureRequestBinding
+public class ConfigureRequestBuilder : IConfigureRequestBuilder
 {
+    private readonly HttpContext _context;
+
     public Type RequestType { get; }
     public object Request { get; }
-    public HttpContext Context { get; }
 
     public ConfigureRequestBuilder(Type requestType, HttpContext context)
     {
+        _context = context;
         RequestType = requestType;
-        Context = context;
         Request = Activator.CreateInstance(RequestType)
             ?? throw new InvalidOperationException($"Failed to create instance of {requestType}");
     }
 
     public ConfigureRequestBuilder(object request, HttpContext context)
     {
+        _context = context;
         RequestType = request.GetType();
         Request = request;
-        Context = context;
     }
 
     public ConfigureRequestBuilder ParseRequestPropertiesFromBody()
     {
-        if (Context.Request.ContentLength > 0 && Context.Request.HasJsonContentType())
+        if (_context.Request.ContentLength > 0 && _context.Request.HasJsonContentType())
         {
             using var s = new MemoryStream();
-            Context.Request.BodyReader.CopyToAsync(s, Context.RequestAborted);
+            _context.Request.BodyReader.CopyToAsync(s, _context.RequestAborted);
 
             using var reader = new StreamReader(s);
 
@@ -50,7 +51,7 @@ public class ConfigureRequestBuilder : IConfigureRequestBinding
         var queryProperties =
             from requestProperty in RequestType.GetProperties()
 
-            join query in Context.Request.Query
+            join query in _context.Request.Query
                 on requestProperty.Name.ToLower() equals query.Key.ToLower()
 
             // check what happens when type cant find convertor.
@@ -76,7 +77,7 @@ public class ConfigureRequestBuilder : IConfigureRequestBinding
 
     public ConfigureRequestBuilder ParseRequestPropertiesFromRouteData()
     {
-        var routeData = Context.GetRouteData().Values;
+        var routeData = _context.GetRouteData().Values;
 
         var routeDataProperties =
             from requestProperty in RequestType.GetProperties()
@@ -104,11 +105,4 @@ public class ConfigureRequestBuilder : IConfigureRequestBinding
 
         return this;
     }
-}
-
-public interface IConfigureRequestBinding
-{
-    ConfigureRequestBuilder ParseRequestPropertiesFromRouteData();
-    ConfigureRequestBuilder ParseRequestPropertiesFromQueryParameters();
-    ConfigureRequestBuilder ParseRequestPropertiesFromBody();
 }

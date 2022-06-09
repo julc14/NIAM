@@ -4,9 +4,7 @@ using System.Reflection;
 
 namespace NameItAfterMe.Application.UseCases.PictureOfTheDay;
 
-[WebHostedUseCase(
-    ContentType = "image/jpg",
-    Route = "PictureOfTheDay")]
+[GenerateEndpoint(ContentType = "image/jpg", Route = "PictureOfTheDay")]
 public class GetPictureOfTheDayStream : IRequest<Stream>
 {
     public bool IsHd { get; set; } = true;
