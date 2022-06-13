@@ -10,17 +10,18 @@ internal class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
 
-    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger) => 
+    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger) =>
         _logger = logger;
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-        var requestName = typeof(TRequest).Name;
-        var requestJson = JsonSerializer.Serialize(request);
         var id = Guid.NewGuid();
 
-        _logger.LogInformation(
-            "Unique Request Id: {RequestId}, Request name:{RequestName}, request json:{RequestJson}", id, requestName, requestJson);
+        Log.RequestCreated(
+            _logger,
+            id,
+            requestName: typeof(TRequest).Name,
+            requestJson: JsonSerializer.Serialize(request));
 
         var timer = new Stopwatch();
         timer.Start();
@@ -29,9 +30,25 @@ internal class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 
         timer.Stop();
 
-        _logger.LogInformation(
-            "End Unique Request Id: {RequestId}, Request name:{RequestName}, total request time:{ElapsedMilliseconds}ms", id, requestName, timer.ElapsedMilliseconds);
+        Log.RequestCompleted(
+            _logger,
+            id,
+            requestName: typeof(TRequest).Name,
+            timer.ElapsedMilliseconds);
 
         return response;
     }
+}
+
+internal static partial class Log
+{
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "Unique Request Id: {id}, Request name:{requestName}, request json:{requestJson}")]
+    public static partial void RequestCreated(ILogger logger, Guid id, string requestName, string requestJson);
+
+    [LoggerMessage(
+        Level = LogLevel.Information,
+        Message = "End Unique Request Id: {id}, Request name:{requestName}, total request time:{elapsedMilliseconds}ms")]
+    public static partial void RequestCompleted(ILogger logger, Guid id, string requestName, long elapsedMilliseconds);
 }

@@ -25,7 +25,7 @@ public class UseCaseIntegrationTests : IClassFixture<WebApplicationFactory<Progr
         using var scope = CreateScope;
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        var stream = await mediator.Send(new GetPictureOfTheDayStream());
+        var stream = await mediator.Send(new GetPictureOfTheDay());
 
         var nextByte = stream.ReadByte();
 
