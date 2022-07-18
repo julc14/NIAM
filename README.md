@@ -1,99 +1,79 @@
 # Name It After Me
 
 This is a learning excersise targeting 3 goals:
-1. Use .Net 6 Minimal API with mediatr to automatically host the mediatr-defined application use cases at a generated endpoint. This can be nice for Hexagonal/Clean architectures that emphanize application code never living in the presentation layers. In these scenarios controllers often become boiler-plate redirects to the request handler via mediatr. With Net 6 Minimal Apis we can automaticlly generate the endpoint and avoid this.
-2. Learn and Improve Blazor skills
-3. Learn and Improve Azure Devops skillset
-5. Eventually - rebuild the website using typescript + vue.
+
+1. Develop a simple website with Blazor:
+    - Use Blazor (client side) tooling to build a public UI that delivers the ability to name stars and exoplanets.
+    - ASP.Net backend to support accessing NASA APIs (which use cors)
+2. Expirement with Minimal APIs:
+    - Create functionality that can automaticlly host a mediar use case to an endpoint.
+    - Project will employ Hexagonal Architecture and Mediatr.
+    - Should support OpenAPI (swagger)
+3. Utilize Azure DevOps+Tooling:
+     - Azure Cosmos Db
+     - Azure KeyVault/AppConfiguration
+     - Azure App Service (Web Hosting)
+     - Github will handle the build for now
+
+## Blazor 
+
+Given how small this app is, systems like Mediatr + Hexagonal Architecture are not really worth the cost-benifit. However we will think of this app as a skeleton for a long-term bussiness application where in that context, maintainablity is more important. Hence we will employ them (and other business practices) anyways. For example we will keep Application concerns out of the UI layer and allow the blazor project to focus entirely on the UI.
+
+We will use blazor client-side model as opposed to server-side purely because I've already used server-side before.
+
+UI will use Mudblazor library.
+
+Desired Functionality:
 
 
-## Minimal APIs and Mediatr
+## Minimal Endpoints
 
-Architectures like Hexagonal Architecture of Clean Architecture will empahize a clear architecural boundary to seperate concerns. This often pushes infrastructure concerns out to the boundary of the application and isolates application code within the application core.
+Architectures like Hexagonal Architecture will dictate a clear architecural boundary to seperate concerns. This pushes infrastructure concerns out to the boundary of the application and decouples it from application/domain code via dependency injection. As well now we have application code that can't exist within Controllers. And if we employ mediatr this leaves many controllers as simple redirects to the use case app core.
 
-This seperation often leaves Controllers as a boiler-plate husk that just directs flow into the application use case. Especially if we employ mediatr and FluentValidation to attach validation as a pipeline behavior (as this solution does).
-
-Solutions that employ mediatr and this architecural design pattern can use minimal APIs to autogenerate these controller methods. This will come at a cost (main one being we cant decorate endpoint with some IActionResult) and may not be advisable for more complicated endpoints, however for simple queries we can use this pattern and not lose any valuable functionality while reducing boiler-plate waste and maintaining the seperation of concerns between layers.
-
+Rather than maintain these boiler-plate redirects we can have ASP.Net automaticlly generate the endpoint and save us from needing the controller method althogether. However this will come at a cost and is only advisable for simple queries/commands. Before the controller could act as a hub for authentication/authorization/validation/pagination. Now these concerns will need be desribed in the application core. If the costs outway the benifits you can still use controllers exactly as you would before.
 
 Example:
 
-Boiler-plate controller methods pointing to the real actor found in application core. This is preferred to leaving logic in the controller as it decouples the use case from the execution environment and makes it easier to replace infrastructure services (These maintainability benifts are not really needed for this simple project but can be very benificial for larger, more complex applications). 
+Boiler-plate controller method pointing to the application core.
 ```cs
 [HttpGet]
 public async Task<IActionResult> Get([FromServices] IMediator mediator)
 {
-    var fileStream = await mediator.Send(new GetPictureOfTheDayStream());
+    var fileStream = await mediator.Send(new GetPictureOfTheDay());
     return File(fileStream, "image/jpg");
 }
 ```
 
-Instead with a marker attribute we can instruct our server to automaticlly generate the endpoint at startup and completely remove this method.
+Instead with a marker attribute we can instruct asp.net to automaticlly generate the endpoint at startup. Now we can completely remove this method (and possibly the controller altogether!).
 ```cs
-[GenerateEndpoint(ContentType = "image/jpg", Route = "GetPictureOfTheDay/{isHd}")]
-public class GetPictureOfTheDayStream : IRequest<Stream>
+[Endpoint(HttpMethods.Get)]
+public class GetExoplanets : PagedQuery, IRequest<IEnumerable<ExoplanetDto>> { }
+
+public class GetExoplanetHandler : IRequestHandler<GetExoplanets, IEnumerable<ExoplanetDto>>
 {
-    public bool IsHd { get; set; } = true;
-}
+    private readonly IExoplanetContext _db;
+    private readonly IMapper _mapper;
 
-public class GetPictureOfTheDayStreamHandler : IRequestHandler<GetPictureOfTheDayStream, Stream>
-{
-    private readonly HttpClient _httpClient;
-    private readonly IPictureOfTheDayRepository _pictureOfTheDayRepository;
+    public GetExoplanetHandler(IExoplanetContext db, IMapper mapper)
+        => (_db, _mapper) = (db, mapper);
 
-    public GetPictureOfTheDayStreamHandler(
-        HttpClient httpClient,
-        IPictureOfTheDayRepository pictureOfTheDayRepository)
-            => (_httpClient, _pictureOfTheDayRepository)
-            = (httpClient, pictureOfTheDayRepository);
-
-    public async Task<Stream> Handle(GetPictureOfTheDayStream request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ExoplanetDto>> Handle(GetExoplanets request, CancellationToken cancellationToken)
     {
-        var picOfDay = await
-            _pictureOfTheDayRepository.GetPictureOfTheDay().ConfigureAwait(false);
+        var results = await _db
+            .Set<Exoplanet>()
+            .OrderBy(x => x.Id)
+            .Skip((request.PageNumber - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ProjectTo<ExoplanetDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
 
-        var imageGet = await _httpClient.GetAsync(picOfDay.Url, cancellationToken).ConfigureAwait(false);
-        var mediaType = imageGet.Content.Headers?.ContentType?.MediaType;
-
-        if (mediaType?.Contains("image", StringComparison.InvariantCultureIgnoreCase) == true)
-        {
-            return await _httpClient.GetStreamAsync(picOfDay.Url, cancellationToken).ConfigureAwait(false);
-        }
-
-        return Assembly
-            .GetExecutingAssembly()
-            .GetManifestResourceStream("NameItAfterMe.Application.UseCases.PictureOfTheDay.BaseBackground.jpg")
-          ?? throw new InvalidOperationException();
+        return new PagedResult<ExoplanetDto>(request.PageNumber, request.PageSize, results);
     }
 }
-```
-
-Once we generate the endpoint we still need to find a way to bind the incoming request to the mediatr request object. For now this solution will provide configuration options to customize from where the requset is parsed. In the future this may be customized to provide granular control of each endpoint.
-
-```cs
-app.UseEndpoints(builder =>
-{
-    builder.MapUseCasesFromAssembly(typeof(GenerateEndpointAttribute).Assembly,
-    options =>
-    {
-        // order and presence of these options matter
-        // for example query parameters will take precednce over same-name parameters found in the request body.
-        options.ParseRequestPropertiesFromBody();
-        options.ParseRequestPropertiesFromRouteData();
-        options.ParseRequestPropertiesFromQueryParameters();
-    });
-});
-```
 
 By default the endpoint will generate a flat route with the same name as the request. Configure the optional route in the attribute just like you would in the controller
 
 ```cs
-[GenerateEndpoint(ContentType = "image/jpg", Route = "NASA/GetPictureOfTheDay/{isHd}")]
-public class GetPictureOfTheDayStream : IRequest<Stream>
-{
-    public bool IsHd { get; set; } = true;
-}
+[Endpoint(HttpMethods.Get, Route = "/Exoplanet/{PageSize:int}/{PageNumber:int}")]
+public class GetExoplanets : PagedQuery, IRequest<IEnumerable<ExoplanetDto>> { }
 ```
-
-Not supported (yet)
-- HttpRedirects
