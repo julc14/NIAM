@@ -1,7 +1,39 @@
 ﻿@page "/pictureoftheday" 
+@using NameItAfterMe.Application.UseCases.PictureOfTheDay
 
-<h3>PictureOfTheDay</h3>
+<MudCard>
+	<MudCardHeader>
+    <CardHeaderAvatar>
+        <MudIcon 
+            Color="Color.Dark" 
+            Icon="@Icons.Material.Filled.RocketLaunch" 
+            Size="Size.Large" />
+    </CardHeaderAvatar>
+    <CardHeaderContent>
+        <MudText Typo="Typo.body1">Nasa's Picture Of The Day</MudText>
+    </CardHeaderContent>
+    <CardHeaderActions>
+        <MudIconButton 
+            Icon="@Icons.Material.Filled.Settings" 
+            Color="Color.Default" />
+    </CardHeaderActions>
+</MudCardHeader>
+
+	@if (@imagePath is not null)
+	{
+		<MudImage  Src=@imagePath Class="rounded-lg" ObjectFit ="ObjectFit.Contain" Height="800" />
+	}
+</MudCard>
 
 @code {
 
+	[Inject] HttpClient HttpClient { get; set; }
+
+	private string? imagePath;
+
+	protected async override Task OnInitializedAsync()
+	{
+		imagePath = await HttpClient.GetFromJsonAsync<string>("PictureOfTheDay/SourcePath");
+		await base.OnInitializedAsync();
+	}
 }

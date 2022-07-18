@@ -39,10 +39,10 @@ public class UseCaseIntegrationTests : IClassFixture<WebApplicationFactory<Progr
         using var scope = CreateScope;
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        var chunks = await mediator.Send(new GetExoplanetChunk()
+        var chunks = await mediator.Send(new GetExoplanets()
         {
-            StartIndex = 0,
-            ChunkSize = 5,
+            PageNumber = 0,
+            PageSize = 5,
         });
 
         // could return less than 5 if there are less than 5 objects at { StartIndex + ChunkSize }

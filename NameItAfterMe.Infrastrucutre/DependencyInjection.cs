@@ -33,6 +33,7 @@ public static class DependencyInjection
             // instead maintain clear boundaries between infra and application services.
             .AddTransient<IPictureOfTheDayRepository, PictureOfTheDayRepository>()
             .AddTransient<IExoplanetApi, ExoplanetRepository>()
+            .AddTransient<IImageHandler, ImageHandler>()
 
             // add cosmos
             .AddDbContext<ExoplanetContext>(options => options.UseCosmos(
