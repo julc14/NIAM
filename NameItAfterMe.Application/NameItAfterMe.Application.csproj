@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassLibrary1\MinimalEndpoints.Abstractions.csproj" />
+    <ProjectReference Include="..\MinimalEndpoints.Abstractions\MinimalEndpoints.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

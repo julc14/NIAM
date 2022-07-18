@@ -1,16 +1,13 @@
 ﻿using MediatR;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HttpMethod = MinimalEndpoints.HttpMethod;
+using HttpMethods = MinimalEndpoints.HttpMethods;
 
 namespace NameItAfterMe.Application.UseCases.PictureOfTheDay;
 
-[Endpoint(nameof(HttpMethod.Get), Route = "PictureOfTheDay/SourcePath")]
+[Endpoint(
+    HttpMethods.Get,
+    Route = "PictureOfTheDay/SourcePath")]
 public class GetPictureOfTheDaySourcePath : IRequest<string>
 {
 }
@@ -42,7 +39,6 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
             return "Images/DefaultPictureOfTheDay.jpg";
         }
 
-        // fire and forget.
         filePath = await _imageHandler.SaveAsync("NasaPictureOfTheDay", picOfDay.Content);
 
         return filePath;

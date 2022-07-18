@@ -10,11 +10,9 @@ internal class ParsePropertyFromQueryParameters : IComponentParser
 {
     private readonly ILogger<ParsePropertyFromQueryParameters> _logger;
 
-    public ParsePropertyFromQueryParameters(ILogger<ParsePropertyFromQueryParameters> logger)
-    {
-        _logger = logger;
-    }
+    public ParsePropertyFromQueryParameters(ILogger<ParsePropertyFromQueryParameters> logger) => _logger = logger;
 
+    /// <inheritdoc/>
     public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object? item)
     {
         item = null;

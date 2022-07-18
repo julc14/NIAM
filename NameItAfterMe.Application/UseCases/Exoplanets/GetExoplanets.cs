@@ -5,11 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Abstractions;
 using NameItAfterMe.Application.Domain;
-using HttpMethod = MinimalEndpoints.HttpMethod;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets;
 
-[Endpoint(nameof(HttpMethod.Get))]
+[Endpoint(HttpMethods.Get)]
 public class GetExoplanets : PagedQuery, IRequest<IEnumerable<ExoplanetDto>>
 {
 }

@@ -11,16 +11,16 @@ namespace MinimalEndpoints;
 public static class EndpointExtentions
 {
     /// <summary>
-    ///     Maps mediatr use cases that contain GenerateEndpoint marker attribute to an endpoint
+    ///     Automaticlly host mediatr request handlers from the given assembly that contain an Endpoint marker.
     /// </summary>
     /// <param name="builder">
-    ///     The endpoint builder.
+    ///     The endpoint route builder.
     /// </param>
     /// <param name="assembly">
     ///     The assembly to search.
     /// </param>
     /// <returns>
-    ///     The builder.
+    ///     The endpoint route builder.
     /// </returns>
     public static IEndpointRouteBuilder MapUseCasesFromAssembly(
         this IEndpointRouteBuilder builder,
@@ -35,10 +35,11 @@ public static class EndpointExtentions
             async Task HandleEndpointAction(HttpContext context, HttpResponse _)
             {
                 // it would be better to let ASP.net handle the web request => medaitr request binding
-                // as that would take advantage of existing and familiar systems (and lead to openAPI working as expected)
-                // intead we are creating a class to do it manually
-                // Using asp.net binding would require implementing a Bind for each medaitr request.
-                // I dont want to force each request to implement this method.
+                // This would take advantage of existing and familiar systems (and lead to openAPI working as expected without workarounds)
+                // intead we are creating a class (RequestBuilder) to do it manually
+                // Using asp.net binding would require implementing a Bind/Parse for each medaitr request type.
+                // Forcing each request to implement one of these methods is not realy "minimal" so not an option.
+                // todo: investigate source generators to create these methods as an alternative to below
                 var mediatrRequestBuilder = context.RequestServices.GetRequiredService<RequestBuilder>();
                 var request = mediatrRequestBuilder.Build(endpoint.RequestType, context);
 
@@ -54,9 +55,11 @@ public static class EndpointExtentions
             builder
             .Map(endpoint.Route, HandleEndpointAction)
             .Produces(200, endpoint.ResponseType, endpoint.ContentType)
-            //.ProducesProblem(404)
+            .ProducesProblem(404)
             .WithMetadata(new HttpMethodMetadata(new[] { endpoint.HttpMethod }))
             .WithMetadata(endpoint);
+
+            // todo: httpposts should accept mediatr request body.
         }
 
         return builder;
