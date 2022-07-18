@@ -3,8 +3,6 @@ namespace MinimalEndpoints;
 
 public class ConfigureRequestBuilder 
 {
-
-
     //public ConfigureRequestBuilder ParseRequestPropertiesFromBody()
     //{
     //    if (_context.Request.ContentLength > 0 && _context.Request.HasJsonContentType())

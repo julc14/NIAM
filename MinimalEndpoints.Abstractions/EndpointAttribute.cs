@@ -14,6 +14,7 @@ public class EndpointAttribute : Attribute
     public string? ContentType { get; init; }
 
     public EndpointAttribute(string httpMethod) => HttpMethod = httpMethod;
+    public EndpointAttribute(HttpMethods httpMethod) => HttpMethod = httpMethod.ToString();
 
     public bool CanHaveBody => !_canNotHaveBody.Contains(HttpMethod, StringComparer.OrdinalIgnoreCase);
 }

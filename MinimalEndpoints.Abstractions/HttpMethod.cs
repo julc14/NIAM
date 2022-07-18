@@ -1,6 +1,6 @@
 ﻿namespace MinimalEndpoints;
 
-public enum HttpMethod
+public enum HttpMethods
 {
     Delete,
     Get,

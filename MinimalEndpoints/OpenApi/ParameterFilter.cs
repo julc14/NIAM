@@ -4,6 +4,11 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace NameItAfterMe.Server.OpenApi;
 
+/// <summary>
+///     Manually add mediatr request properties as swagger optional parameters.
+///     Swagger will not see these otherwise since we have manually bound asp request => mediatr request.
+///     This has no effect on runtime behavior, just swagger.
+/// </summary>
 public class ParameterFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
