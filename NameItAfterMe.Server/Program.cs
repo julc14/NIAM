@@ -1,23 +1,30 @@
+using MinimalEndpoints;
+using MinimalEndpoints.OpenApi;
 using NameItAfterMe.Application;
+using NameItAfterMe.Application.Abstractions;
 using NameItAfterMe.Infrastructure;
-using NameItAfterMe.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddAzureAppConfiguration(
     builder.Configuration.GetConnectionString("AppConfig"));
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddMinimalEndpointServices();
+
+builder.Services.AddSwaggerGen(x => x.AddMinimalEndpointSupport());
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.UseWebAssemblyDebugging();
 }
 else
@@ -31,18 +38,12 @@ app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseEndpoints(builder =>
 {
-    builder.MapUseCasesFromAssembly(typeof(GenerateEndpointAttribute).Assembly,
-    options =>
-    {
-        options.ParseRequestPropertiesFromBody();
-        options.ParseRequestPropertiesFromRouteData();
-        options.ParseRequestPropertiesFromQueryParameters();
-    });
+    builder.MapSwagger();
+    builder.MapUseCasesFromAssembly(typeof(IExoplanetApi).Assembly);
 });
 
 app.MapRazorPages();

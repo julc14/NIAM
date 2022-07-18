@@ -17,21 +17,24 @@
 
 @code {
     private List<T> _items = new();
-    private ElementReference _lastItemIndicator;
-    private DotNetObjectReference<InfiniteScrolling<T>> _currentComponentReference;
-    private IJSObjectReference _module;
-    private IJSObjectReference _instance;
     private bool _loading = false;
-    private CancellationTokenSource _loadItemsCts;
 
-    [Parameter]
-    public InfiniteScrollingItemsProviderRequestDelegate<T> ItemsProvider { get; set; }
+    private CancellationTokenSource? _loadItemsCts;
 
-    [Parameter]
-    public RenderFragment<T> ItemTemplate { get; set; }
+    private ElementReference _lastItemIndicator;
+    private DotNetObjectReference<InfiniteScrolling<T>>? _currentComponentReference;
 
-    [Parameter]
-    public RenderFragment LoadingTemplate { get; set; }
+    private IJSObjectReference? _module;
+    private IJSObjectReference? _instance;
+
+    [Parameter, EditorRequired]
+    public InfiniteScrollingItemsProviderRequestDelegate<T> ItemsProvider { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public RenderFragment<T> ItemTemplate { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public RenderFragment LoadingTemplate { get; set; } = null!;
 
     [JSInvokable]
     public async Task LoadMoreItems()
@@ -44,7 +47,8 @@
         {
             _loadItemsCts ??= new CancellationTokenSource();
 
-            StateHasChanged(); // Allow the UI to display the loading indicator
+            // Allow the UI to display the loading indicator
+            StateHasChanged();
             try
             {
                 var newItems = await ItemsProvider(new InfiniteScrollingItemsProviderRequest(_items.Count, _loadItemsCts.Token));
@@ -60,7 +64,8 @@
             _loading = false;
         }
 
-        StateHasChanged(); // Display the new items and hide the loading indicator
+        // Display the new items and hide the loading indicator
+        StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

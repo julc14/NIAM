@@ -8,15 +8,29 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="5.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <Content Remove="wwwroot\Images\DefaultPictureOfTheDay.jpg" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NameItAfterMe.Application\NameItAfterMe.Application.csproj" />
+    <EmbeddedResource Include="wwwroot\Images\DefaultPictureOfTheDay.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MinimalEndpoints\MinimalEndpoints.csproj" />
     <ProjectReference Include="..\NameItAfterMe.Infrastrucutre\NameItAfterMe.Infrastructure.csproj" />
+    <ProjectReference Include="..\NameItAfterMe\Blazor.Client\NameItAfterMe.Blazor.Client.csproj" />
   </ItemGroup>
 
 
