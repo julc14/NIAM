@@ -40,7 +40,6 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
         }
 
         filePath = await _imageHandler.SaveAsync("NasaPictureOfTheDay", picOfDay.Content);
-
         return filePath;
     }
 }

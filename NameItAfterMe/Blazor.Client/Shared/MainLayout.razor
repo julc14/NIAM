@@ -1,6 +1,4 @@
 ﻿@inherits LayoutComponentBase;
-@inject HttpClient httpClient;
-@inject IJSRuntime jsRuntime;
 
 <div class="page">
     <div class="sidebar">
@@ -23,14 +21,4 @@
 
 @code {
 
-    protected override async Task OnInitializedAsync()
-    {
-        var stream = await httpClient.GetStreamAsync("PictureOfTheDay");
-        var dotnetImageStream = new DotNetStreamReference(stream);
-
-        await jsRuntime.InvokeVoidAsync("updateBackground", 
-            new object[] { dotnetImageStream });
-
-        await base.OnInitializedAsync();
-    }
 }

@@ -19,7 +19,7 @@
 
 @code {
 
-    [Parameter] public string Name { get; set; }
+    [Parameter, EditorRequired] public string Name { get; set; }
 
     private bool isVisible = false;
 
@@ -29,19 +29,4 @@
     }
 
     MudForm form;
-
-    private IEnumerable<string> PasswordStrength(string pw)
-    {
-        if (string.IsNullOrWhiteSpace(pw))
-        {
-            yield return "Password is required!";
-            yield break;
-        }
-    }
-
-    private string PasswordMatch(string arg)
-    {
-
-        return null;
-    }
 }
