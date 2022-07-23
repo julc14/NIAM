@@ -14,7 +14,6 @@ public static class DependencyInjection
             .AddMediatR(typeof(DependencyInjection).Assembly)
             .AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly)
             // todo: auto register base class validators.
-            .AddTransient<IValidator<GetExoplanets>, PagedQueryValidator>()
             .AddAutoMapper(c => c.AddMaps(typeof(DependencyInjection).Assembly))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
