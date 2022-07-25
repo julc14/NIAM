@@ -14,9 +14,9 @@ internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequ
     {
         foreach (var validator in _validators)
         {
-            await validator.ValidateAndThrowAsync(request, cancellationToken).ConfigureAwait(false);
+            await validator.ValidateAndThrowAsync(request, cancellationToken);
         }
 
-        return await next().ConfigureAwait(false);
+        return await next();
     }
 }

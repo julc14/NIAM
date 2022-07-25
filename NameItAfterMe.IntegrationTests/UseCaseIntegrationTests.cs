@@ -16,7 +16,7 @@ public class UseCaseIntegrationTests : IClassFixture<WebApplicationFactory<Progr
     internal IServiceScope CreateScope => _host.Services.CreateScope();
 
     public UseCaseIntegrationTests(
-        WebApplicationFactory<Program> testHost) 
+        WebApplicationFactory<Program> testHost)
             => _host = testHost;
 
     [Fact]
@@ -39,7 +39,7 @@ public class UseCaseIntegrationTests : IClassFixture<WebApplicationFactory<Progr
 
         var chunks = await mediator.Send(new GetExoplanets()
         {
-            PageNumber = 0,
+            PageNumber = 1,
             PageSize = 5,
         });
 

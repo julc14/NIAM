@@ -1,18 +1,17 @@
-﻿@using System.Threading
-
-@typeparam T
+﻿@typeparam T
 @implements IAsyncDisposable
 
 @foreach (var item in _items)
 {
     @ItemTemplate(item)
 }
+
 @if (_loading)
 {
     @LoadingTemplate
 }
 
-<div @ref="_lastItemIndicator" style="height:1px"></div>
+<div @ref="_lastItemIndicator" style="height:1px"/>
 
 @code {
     private List<T> _items = new();
@@ -48,9 +47,19 @@
 
         // Allow the UI to display the loading indicator
         StateHasChanged();
+
         try
         {
             var newItems = await ItemsProvider(new InfiniteScrollingItemsProviderRequest(_items.Count, _loadItemsCts.Token));
+
+            if (!newItems.Any())
+            {
+                // if no items are returned assume we haved reached last item
+                // terminate JS intersection observer
+                // this will not affect already-rendered items.
+                await DisposeAsync();
+            }
+
             _items.AddRange(newItems);
         }
         catch (OperationCanceledException oce) when (oce.CancellationToken == _loadItemsCts.Token)
