@@ -38,7 +38,7 @@ public static class EndpointExtentions
                 // This would take advantage of existing and familiar systems (and lead to openAPI working as expected without workarounds)
                 // intead we are creating a class (RequestBuilder) to do it manually
                 // Using asp.net binding would require implementing a Bind/Parse for each medaitr request type.
-                // Forcing each request to implement one of these methods is not realy "minimal" so not an option.
+                // Forcing each mediatr request type to implement one of these methods is not realy "minimal" so not an option.
                 // todo: investigate source generators to create these methods as an alternative to below
                 var mediatrRequestBuilder = context.RequestServices.GetRequiredService<RequestBuilder>();
                 var request = mediatrRequestBuilder.Build(endpoint.RequestType, context);

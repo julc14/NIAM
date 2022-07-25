@@ -1,7 +1,7 @@
 ﻿
 namespace MinimalEndpoints;
 
-public class ConfigureRequestBuilder 
+public class ConfigureRequestBuilder
 {
     //public ConfigureRequestBuilder ParseRequestPropertiesFromBody()
     //{

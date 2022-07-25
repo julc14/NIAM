@@ -1,7 +1,7 @@
 ﻿namespace NameItAfterMe.Infrastructure
 {
     /// <summary>
-    ///     Handler to add an API key to the end of web requests.
+    ///     Handler to add append an API key to web requests.
     /// </summary>
     public class ApiKeyHandler : DelegatingHandler
     {

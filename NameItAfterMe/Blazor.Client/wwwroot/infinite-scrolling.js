@@ -3,7 +3,7 @@
     const options = {
         root: findClosestScrollContainer(lastItemIndicator),
         rootMargin: '0px',
-        threshold: 0,
+        threshold: 1,
     };
 
     const observer = new IntersectionObserver(async (entries) => {

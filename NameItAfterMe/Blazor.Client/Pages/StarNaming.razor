@@ -1,7 +1,8 @@
 ﻿@page "/starnaming"
+@using NameItAfterMe.Application
 
-<div style="height:auto;overflow:scroll;" tabindex="-1">
-    <InfiniteScrolling ItemsProvider=@GetExoplanets >
+<div class="page-background-class" style="height:100%;" tabindex="-1">
+    <InfiniteScrolling ItemsProvider=@GetExoplanets>
         <ItemTemplate Context="item">
             <MudContainer MaxWidth="MaxWidth.Small" Class="pa-2">
                 <PlanetCard Name=@item.Name />
@@ -20,8 +21,7 @@
                     <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
                 </MudCardActions>
             </MudCard>
-        </LoadingTemplate>
-        
+        </LoadingTemplate>      
     </InfiniteScrolling>  
 </div>
 
@@ -29,21 +29,17 @@
 
     [Inject] HttpClient HttpClient { get; set; }
 
-    private int _maxPlanetsPerPage = 15;
+    private readonly int _planetLoadSize = 10;
     private int _currentPage = 1;
-
-    private bool _isQuerying = true;
 
     async Task<IEnumerable<ExoplanetDto>> GetExoplanets(InfiniteScrollingItemsProviderRequest request)
     {
-        var exoplanetRoute = $"Exoplanet/{request.StartIndex}/4";
-        var ignoreCase = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-        };
+        var exoplanetRoute = $"Exoplanet/{_currentPage}/{_planetLoadSize}";
 
         var exoplanetGet =
-            await HttpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>(exoplanetRoute, ignoreCase);
+            await HttpClient.GetFromJsonAsync<PagedResult<ExoplanetDto>>(exoplanetRoute, request.CancellationToken);
+
+        _currentPage++;
 
         return exoplanetGet ?? Enumerable.Empty<ExoplanetDto>();
     }
