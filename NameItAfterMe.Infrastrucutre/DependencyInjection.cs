@@ -28,9 +28,9 @@ public static class DependencyInjection
             .SetHttpBaseAddress("https://exoplanetarchive.ipac.caltech.edu")
 
             // add respositories for application services.
-            // we could bind REFIT created infra services directly to the abstraction living in app layer
-            // however this would force application abstractions to depend upon REFIT
-            // instead maintain clear boundaries between infra and application services.
+            // we could bind REFIT created infra services directly to the abstraction living in application layer
+            // however this would force application layer to depend upon REFIT
+            // Prefer to keep refit contained in the infra layer.
             .AddTransient<IPictureOfTheDayRepository, PictureOfTheDayRepository>()
             .AddTransient<IExoplanetApi, ExoplanetRepository>()
             .AddTransient<IImageHandler, ImageHandler>()
@@ -46,8 +46,6 @@ public static class DependencyInjection
             .AddLogging(configure => configure.AddSerilog());
     }
 
-    // trivial extention method to enable a fluent service creation above
-    // by ending an http configuration and returning default services.
     private static IServiceCollection SetHttpBaseAddress(
         this IHttpClientBuilder builder,
         string url)
