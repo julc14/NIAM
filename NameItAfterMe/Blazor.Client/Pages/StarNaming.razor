@@ -1,5 +1,4 @@
 ﻿@page "/starnaming"
-@using NameItAfterMe.Application
 
 <div class="page-background-class" style="height:100%;" tabindex="-1">
 	<InfiniteScrolling ItemsProvider=@GetExoplanets>
@@ -27,17 +26,17 @@
 
 @code {
 
-	[Inject] HttpClient HttpClient { get; set; }
+	[Inject] HttpClient HttpClient { get; set; } = null!;
 
 	private readonly int _planetLoadSize = 10;
 	private int _currentPage = 1;
 
-	async Task<IEnumerable<ExoplanetDto>> GetExoplanets(InfiniteScrollingItemsProviderRequest request)
+	private async Task<IEnumerable<ExoplanetDto>> GetExoplanets(InfiniteScrollingItemsProviderRequest request)
 	{
 		var exoplanetRoute = $"Exoplanet/{_currentPage}/{_planetLoadSize}";
 
 		var exoplanetGet =
-			await HttpClient.GetFromJsonAsync<PagedResult<ExoplanetDto>>(exoplanetRoute, request.CancellationToken);
+			await HttpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>(exoplanetRoute, request.CancellationToken);
 
 		_currentPage++;
 

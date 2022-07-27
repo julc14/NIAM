@@ -27,6 +27,7 @@ internal class RequestBuilder
     /// </exception>
     public object Build(Type requestType, HttpContext context)
     {
+        // todo: almost certainly more performant to cache the ctor delegate instead of using activator.
         var request = Activator.CreateInstance(requestType)
             ?? throw new InvalidOperationException($"{requestType} does not have a public paramaterless constructor.");
 

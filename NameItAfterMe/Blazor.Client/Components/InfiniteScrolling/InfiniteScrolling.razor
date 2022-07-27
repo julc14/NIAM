@@ -1,0 +1,111 @@
+﻿@typeparam T
+@implements IAsyncDisposable
+
+@foreach (var item in _items)
+{
+	@ItemTemplate(item)
+}
+
+@if (_loading)
+{
+	@LoadingTemplate
+}
+
+<div @ref="_lastItemIndicator" style="height:1px" />
+
+@code {
+	private List<T> _items = new();
+	private bool _loading = false;
+
+	private CancellationTokenSource? _loadItemsCts;
+
+	private ElementReference _lastItemIndicator;
+	private DotNetObjectReference<InfiniteScrolling<T>>? _currentComponentReference;
+
+	private IJSObjectReference? _module;
+	private IJSObjectReference? _instance;
+
+	[Inject] public IJSRuntime JsRuntime { get; set; } = null!;
+
+	[Parameter, EditorRequired]
+	public InfiniteScrollingItemsProviderRequestDelegate<T> ItemsProvider { get; set; } = null!;
+
+	[Parameter, EditorRequired]
+	public RenderFragment<T> ItemTemplate { get; set; } = null!;
+
+	[Parameter, EditorRequired]
+	public RenderFragment LoadingTemplate { get; set; } = null!;
+
+	[JSInvokable]
+	public async Task LoadMoreItems()
+	{
+		if (_loading)
+			return;
+
+		_loading = true;
+		_loadItemsCts ??= new CancellationTokenSource();
+
+		// Allow the UI to display the loading indicator
+		StateHasChanged();
+
+		try
+		{
+			var newItems = await ItemsProvider(new InfiniteScrollingItemsProviderRequest(_items.Count, _loadItemsCts.Token));
+
+			if (!newItems.Any())
+			{
+				// if no items are returned assume we haved reached last item
+				// terminate JS intersection observer
+				// this will not affect already-rendered items.
+				await DisposeAsync();
+			}
+
+			_items.AddRange(newItems);
+		}
+		catch (OperationCanceledException oce) when (oce.CancellationToken == _loadItemsCts.Token)
+		{
+		}
+		finally
+		{
+			_loading = false;
+		}
+
+		// Display the new items and hide the loading indicator
+		StateHasChanged();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			_module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./infinite-scrolling.js");
+			_currentComponentReference = DotNetObjectReference.Create(this);
+			_instance = await _module.InvokeAsync<IJSObjectReference>("initialize", _lastItemIndicator, _currentComponentReference);
+		}
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		// Cancel the current load items operation
+		if (_loadItemsCts != null)
+		{
+			_loadItemsCts.Dispose();
+			_loadItemsCts = null;
+		}
+
+		// Stop the IntersectionObserver
+		if (_instance != null)
+		{
+			await _instance.InvokeVoidAsync("dispose");
+			await _instance.DisposeAsync();
+			_instance = null;
+		}
+
+		if (_module != null)
+		{
+			await _module.DisposeAsync();
+		}
+
+		_currentComponentReference?.Dispose();
+	}
+}
