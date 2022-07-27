@@ -21,5 +21,5 @@ public interface IComponentParser
     /// <returns>
     ///     Whether the Parse was successful.
     /// </returns>
-    bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object? propertyValue);
+    bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object propertyValue);
 }

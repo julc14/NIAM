@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Reflection;
 
 namespace MinimalEndpoints.RequestBinding;
 
@@ -29,16 +30,25 @@ internal class RequestBuilder
         var request = Activator.CreateInstance(requestType)
             ?? throw new InvalidOperationException($"{requestType} does not have a public paramaterless constructor.");
 
-        foreach (var property in requestType.GetProperties())
+        var propertiesWithAccessibleSetters =
+            requestType.GetProperties().Where(x => x.GetSetMethod() is not null);
+
+        foreach (var property in propertiesWithAccessibleSetters)
+        {
+            SetPropertyValue(context, property, request);
+        }
+
+        return request;
+    }
+
+    private void SetPropertyValue(HttpContext context, PropertyInfo property, object request)
+    {
         foreach (var component in _componentParsers)
         {
-            if (property.GetSetMethod() is not null
-                && component.TryParse(context, property, out var propertyValue))
+            if (component.TryParse(context, property, out var propertyValue))
             {
                 property.SetValue(request, propertyValue);
             }
         }
-
-        return request;
     }
 }

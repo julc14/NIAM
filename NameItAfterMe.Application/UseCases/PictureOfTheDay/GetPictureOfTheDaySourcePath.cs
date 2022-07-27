@@ -1,13 +1,10 @@
 ﻿using MediatR;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Abstractions;
-using HttpMethods = MinimalEndpoints.HttpMethods;
 
 namespace NameItAfterMe.Application.UseCases.PictureOfTheDay;
 
-[Endpoint(
-    HttpMethods.Get,
-    Route = "PictureOfTheDay/SourcePath")]
+[Endpoint(Route = "PictureOfTheDay/SourcePath")]
 public class GetPictureOfTheDaySourcePath : IRequest<string>
 {
 }
