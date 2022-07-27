@@ -3,18 +3,10 @@
 [AttributeUsage(AttributeTargets.Class)]
 public class EndpointAttribute : Attribute
 {
-    private static readonly string[] _canNotHaveBody = new string[]
-    {
-        "Get",
-        "Head"
-    };
-
-    public string HttpMethod { get; }
+    public HttpMethods? HttpMethod { get; init; }
     public string? Route { get; init; }
     public string? ContentType { get; init; }
 
-    public EndpointAttribute(string httpMethod) => HttpMethod = httpMethod;
-    public EndpointAttribute(HttpMethods httpMethod) => HttpMethod = httpMethod.ToString();
-
-    public bool CanHaveBody => !_canNotHaveBody.Contains(HttpMethod, StringComparer.OrdinalIgnoreCase);
+    public EndpointAttribute(HttpMethods httpMethod) => HttpMethod = httpMethod;
+    public EndpointAttribute() { }
 }

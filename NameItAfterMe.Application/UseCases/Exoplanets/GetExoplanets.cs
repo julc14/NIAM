@@ -8,9 +8,7 @@ using NameItAfterMe.Application.Domain;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets;
 
-[Endpoint(
-    HttpMethods.Get,
-    Route = "Exoplanet/{PageNumber:int}/{PageSize:int}")]
+[Endpoint(Route = "Exoplanet/{PageNumber:int}/{PageSize:int}")]
 public class GetExoplanets : IRequest<IEnumerable<ExoplanetDto>>
 {
     public int PageNumber { get; set; } = 1;

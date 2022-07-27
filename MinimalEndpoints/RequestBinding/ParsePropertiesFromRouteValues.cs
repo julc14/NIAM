@@ -8,7 +8,7 @@ namespace MinimalEndpoints.RequestBinding;
 public class ParsePropertiesFromRouteValues : IComponentParser
 {
     /// <inheritdoc/>
-    public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object? propertyValue)
+    public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object propertyValue)
     {
         propertyValue = null;
 

@@ -13,7 +13,7 @@ internal class ParsePropertyFromQueryParameters : IComponentParser
     public ParsePropertyFromQueryParameters(ILogger<ParsePropertyFromQueryParameters> logger) => _logger = logger;
 
     /// <inheritdoc/>
-    public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object? item)
+    public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object item)
     {
         item = null;
 

@@ -56,7 +56,7 @@ public static class EndpointExtentions
             .Map(endpoint.Route, HandleEndpointAction)
             .Produces(200, endpoint.ResponseType, endpoint.ContentType)
             .ProducesProblem(404)
-            .WithMetadata(new HttpMethodMetadata(new[] { endpoint.HttpMethod }))
+            .WithMetadata(new HttpMethodMetadata(new[] { endpoint.HttpMethod.ToString() }))
             .WithMetadata(endpoint);
 
             // todo: httpposts should accept mediatr request body.
