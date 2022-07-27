@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using MinimalEndpoints.RequestBinding;
 using System.Reflection;
+using FluentValidation;
 
 namespace MinimalEndpoints;
 
 public static class EndpointExtentions
 {
+    private const int ValidationErrorCode = 422;
+
     /// <summary>
     ///     Automaticlly host mediatr request handlers from the given assembly that contain an Endpoint marker.
     /// </summary>
@@ -28,25 +31,16 @@ public static class EndpointExtentions
     {
         foreach (var endpoint in ScanForEndpoints(assembly))
         {
-            // HttpResponse is not needed as a parameter below and could be omitted.
-            // However doing so leads to Swagger failing to generate the endpoint documentation.
-            // Hopefully this gets fixed with dotnet7
-            // https://github.com/dotnet/aspnetcore/issues/39766
-            async Task HandleEndpointAction(HttpContext context, HttpResponse _)
+            // it would be better to let ASP.net handle the web request => medaitr request binding
+            // This would take advantage of existing and familiar systems (and lead to openAPI working as expected without workarounds)
+            // intead we are creating a class (RequestBuilder) to do it manually
+            // Using asp.net binding would require implementing a Bind/Parse for each medaitr request type.
+            // Forcing each mediatr request type to implement one of these methods is not realy "minimal" so not an option.
+            // todo: investigate source generators to create these methods as an alternative to below
+            async Task HandleEndpointAction(HttpContext context, IMediator mediatr, RequestBuilder mediatrRequestBuilder)
             {
-                // it would be better to let ASP.net handle the web request => medaitr request binding
-                // This would take advantage of existing and familiar systems (and lead to openAPI working as expected without workarounds)
-                // intead we are creating a class (RequestBuilder) to do it manually
-                // Using asp.net binding would require implementing a Bind/Parse for each medaitr request type.
-                // Forcing each mediatr request type to implement one of these methods is not realy "minimal" so not an option.
-                // todo: investigate source generators to create these methods as an alternative to below
-                var mediatrRequestBuilder = context.RequestServices.GetRequiredService<RequestBuilder>();
                 var request = mediatrRequestBuilder.Build(endpoint.RequestType, context);
-
-                var mediatr = context.RequestServices.GetRequiredService<IMediator>();
-                var response = await mediatr.Send(request, cancellationToken: context.RequestAborted);
-
-                await HandleResponse(context, endpoint, response);
+                await ExecuteMediatrUseCase(context, mediatr, request, endpoint.ContentType);
 
                 var body = context.Response.Body;
                 await body.FlushAsync(cancellationToken: context.RequestAborted);
@@ -55,7 +49,7 @@ public static class EndpointExtentions
             builder
             .Map(endpoint.Route, HandleEndpointAction)
             .Produces(200, endpoint.ResponseType, endpoint.ContentType)
-            .ProducesProblem(404)
+            .ProducesValidationProblem(ValidationErrorCode, "application/json")
             .WithMetadata(new HttpMethodMetadata(new[] { endpoint.HttpMethod.ToString() }))
             .WithMetadata(endpoint);
 
@@ -81,6 +75,39 @@ public static class EndpointExtentions
         services.AddScoped<RequestBuilder>();
 
         return services;
+    }
+
+    private static async Task ExecuteMediatrUseCase(HttpContext context, IMediator mediatr, object request, string? contentType = null)
+    {
+        try
+        {
+            var content = await mediatr.Send(request, cancellationToken: context.RequestAborted);
+
+            switch (content)
+            {
+                case Stream streamedResponse:
+                    context.Response.ContentType =
+                        contentType ?? context.Response.ContentType;
+
+                    await streamedResponse.CopyToAsync(context.Response.Body, context.RequestAborted);
+                    await streamedResponse.DisposeAsync();
+
+                    return;
+
+                case not Unit:
+                    await context.Response.WriteAsJsonAsync(content, context.RequestAborted);
+                    return;
+            }
+        }
+        catch (ValidationException e)
+        {
+            context.Response.StatusCode = ValidationErrorCode;
+            await context.Response.WriteAsJsonAsync(e.Errors);
+        }
+        catch (Exception)
+        {
+            context.Response.StatusCode = 500;
+        }
     }
 
     private static IEnumerable<EndpointMetadata> ScanForEndpoints(
@@ -117,29 +144,5 @@ public static class EndpointExtentions
             {
                 ContentType = endpointAttribute.ContentType,
             };
-    }
-
-    private static async Task HandleResponse(
-        HttpContext context,
-        EndpointMetadata endpoint,
-        object response)
-    {
-        switch (response)
-        {
-            case Stream streamedResponse:
-            {
-                context.Response.ContentType =
-                    endpoint.ContentType ?? context.Response.ContentType;
-
-                await streamedResponse.CopyToAsync(context.Response.Body, context.RequestAborted);
-                break;
-            }
-
-            case not Unit:
-            {
-                await context.Response.WriteAsJsonAsync(response, context.RequestAborted);
-                break;
-            }
-        }
     }
 }
