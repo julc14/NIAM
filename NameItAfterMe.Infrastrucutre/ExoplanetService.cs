@@ -22,10 +22,8 @@ internal class ExoplanetRepository : IExoplanetApi
     /// </returns>
     public async Task<IEnumerable<Exoplanet>> GetAllExoplanets()
     {
-        var planets = await _exoplanetService.GetAllPlanets().ConfigureAwait(false);
-
         var validPlanets =
-            from p in planets
+            from p in await _exoplanetService.GetAllPlanets()
             where p.Distance is not null
             where p.Name is not null
             select p;

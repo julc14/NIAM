@@ -12,6 +12,6 @@ public class ExoplanetContext : DbContext, IExoplanetContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Exoplanet>();
+        modelBuilder.Entity<Exoplanet>().Property(x => x.Id).ValueGeneratedOnAdd();
     }
 }

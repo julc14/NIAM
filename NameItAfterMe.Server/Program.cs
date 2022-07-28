@@ -3,6 +3,7 @@ using MinimalEndpoints.OpenApi;
 using NameItAfterMe.Application;
 using NameItAfterMe.Application.Abstractions;
 using NameItAfterMe.Infrastructure;
+using NameItAfterMe.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMinimalEndpointServices();
+builder.Services.AddHostedService<ExoplanetSyncronizationService>();
 
 builder.Services.AddSwaggerGen(x => x.AddMinimalEndpointSupport());
 
