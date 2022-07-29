@@ -70,8 +70,9 @@ public static class EndpointExtentions
     /// </returns>
     public static IServiceCollection AddMinimalEndpointServices(this IServiceCollection services)
     {
-        services.AddScoped<IComponentParser, ParsePropertyFromQueryParameters>();
-        services.AddScoped<IComponentParser, ParsePropertiesFromRouteValues>();
+        services.AddScoped<IComponentParser, RequestBodyParser>();
+        services.AddScoped<IComponentParser, QueryParametersParser>();
+        services.AddScoped<IComponentParser, RouteValuesParser>();
         services.AddScoped<RequestBuilder>();
 
         return services;

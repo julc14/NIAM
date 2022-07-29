@@ -1,15 +1,28 @@
+using Microsoft.ApplicationInsights.Extensibility;
 using MinimalEndpoints;
 using MinimalEndpoints.OpenApi;
 using NameItAfterMe.Application;
 using NameItAfterMe.Application.Abstractions;
 using NameItAfterMe.Infrastructure;
 using NameItAfterMe.Server.Services;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddAzureAppConfiguration(
     builder.Configuration.GetConnectionString("AppConfig"));
 
+builder.Host.UseSerilog((context, services, config) =>
+{
+    config.WriteTo.ApplicationInsights(
+        services.GetRequiredService<TelemetryConfiguration>(),
+        TelemetryConverter.Traces);
+
+    config.WriteTo.Async(x => x.Console(theme: AnsiConsoleTheme.Code));
+});
+
+builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddApplication();

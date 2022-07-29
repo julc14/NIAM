@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NameItAfterMe.Application.Abstractions;
-using NameItAfterMe.Application.Domain;
+﻿using MediatR;
+using NameItAfterMe.Application.UseCases.Exoplanets;
 
 namespace NameItAfterMe.Server.Services;
 
@@ -9,9 +8,7 @@ public class ExoplanetSyncronizationService : BackgroundService
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
     public ExoplanetSyncronizationService(IServiceScopeFactory serviceScopeFactory)
-    {
-        _serviceScopeFactory = serviceScopeFactory;
-    }
+        => _serviceScopeFactory = serviceScopeFactory;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -19,18 +16,8 @@ public class ExoplanetSyncronizationService : BackgroundService
         {
             await using (var scope = _serviceScopeFactory.CreateAsyncScope())
             {
-                var exoplanetWebApi = scope.ServiceProvider.GetRequiredService<IExoplanetApi>();
-                var db = scope.ServiceProvider.GetRequiredService<IExoplanetContext>();
-
-                var sourceExoplanets = await exoplanetWebApi.GetAllExoplanets();
-                var exoplanets = db.Set<Exoplanet>();
-
-                var newPlanets = sourceExoplanets.Except(
-                    await exoplanets.ToListAsync(), 
-                    new ExoplanetComparer());
-
-                await exoplanets.AddRangeAsync(newPlanets.ToList(), stoppingToken);
-                await db.SaveChangesAsync(stoppingToken);
+                var medaitr = scope.ServiceProvider.GetRequiredService<IMediator>();
+                await medaitr.Send(new SyncronizeExoplanetData(), stoppingToken);
             }
 
             await Task.Delay(TimeSpan.FromHours(12), stoppingToken);

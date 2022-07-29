@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace MinimalEndpoints.RequestBinding;
 
-public class ParsePropertiesFromRouteValues : IComponentParser
+public class RouteValuesParser : IComponentParser
 {
     /// <inheritdoc/>
     public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object propertyValue)

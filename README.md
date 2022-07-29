@@ -54,9 +54,7 @@ Let's give the ASP.Net core backend a way to automatically host the mediatr use 
 
 With a marker attribute (Endpoint) we can instruct asp.net to automaticlly generate the endpoint at startup. Now no controller is required.
 ```cs
-[Endpoint(
-    HttpMethods.Get,
-    Route = "Exoplanet/{PageNumber}/{PageSize}")]
+[Endpoint(Route = "Exoplanet/{PageNumber}/{PageSize}")]
 public class GetExoplanets : IRequest<IEnumerable<ExoplanetDto>> 
 {
     public int PageNumber { get; set; } = 1;
@@ -73,21 +71,21 @@ public class GetExoplanetHandler : IRequestHandler<GetExoplanets, IEnumerable<Ex
 
     public async Task<IEnumerable<ExoplanetDto>> Handle(GetExoplanets request, CancellationToken cancellationToken)
     {
-        var results = await _db
+        return await _db
             .Set<Exoplanet>()
             .OrderBy(x => x.Id)
             .Skip((request.PageNumber - 1) * request.PageSize)
             .Take(request.PageSize)
             .ProjectTo<ExoplanetDto>(_mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);
-
-        return new PagedResult<ExoplanetDto>(request.PageNumber, request.PageSize, results);
+            .ToPaginatedResult(request.PageNumber, request.PageSize, cancellationToken);
     }
 }
 ```
 
+### Goals
+
 - [x] Mediatr use cases with 'Endpoint' are automaticlly hosted by ASP.Net 
-- [ ] Mediatr requests are bound from query parameters, route parameters, and sometimes the request body.
+- [x] Mediatr requests are bound from query parameters, route parameters, and sometimes the request body.
 
 ## Azure DevOps (Free-Tier)
 
