@@ -26,7 +26,7 @@ internal class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
         var timer = new Stopwatch();
         timer.Start();
 
-        var response = await next().ConfigureAwait(false);
+        var response = await next();
 
         timer.Stop();
 

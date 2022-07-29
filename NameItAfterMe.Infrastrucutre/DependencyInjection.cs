@@ -42,8 +42,7 @@ public static class DependencyInjection
             .AddScoped<IExoplanetContext>(sp => sp.GetRequiredService<ExoplanetContext>())
 
             // add general infra.
-            .AddAutoMapper(e => e.AddMaps(typeof(DependencyInjection).Assembly))
-            .AddLogging(configure => configure.AddSerilog());
+            .AddAutoMapper(e => e.AddMaps(typeof(DependencyInjection).Assembly));
     }
 
     private static IServiceCollection SetHttpBaseAddress(

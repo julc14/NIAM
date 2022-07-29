@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace MinimalEndpoints.RequestBinding;
 
-internal class ParsePropertyFromQueryParameters : IComponentParser
+internal class QueryParametersParser : IComponentParser
 {
-    private readonly ILogger<ParsePropertyFromQueryParameters> _logger;
+    private readonly ILogger<QueryParametersParser> _logger;
 
-    public ParsePropertyFromQueryParameters(ILogger<ParsePropertyFromQueryParameters> logger) => _logger = logger;
+    public QueryParametersParser(ILogger<QueryParametersParser> logger) => _logger = logger;
 
     /// <inheritdoc/>
     public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object item)
