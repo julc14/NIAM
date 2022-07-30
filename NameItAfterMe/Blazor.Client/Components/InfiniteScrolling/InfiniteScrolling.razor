@@ -3,104 +3,104 @@
 
 @foreach (var item in _items)
 {
-	@ItemTemplate(item)
+    @ItemTemplate(item)
 }
 
 @if (_isLoading)
 {
-	@LoadingTemplate
+    @LoadingTemplate
 }
 
 <div @ref="_lastItemIndicator" style="height:1px" />
 
 @code {
-	private List<T> _items = new();
-	private bool _isLoading = false;
+    private List<T> _items = new();
+    private bool _isLoading = false;
 
-	private CancellationTokenSource? _loadItemsCts;
+    private CancellationTokenSource? _loadItemsCts;
 
-	private ElementReference _lastItemIndicator;
-	private DotNetObjectReference<InfiniteScrolling<T>>? _currentComponentReference;
+    private ElementReference _lastItemIndicator;
+    private DotNetObjectReference<InfiniteScrolling<T>>? _currentComponentReference;
 
-	private IJSObjectReference? _module;
-	private IJSObjectReference? _instance;
+    private IJSObjectReference? _module;
+    private IJSObjectReference? _instance;
 
-	[Inject] public IJSRuntime JsRuntime { get; set; } = null!;
+    [Inject] public IJSRuntime JsRuntime { get; set; } = null!;
 
-	[Parameter, EditorRequired]
-	public InfiniteScrollingItemsProviderRequestDelegate<T> ItemsProvider { get; set; } = null!;
+    [Parameter, EditorRequired]
+    public InfiniteScrollingItemsProviderRequestDelegate<T> ItemsProvider { get; set; } = null!;
 
-	[Parameter, EditorRequired]
-	public RenderFragment<T> ItemTemplate { get; set; } = null!;
+    [Parameter, EditorRequired]
+    public RenderFragment<T> ItemTemplate { get; set; } = null!;
 
-	[Parameter, EditorRequired]
-	public RenderFragment LoadingTemplate { get; set; } = null!;
+    [Parameter, EditorRequired]
+    public RenderFragment LoadingTemplate { get; set; } = null!;
 
-	[JSInvokable]
-	public async Task LoadMoreItems()
-	{
-		if (_isLoading)
-			return;
+    [JSInvokable]
+    public async Task LoadMoreItems()
+    {
+        if (_isLoading)
+            return;
 
-		_isLoading = true;
-		_loadItemsCts ??= new CancellationTokenSource();
+        _isLoading = true;
+        _loadItemsCts ??= new CancellationTokenSource();
 
-		// Allow the UI to display the loading indicator
-		StateHasChanged();
+        // Allow the UI to display the loading indicator
+        StateHasChanged();
 
-		try
-		{
-			var newItems = await ItemsProvider(new InfiniteScrollingItemsProviderRequest(_items.Count, _loadItemsCts.Token));
+        try
+        {
+            var newItems = await ItemsProvider(new InfiniteScrollingItemsProviderRequest(_items.Count, _loadItemsCts.Token));
 
-			if (!newItems.Any())
-			{
-				// if no items are returned assume we haved reached last item we could load
-				// dispose JS intersection observer
-				// this will not affect already-rendered items.
-				await DisposeAsync();
-			}
+            if (!newItems.Any())
+            {
+                // if no items are returned assume we haved reached last item we could load
+                // dispose JS intersection observer
+                // this will not affect already-rendered items.
+                await DisposeAsync();
+            }
 
-			_items.AddRange(newItems);
-		}
-		catch (OperationCanceledException oce) when (oce.CancellationToken == _loadItemsCts.Token)
-		{
-		}
-		finally
-		{
-			_isLoading = false;
-		}
+            _items.AddRange(newItems);
+        }
+        catch (OperationCanceledException oce) when (oce.CancellationToken == _loadItemsCts.Token)
+        {
+        }
+        finally
+        {
+            _isLoading = false;
+        }
 
-		// Display the new items and hide the loading indicator
-		StateHasChanged();
-	}
+        // Display the new items and hide the loading indicator
+        StateHasChanged();
+    }
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender)
-		{
-			_module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./infinite-scrolling.js");
-			_currentComponentReference = DotNetObjectReference.Create(this);
-			_instance = await _module.InvokeAsync<IJSObjectReference>("initialize", _lastItemIndicator, _currentComponentReference);
-		}
-	}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./infinite-scrolling.js");
+            _currentComponentReference = DotNetObjectReference.Create(this);
+            _instance = await _module.InvokeAsync<IJSObjectReference>("initialize", _lastItemIndicator, _currentComponentReference);
+        }
+    }
 
-	public async ValueTask DisposeAsync()
-	{
-		_loadItemsCts?.Dispose();
-		_loadItemsCts = null;
+    public async ValueTask DisposeAsync()
+    {
+        _loadItemsCts?.Dispose();
+        _loadItemsCts = null;
 
-		if (_instance != null)
-		{
-			await _instance.InvokeVoidAsync("dispose");
-			await _instance.DisposeAsync();
-			_instance = null;
-		}
+        if (_instance != null)
+        {
+            await _instance.InvokeVoidAsync("dispose");
+            await _instance.DisposeAsync();
+            _instance = null;
+        }
 
-		if (_module != null)
-		{
-			await _module.DisposeAsync();
-		}
+        if (_module != null)
+        {
+            await _module.DisposeAsync();
+        }
 
-		_currentComponentReference?.Dispose();
-	}
+        _currentComponentReference?.Dispose();
+    }
 }
