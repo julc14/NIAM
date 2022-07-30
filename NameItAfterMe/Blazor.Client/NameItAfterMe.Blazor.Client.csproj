@@ -20,4 +20,10 @@
     <ProjectReference Include="..\..\NameItAfterMe.Application\NameItAfterMe.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\infinite-scrolling.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
