@@ -6,7 +6,7 @@
 	@ItemTemplate(item)
 }
 
-@if (_loading)
+@if (_isLoading)
 {
 	@LoadingTemplate
 }
@@ -15,7 +15,7 @@
 
 @code {
 	private List<T> _items = new();
-	private bool _loading = false;
+	private bool _isLoading = false;
 
 	private CancellationTokenSource? _loadItemsCts;
 
@@ -39,10 +39,10 @@
 	[JSInvokable]
 	public async Task LoadMoreItems()
 	{
-		if (_loading)
+		if (_isLoading)
 			return;
 
-		_loading = true;
+		_isLoading = true;
 		_loadItemsCts ??= new CancellationTokenSource();
 
 		// Allow the UI to display the loading indicator
@@ -54,8 +54,8 @@
 
 			if (!newItems.Any())
 			{
-				// if no items are returned assume we haved reached last item
-				// terminate JS intersection observer
+				// if no items are returned assume we haved reached last item we could load
+				// dispose JS intersection observer
 				// this will not affect already-rendered items.
 				await DisposeAsync();
 			}
@@ -67,7 +67,7 @@
 		}
 		finally
 		{
-			_loading = false;
+			_isLoading = false;
 		}
 
 		// Display the new items and hide the loading indicator
@@ -86,14 +86,9 @@
 
 	public async ValueTask DisposeAsync()
 	{
-		// Cancel the current load items operation
-		if (_loadItemsCts != null)
-		{
-			_loadItemsCts.Dispose();
-			_loadItemsCts = null;
-		}
+		_loadItemsCts?.Dispose();
+		_loadItemsCts = null;
 
-		// Stop the IntersectionObserver
 		if (_instance != null)
 		{
 			await _instance.InvokeVoidAsync("dispose");
