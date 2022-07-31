@@ -10,7 +10,8 @@ internal class ImageHandler : IImageHandler
 
     public async Task<string> SaveAsync(string name, Stream content)
     {
-        static string GetDateTag() => DateTime.UtcNow.ToShortDateString().Replace("/", "-");
+        static string GetDateTag()
+            => DateTime.UtcNow.ToShortDateString().Replace("/", "-");
 
         var localName = name + "-" + GetDateTag() + ".jpg";
         var imagePath = Path.Join(_root, localName);

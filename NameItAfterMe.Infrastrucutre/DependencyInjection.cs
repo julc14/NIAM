@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NameItAfterMe.Application.Abstractions;
 using Refit;
-using Serilog;
 
 namespace NameItAfterMe.Infrastructure;
 
@@ -16,33 +15,26 @@ public static class DependencyInjection
 
         var settings = configuration.GetRequiredSection(nameof(ExoplanetSettings)).Get<ExoplanetSettings>();
 
-        return services
+        services
+        .AddRefitClient<IPictureOfTheDay>()
+        .AddHttpMessageHandler(() => new ApiKeyHandler(apiKey))
+        .SetHttpBaseAddress("https://api.nasa.gov")
 
-            // add endpoint to access NASA picture of the day
-            .AddRefitClient<IPictureOfTheDay>()
-            .AddHttpMessageHandler(() => new ApiKeyHandler(apiKey))
-            .SetHttpBaseAddress("https://api.nasa.gov")
+        .AddRefitClient<IExoplanetService>()
+        .SetHttpBaseAddress("https://exoplanetarchive.ipac.caltech.edu")
 
-            // add endpoint to acccess exoplanet repository.
-            .AddRefitClient<IExoplanetService>()
-            .SetHttpBaseAddress("https://exoplanetarchive.ipac.caltech.edu")
+        .AddTransient<IPictureOfTheDayRepository, PictureOfTheDayRepository>()
+        .AddTransient<IExoplanetApi, ExoplanetRepository>()
+        .AddTransient<IImageHandler, ImageHandler>()
 
-            // add respositories for application services.
-            // we could bind REFIT created infra services directly to the abstraction living in application layer
-            // however this would force application layer to depend upon REFIT
-            // Prefer to keep refit contained in the infra layer.
-            .AddTransient<IPictureOfTheDayRepository, PictureOfTheDayRepository>()
-            .AddTransient<IExoplanetApi, ExoplanetRepository>()
-            .AddTransient<IImageHandler, ImageHandler>()
+        .AddDbContext<ExoplanetContext>(options => options.UseCosmos(
+            $"AccountEndpoint={settings.AccountEndpoint};AccountKey={settings.AccountKey};",
+            databaseName: settings.Name))
+        .AddScoped<IExoplanetContext>(sp => sp.GetRequiredService<ExoplanetContext>())
 
-            // add cosmos
-            .AddDbContext<ExoplanetContext>(options => options.UseCosmos(
-                $"AccountEndpoint={settings.AccountEndpoint};AccountKey={settings.AccountKey};",
-                databaseName: settings.Name))
-            .AddScoped<IExoplanetContext>(sp => sp.GetRequiredService<ExoplanetContext>())
+        .AddAutoMapper(e => e.AddMaps(typeof(DependencyInjection).Assembly));
 
-            // add general infra.
-            .AddAutoMapper(e => e.AddMaps(typeof(DependencyInjection).Assembly));
+        return services;
     }
 
     private static IServiceCollection SetHttpBaseAddress(
