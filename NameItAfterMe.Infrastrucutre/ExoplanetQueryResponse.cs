@@ -9,4 +9,13 @@ public class ExoplanetQueryResponse
 
     [JsonPropertyName("pl_name")]
     public string? Name { get; set; }
+
+    [JsonPropertyName("hostname")]
+    public string? HostName { get; set; }
+
+    [JsonPropertyName("disc_year")]
+    public int? DiscoveryYear { get; set; }
+
+    [JsonPropertyName("discoverymethod")]
+    public string? DiscoveryMethod { get; set; }
 }

@@ -2,8 +2,8 @@
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using MinimalEndpoints;
-using NameItAfterMe.Application.Abstractions;
 using NameItAfterMe.Application.Domain;
+using NameItAfterMe.Application.Services;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets;
 
@@ -16,10 +16,10 @@ public class GetExoplanets : IRequest<IEnumerable<ExoplanetDto>>
 
 public class GetExoplanetHandler : IRequestHandler<GetExoplanets, IEnumerable<ExoplanetDto>>
 {
-    private readonly IExoplanetContext _db;
+    private readonly ExoplanetContext _db;
     private readonly IMapper _mapper;
 
-    public GetExoplanetHandler(IExoplanetContext db, IMapper mapper)
+    public GetExoplanetHandler(ExoplanetContext db, IMapper mapper)
         => (_db, _mapper) = (db, mapper);
 
     public async Task<IEnumerable<ExoplanetDto>> Handle(GetExoplanets request, CancellationToken cancellationToken)

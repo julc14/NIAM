@@ -6,4 +6,6 @@ public class Exoplanet
     public int Distance { get; set; }
     public string DistanceUnits { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
+    public string? ProvidedName { get; set; }
+    public string? HostName { get; set; }
 }
