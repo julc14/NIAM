@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NameItAfterMe.Application.Abstractions;
+using NameItAfterMe.Application.Services;
 using Refit;
 
 namespace NameItAfterMe.Infrastructure;
@@ -27,10 +28,16 @@ public static class DependencyInjection
         .AddTransient<IExoplanetApi, ExoplanetRepository>()
         .AddTransient<IImageHandler, ImageHandler>()
 
-        .AddDbContext<ExoplanetContext>(options => options.UseCosmos(
-            $"AccountEndpoint={settings.AccountEndpoint};AccountKey={settings.AccountKey};",
-            databaseName: settings.Name))
-        .AddScoped<IExoplanetContext>(sp => sp.GetRequiredService<ExoplanetContext>())
+        .AddDbContext<ExoplanetContext>(options =>
+        {
+            options.UseCosmos(
+                $"AccountEndpoint={settings.AccountEndpoint};AccountKey={settings.AccountKey};",
+                databaseName: settings.Name);
+
+            var builder = new ModelBuilder();
+            builder.ApplyConfigurationsFromAssembly(typeof(DependencyInjection).Assembly);
+            options.UseModel(builder.FinalizeModel());
+        })
 
         .AddAutoMapper(e => e.AddMaps(typeof(DependencyInjection).Assembly));
 

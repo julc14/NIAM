@@ -31,6 +31,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMinimalEndpointServices();
 builder.Services.AddHostedService<ExoplanetSyncronizationService>();
 
+builder.Services.Configure<BackgroundServiceOptions>(builder.Configuration);
+
 builder.Services.AddSwaggerGen(x => x.AddMinimalEndpointSupport());
 
 var app = builder.Build();
