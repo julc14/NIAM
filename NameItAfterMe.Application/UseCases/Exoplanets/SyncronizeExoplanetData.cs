@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using NameItAfterMe.Application.Abstractions;
-using NameItAfterMe.Application.Services;
+using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
+using NameItAfterMe.Infrastructure.Persistance;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets;
 
@@ -11,12 +11,12 @@ public class SyncronizeExoplanetData : IRequest
 
 public class SyncronizeExoplanetDataHandler : IRequestHandler<SyncronizeExoplanetData>
 {
-    private readonly IExoplanetApi _exoplanetApi;
+    private readonly IExoplanetService _exoplanetApi;
     private readonly ExoplanetContext _db;
     private readonly ILogger<SyncronizeExoplanetDataHandler> _logger;
 
     public SyncronizeExoplanetDataHandler(
-        IExoplanetApi exoplanetApi,
+        IExoplanetService exoplanetApi,
         ExoplanetContext db,
         ILogger<SyncronizeExoplanetDataHandler> logger)
             => (_exoplanetApi, _db, _logger) = (exoplanetApi, db, logger);

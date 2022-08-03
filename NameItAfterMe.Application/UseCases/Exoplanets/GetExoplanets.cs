@@ -3,7 +3,7 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
-using NameItAfterMe.Application.Services;
+using NameItAfterMe.Infrastructure.Persistance;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets;
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NameItAfterMe.Application.UseCases.Exoplanets;
 using NameItAfterMe.Application.UseCases.PictureOfTheDay;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -22,13 +23,10 @@ public class UseCaseIntegrationTests : IClassFixture<WebApplicationFactory<Progr
     [Fact]
     public async Task GetPictureOfTheDayStream_ReturnsStreamOfBitsNotEmpty()
     {
-        using var scope = CreateScope;
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var client = _host.CreateClient();
+        var soucePath = await client.GetFromJsonAsync<string>("PictureOfTheDay/SourcePath");
 
-        await mediator.Send(new GetPictureOfTheDaySourcePath());
-        
-
-        //todo needs fixed with an assert
+        Assert.NotEmpty(soucePath);
     }
 
     [Fact]

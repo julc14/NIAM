@@ -1,25 +1,30 @@
 ﻿using MediatR;
 using MinimalEndpoints;
-using NameItAfterMe.Application.Abstractions;
+using NameItAfterMe.Application.Infrastructure.Files;
+using NameItAfterMe.Application.Infrastructure.PictureOfTheDay;
 
 namespace NameItAfterMe.Application.UseCases.PictureOfTheDay;
 
 [Endpoint(Route = "PictureOfTheDay/SourcePath")]
 public class GetPictureOfTheDaySourcePath : IRequest<string>
 {
+    public bool PreferHd { get; set; } = true;
 }
 
 public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfTheDaySourcePath, string>
 {
+    private readonly HttpClient _httpClient;
     private readonly IImageHandler _imageHandler;
-    private readonly IPictureOfTheDayRepository _pictureOfTheDayRepository;
+    private readonly IPictureOfTheDayService _pictureOfTheDayService;
 
     public GetPictureOfTheDaySourcePathHandler(
+        HttpClient httpClient,
         IImageHandler imageHandler,
-        IPictureOfTheDayRepository pictureOfTheDayRepository)
+        IPictureOfTheDayService pictureOfTheDayService)
     {
+        _httpClient = httpClient;
         _imageHandler = imageHandler;
-        _pictureOfTheDayRepository = pictureOfTheDayRepository;
+        _pictureOfTheDayService = pictureOfTheDayService;
     }
 
     public async Task<string> Handle(GetPictureOfTheDaySourcePath request, CancellationToken cancellationToken)
@@ -29,14 +34,27 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
             return filePath;
         }
 
-        var picOfDay = await _pictureOfTheDayRepository.GetPictureOfTheDay();
+        var pod = await _pictureOfTheDayService.Get();
 
-        if (picOfDay.Content is null)
-        {
+        var url = request.PreferHd && !string.IsNullOrEmpty(pod.HdUrl)
+            ? pod.HdUrl
+            : pod.Url;
+
+        if (string.IsNullOrEmpty(url))
             return "Images/DefaultPictureOfTheDay.jpg";
-        }
 
-        filePath = await _imageHandler.SaveAsync("NasaPictureOfTheDay", picOfDay.Content);
+        var response = await _httpClient.GetAsync(url, cancellationToken);
+        var mediaType = response.Content.Headers?.ContentType?.MediaType;
+
+        var contentTypeIsImage =
+            mediaType?.Contains("image", StringComparison.InvariantCultureIgnoreCase) ?? false;
+
+        if (!contentTypeIsImage)
+            return "Images/DefaultPictureOfTheDay.jpg";
+
+        var pictureOfTheDay = await _httpClient.GetStreamAsync(url);
+
+        filePath = await _imageHandler.SaveAsync("NasaPictureOfTheDay", pictureOfTheDay);
         return filePath;
     }
 }

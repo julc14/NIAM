@@ -2,9 +2,9 @@
 
 <PageTitle>Name It After Me!</PageTitle>
 
-<MudContainer MaxWidth=MaxWidth.Medium>
+<MudContainer MaxWidth=MaxWidth.Large>
     <MudGrid>
-        <MudItem xs="6">
+        <MudItem xs="3">
             <MudCard>
                 <MudCardContent>
                     <MudText Typo=Typo.body1>Total Exoplanets: @_totalExoplanets</MudText>
@@ -13,12 +13,19 @@
             </MudCard>
         </MudItem>
         <MudItem xs="6">
+            @if (_exoplanets.Any())
+            {
+                <MudCarousel Style="height:450px;" ItemsSource=@_exoplanets Context="planet">
+                    <ItemTemplate>
+                        <PlanetCard Name=planet.Name />
+                    </ItemTemplate>
+                </MudCarousel>
+            }
+        </MudItem>
+        <MudItem xs="3">
             <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
         </MudItem>
-        <MudItem xs="6">
-            <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
-        </MudItem>
-        <MudItem xs="6">
+        <MudItem xs="3">
             <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
         </MudItem>
     </MudGrid>
@@ -29,11 +36,19 @@
     private int _totalExoplanets;
     private int _namedExoplanets;
 
+    private IEnumerable<ExoplanetDto> _exoplanets = Enumerable.Empty<ExoplanetDto>();
+
     [Inject] HttpClient HttpClient { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
         _namedExoplanets = await HttpClient.GetFromJsonAsync<int>("Exoplanet/Count?excludeunnamedexoplanets=true");
         _totalExoplanets = await HttpClient.GetFromJsonAsync<int>("Exoplanet/Count");
+
+        var rng = Random.Shared.Next(1, 10);
+
+        _exoplanets = await HttpClient
+            .GetFromJsonAsync<IEnumerable<ExoplanetDto>>($"Exoplanet/{rng}/6") 
+            ?? Enumerable.Empty<ExoplanetDto>();
     }
 }

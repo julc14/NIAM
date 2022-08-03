@@ -1,4 +1,4 @@
-﻿namespace NameItAfterMe.Infrastructure
+﻿namespace NameItAfterMe.Application.Infrastructure.Nasa.PictureOfTheDay
 {
     /// <summary>
     ///     Handler to add append an API key to web requests.
