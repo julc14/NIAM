@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NameItAfterMe.Infrastructure;
+namespace NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
 
 public class ExoplanetQueryResponse
 {

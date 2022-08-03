@@ -3,7 +3,6 @@ using MinimalEndpoints;
 using MinimalEndpoints.OpenApi;
 using NameItAfterMe.Application;
 using NameItAfterMe.Application.Abstractions;
-using NameItAfterMe.Infrastructure;
 using NameItAfterMe.Server.Services;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -25,8 +24,7 @@ builder.Host.UseSerilog((context, services, config) =>
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMinimalEndpointServices();
 builder.Services.AddHostedService<ExoplanetSyncronizationService>();

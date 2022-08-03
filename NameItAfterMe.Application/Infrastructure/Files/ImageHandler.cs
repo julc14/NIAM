@@ -1,7 +1,6 @@
-﻿using NameItAfterMe.Application.Abstractions;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NameItAfterMe.Infrastructure;
+namespace NameItAfterMe.Application.Infrastructure.Files;
 
 internal class ImageHandler : IImageHandler
 {

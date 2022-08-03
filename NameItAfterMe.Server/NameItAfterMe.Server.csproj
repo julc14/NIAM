@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MinimalEndpoints\MinimalEndpoints.csproj" />
-    <ProjectReference Include="..\NameItAfterMe.Infrastrucutre\NameItAfterMe.Infrastructure.csproj" />
     <ProjectReference Include="..\NameItAfterMe\Blazor.Client\NameItAfterMe.Blazor.Client.csproj" />
   </ItemGroup>
 

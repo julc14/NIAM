@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace NameItAfterMe.Application.Abstractions;
+namespace NameItAfterMe.Application.Infrastructure.Files;
 
 public interface IImageHandler
 {
