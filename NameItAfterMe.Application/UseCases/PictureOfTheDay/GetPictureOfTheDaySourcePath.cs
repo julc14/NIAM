@@ -17,21 +17,21 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
     private readonly IImageHandler _imageHandler;
     private readonly IPictureOfTheDayService _pictureOfTheDayService;
 
+    private const string DefaultPictureOfTheDayPath = "Images/DefaultPictureOfTheDay.jpg";
+    private const string BaseImageTitle = "NasaPictureOfTheDay";
+
     public GetPictureOfTheDaySourcePathHandler(
         HttpClient httpClient,
         IImageHandler imageHandler,
         IPictureOfTheDayService pictureOfTheDayService)
-    {
-        _httpClient = httpClient;
-        _imageHandler = imageHandler;
-        _pictureOfTheDayService = pictureOfTheDayService;
-    }
+            => (_httpClient, _imageHandler, _pictureOfTheDayService)
+            = (httpClient, imageHandler, pictureOfTheDayService);
 
     public async Task<string> Handle(GetPictureOfTheDaySourcePath request, CancellationToken cancellationToken)
     {
-        if (_imageHandler.TrySearch("NasaPictureOfTheDay", out var filePath))
+        if (_imageHandler.TrySearch(BaseImageTitle, out var image))
         {
-            return filePath;
+            return image.LocalRootPath;
         }
 
         var pod = await _pictureOfTheDayService.Get();
@@ -41,7 +41,9 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
             : pod.Url;
 
         if (string.IsNullOrEmpty(url))
-            return "Images/DefaultPictureOfTheDay.jpg";
+        {
+            return DefaultPictureOfTheDayPath;
+        }
 
         var response = await _httpClient.GetAsync(url, cancellationToken);
         var mediaType = response.Content.Headers?.ContentType?.MediaType;
@@ -49,12 +51,14 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
         var contentTypeIsImage =
             mediaType?.Contains("image", StringComparison.InvariantCultureIgnoreCase) ?? false;
 
+        // sometimes pic of day is actually a video
         if (!contentTypeIsImage)
-            return "Images/DefaultPictureOfTheDay.jpg";
+        {
+            return DefaultPictureOfTheDayPath;
+        }
 
-        var pictureOfTheDay = await _httpClient.GetStreamAsync(url);
+        image = await _imageHandler.SaveAsync(BaseImageTitle, () => _httpClient.GetStreamAsync(url));
 
-        filePath = await _imageHandler.SaveAsync("NasaPictureOfTheDay", pictureOfTheDay);
-        return filePath;
+        return image.LocalRootPath;
     }
 }

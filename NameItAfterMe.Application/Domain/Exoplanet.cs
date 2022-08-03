@@ -8,4 +8,6 @@ public class Exoplanet
     public string Name { get; set; } = string.Empty;
     public string? ProvidedName { get; set; }
     public string? HostName { get; set; }
+
+    public bool IsNamed() => HostName is not null;
 }

@@ -21,8 +21,6 @@ public class GetExoplanetCountHandler : IRequestHandler<GetExoplanetCount, int>
 
     public async Task<int> Handle(GetExoplanetCount request, CancellationToken cancellationToken)
     {
-        _db.Database.EnsureCreated();
-
         var exoplanets = _db.Set<Exoplanet>();
 
         if (request.ExcludeUnnamedExoplanets)

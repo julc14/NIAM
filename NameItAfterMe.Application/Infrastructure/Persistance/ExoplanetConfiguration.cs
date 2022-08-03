@@ -14,7 +14,6 @@ internal class ExoplanetConfiguration : IEntityTypeConfiguration<Exoplanet>
         builder.HasKey(x => x.Id);
         builder.HasPartitionKey(x => x.Id);
         builder.Property(x => x.Distance);
-        // todo revise
         builder.Property(x => x.DistanceUnits);
         builder.Property(x => x.HostName);
         builder.Property(x => x.Name);
