@@ -47,13 +47,15 @@ public static class DependencyInjection
                     databaseName: settings.Name);
             });
 
-        services.AddScoped(sp => ActivatorUtilities.CreateInstance<IRequestHandler<GetPictureOfTheDaySourcePath, string>>(
-            sp,
-            sp.GetRequiredService<PictureOfTheDayImageHandler>())
+        services.AddScoped<IRequestHandler<GetPictureOfTheDaySourcePath, string>>(sp =>
+            ActivatorUtilities.CreateInstance<GetPictureOfTheDaySourcePathHandler>(
+                sp,
+                sp.GetRequiredService<PictureOfTheDayImageHandler>())
         );
 
         return services;
     }
+    GetPictureOfTheDaySourcePathHandler
 
     private static IServiceCollection SetHttpBaseAddress(
         this IHttpClientBuilder builder,
