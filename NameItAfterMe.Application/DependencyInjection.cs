@@ -8,6 +8,7 @@ using NameItAfterMe.Application.Infrastructure.Files;
 using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
 using NameItAfterMe.Application.Infrastructure.Nasa.PictureOfTheDay;
 using NameItAfterMe.Application.Infrastructure.PictureOfTheDay;
+using NameItAfterMe.Application.UseCases.PictureOfTheDay;
 using NameItAfterMe.Infrastructure.Persistance;
 using Refit;
 
@@ -37,6 +38,7 @@ public static class DependencyInjection
             .SetHttpBaseAddress("https://exoplanetarchive.ipac.caltech.edu")
 
             .AddTransient<IImageHandler, ImageHandler>()
+            .AddTransient<PictureOfTheDayImageHandler>()
 
             .AddDbContext<ExoplanetContext>(options =>
             {
@@ -44,6 +46,11 @@ public static class DependencyInjection
                     $"AccountEndpoint={settings.AccountEndpoint};AccountKey={settings.AccountKey};",
                     databaseName: settings.Name);
             });
+
+        services.AddScoped(sp => ActivatorUtilities.CreateInstance<IRequestHandler<GetPictureOfTheDaySourcePath, string>>(
+            sp,
+            sp.GetRequiredService<PictureOfTheDayImageHandler>())
+        );
 
         return services;
     }

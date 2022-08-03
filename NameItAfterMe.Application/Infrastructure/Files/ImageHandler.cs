@@ -2,44 +2,46 @@
 
 namespace NameItAfterMe.Application.Infrastructure.Files;
 
+// TODO: Writing to disk is not great for clould-based hosting
+// switch to blob storage later
 internal class ImageHandler : IImageHandler
 {
     private readonly string _root = "wwwroot/Images";
-    private readonly TimeSpan _imageExpiresAfter = TimeSpan.FromHours(24);
 
-    public async Task<string> SaveAsync(string name, Stream content)
+    /// <inheritdoc/>
+    public bool TrySearch(string fileName, [MaybeNullWhen(false)] out ImageMetadata image)
     {
-        static string GetDateTag()
-            => DateTime.UtcNow.ToShortDateString().Replace("/", "-");
-
-        var localName = name + "-" + GetDateTag() + ".jpg";
-        var imagePath = Path.Join(_root, localName);
-
-        var fileStream = new FileStream(imagePath, FileMode.Create);
-        await content.CopyToAsync(fileStream);
-
-        return "Images/" + localName;
-    }
-
-    public bool TrySearch(string fileName, [MaybeNullWhen(false)] out string path)
-    {
-        path = null;
-
         var fileSearch =
             from filePath in Directory.EnumerateFiles(_root, $"*{fileName}*", SearchOption.TopDirectoryOnly)
             let fileInfo = new FileInfo(filePath)
             orderby fileInfo.LastWriteTimeUtc descending
-            select fileInfo;
+            select new ImageMetadata(
+                fileInfo.Name,
+                fileInfo.FullName,
+                DateOnly.FromDateTime(fileInfo.LastAccessTimeUtc),
+                Path.Join("Images", fileInfo.Name));
 
-        var firstMatchingFile = fileSearch.FirstOrDefault();
+        image = fileSearch.FirstOrDefault();
 
-        if (firstMatchingFile is null
-            || DateTime.UtcNow.Subtract(firstMatchingFile.LastAccessTimeUtc) > _imageExpiresAfter)
-        {
-            return false;
-        }
-
-        path = "Images/" + firstMatchingFile.Name;
-        return true;
+        return image is not null;
     }
+
+    /// <inheritdoc/>
+    public async Task<ImageMetadata> SaveAsync(string name, Func<Task<Stream>> getStreamContent)
+    {
+        var uniqueName = GetUniqueFileName(name);
+        var imagePath = Path.Join(_root, uniqueName);
+
+        using var fileStream = new FileStream(imagePath, FileMode.Create);
+        using var stream = await getStreamContent();
+        await stream.CopyToAsync(fileStream);
+
+        return new ImageMetadata(
+            uniqueName,
+            "",
+            DateOnly.FromDateTime(DateTime.UtcNow),
+            Path.Join("Images", uniqueName));
+    }
+
+    private static string GetUniqueFileName(string name) => name + Guid.NewGuid() + ".jpg";
 }

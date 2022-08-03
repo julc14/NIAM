@@ -2,7 +2,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using MinimalEndpoints;
 using MinimalEndpoints.OpenApi;
 using NameItAfterMe.Application;
-using NameItAfterMe.Application.Abstractions;
+using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Server.Services;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -58,7 +58,7 @@ app.UseRouting();
 app.UseEndpoints(builder =>
 {
     builder.MapSwagger();
-    builder.MapUseCasesFromAssembly(typeof(IExoplanetApi).Assembly);
+    builder.MapUseCasesFromAssembly(typeof(Exoplanet).Assembly);
 });
 
 app.MapRazorPages();
