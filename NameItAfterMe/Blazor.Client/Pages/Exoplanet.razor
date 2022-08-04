@@ -4,7 +4,7 @@
     <InfiniteScrolling ItemsProvider=@GetExoplanets>
         <ItemTemplate Context="item">
             <MudContainer MaxWidth="MaxWidth.Small" Class="pa-2">
-                <PlanetCard Name=@item.Name />
+                <PlanetCard Exoplanet=@item />
             </MudContainer>
         </ItemTemplate>
         <LoadingTemplate>

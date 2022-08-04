@@ -8,7 +8,6 @@ using NameItAfterMe.Application.Infrastructure.Files;
 using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
 using NameItAfterMe.Application.Infrastructure.Nasa.PictureOfTheDay;
 using NameItAfterMe.Application.Infrastructure.PictureOfTheDay;
-using NameItAfterMe.Application.UseCases.PictureOfTheDay;
 using NameItAfterMe.Infrastructure.Persistance;
 using Refit;
 
@@ -18,10 +17,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
+        var assembly = typeof(DependencyInjection).Assembly;
+
         services
-            .AddMediatR(typeof(DependencyInjection).Assembly)
-            .AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly)
-            .AddAutoMapper(c => c.AddMaps(typeof(DependencyInjection).Assembly))
+            .AddMediatR(assembly)
+            .AddValidatorsFromAssembly(assembly)
+            .AddAutoMapper(c => c.AddMaps(assembly))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
@@ -38,7 +39,6 @@ public static class DependencyInjection
             .SetHttpBaseAddress("https://exoplanetarchive.ipac.caltech.edu")
 
             .AddTransient<IImageHandler, ImageHandler>()
-            .AddTransient<PictureOfTheDayImageHandler>()
 
             .AddDbContext<ExoplanetContext>(options =>
             {
@@ -47,15 +47,8 @@ public static class DependencyInjection
                     databaseName: settings.Name);
             });
 
-        services.AddScoped<IRequestHandler<GetPictureOfTheDaySourcePath, string>>(sp =>
-            ActivatorUtilities.CreateInstance<GetPictureOfTheDaySourcePathHandler>(
-                sp,
-                sp.GetRequiredService<PictureOfTheDayImageHandler>())
-        );
-
         return services;
     }
-    GetPictureOfTheDaySourcePathHandler
 
     private static IServiceCollection SetHttpBaseAddress(
         this IHttpClientBuilder builder,

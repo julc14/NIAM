@@ -36,5 +36,9 @@
     <ProjectReference Include="..\NameItAfterMe\Blazor.Client\NameItAfterMe.Blazor.Client.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\Exoplanet\" />
+  </ItemGroup>
+
 
 </Project>

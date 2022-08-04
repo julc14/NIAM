@@ -1,35 +1,38 @@
 ﻿<MudCard Outlined=@true>
-    <PlanetCardHeader Name=@Name />
-    <MudCardMedia Image="Images/Star1.jpeg" Height="200" />
+    <PlanetCardHeader Name=@Exoplanet.Name />
+    <MudCardMedia Image="@_imagePath" Height="200" />
     <MudCardContent>
         <MudText Typo="Typo.body2">This photo was taken in a small village in Istra Croatia.</MudText>
     </MudCardContent>
     <PlanetCardActions OnSaveClick="onSaveClick" />
 </MudCard>
 
-<MudOverlay @bind-Visible="isVisible" DarkBackground="true" LightBackground="true" >
-    <MudGrid>
-        <MudItem xs=12 >
-            <MudPaper Outlined="true" Class="pa-16 ma-2" MinWidth="1500px">
-                <MudForm @ref="form" >
-                    <MudTextField T="string" Label="FirstName" Required="true" RequiredError="First name is required!"/>
-                    <MudTextField T="string" Label="LastName" Required="false" AdornmentText="Optional" />            
-                </MudForm>   
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
-</MudOverlay>
+<NamePlanetOverlay 
+    Exoplanet=@Exoplanet 
+    PlanetImagePath=@_imagePath 
+    IsVisable=@_isVisable />
 
 @code {
 
-    [Parameter, EditorRequired] public string Name { get; set; } = null!;
+    [Inject] HttpClient HttpClient { get; set; } = null!;
 
-    private bool isVisible = false;
+    [Parameter, EditorRequired] public ExoplanetDto Exoplanet { get; set; } = null!;
+
+    [Parameter] public EventCallback OnSave { get; set; }
+
+    private string? _imagePath;
+    private string? _name;
+    private bool _isVisable;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // ask server for random image path.
+        _imagePath = await HttpClient.GetFromJsonAsync<string>("Exoplanet/ImagePath");
+    }
 
     private void onSaveClick()
     {
-        isVisible = true;
+        _isVisable = true;
+        OnSave.InvokeAsync();
     }
-
-    MudForm form;
 }

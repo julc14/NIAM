@@ -29,7 +29,8 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
 
     public async Task<string> Handle(GetPictureOfTheDaySourcePath request, CancellationToken cancellationToken)
     {
-        if (_imageHandler.TrySearch(BaseImageTitle, out var image))
+        if (_imageHandler.TrySearch(BaseImageTitle, out var image)
+            && DateTime.UtcNow.Day == image.DownloadDate.Day)
         {
             return image.LocalRootPath;
         }

@@ -4,37 +4,72 @@
 
 <MudContainer MaxWidth=MaxWidth.Large>
     <MudGrid>
-        <MudItem xs="3">
+        <MudItem xs="12">
+            <MudCard Outlined=@true>
+                <MudCardContent>
+                    <MudText Typo=Typo.h3 Align=Align.Center>Name It After Me!</MudText>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="6">
             <MudCard>
                 <MudCardContent>
                     <MudText Typo=Typo.body1>Total Exoplanets: @_totalExoplanets</MudText>
                     <MudText Typo=Typo.body1>Named Exoplanets: @_namedExoplanets</MudText>
                 </MudCardContent>
             </MudCard>
-        </MudItem>
-        <MudItem xs="6">
+
+            <div style="height:230px"></div>
+
             @if (_exoplanets.Any())
             {
-                <MudCarousel Style="height:450px;" ItemsSource=@_exoplanets Context="planet">
+                <MudCarousel Style="height:450px;clip-path:initial" ItemsSource=@_exoplanets Context="planet" AutoCycle=@_carouselRotating>
                     <ItemTemplate>
-                        <PlanetCard Name=planet.Name />
+                        <PlanetCard Exoplanet=@planet OnSave="() => SetCarouselRotating(false)"/>
                     </ItemTemplate>
                 </MudCarousel>
             }
         </MudItem>
-        <MudItem xs="3">
-            <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
-        </MudItem>
-        <MudItem xs="3">
-            <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
+        <MudItem xs="6">
+            <MudCard Style="width:min-content; margin:auto;">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudIcon Color="Color.Dark"
+                                 Icon="@Icons.Material.Filled.RocketLaunch"
+                                 Size="Size.Large" />
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">Nasa's Picture Of The Day</MudText>
+                        <MudText Typo="Typo.caption">@DateTime.Now.ToShortDateString()</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Download"
+                                       Color="Color.Default"
+                                       Href="@imagePath" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+
+                @if (@imagePath is not null)
+                {
+                    <MudImage Style="display:flex; margin:auto; padding:10px"
+                          Src=@imagePath
+                          Class="rounded-lg"
+                          ObjectFit="ObjectFit.Contain"
+                          Height="630" />
+                }
+            </MudCard>
         </MudItem>
     </MudGrid>
 </MudContainer>
 
-@code 
+@code
 {
+    private bool _carouselRotating = true;
+
     private int _totalExoplanets;
     private int _namedExoplanets;
+
+    private string? imagePath;
 
     private IEnumerable<ExoplanetDto> _exoplanets = Enumerable.Empty<ExoplanetDto>();
 
@@ -48,7 +83,14 @@
         var rng = Random.Shared.Next(1, 10);
 
         _exoplanets = await HttpClient
-            .GetFromJsonAsync<IEnumerable<ExoplanetDto>>($"Exoplanet/{rng}/6") 
+            .GetFromJsonAsync<IEnumerable<ExoplanetDto>>($"Exoplanet/{rng}/6")
             ?? Enumerable.Empty<ExoplanetDto>();
+
+        imagePath = await HttpClient.GetFromJsonAsync<string>("PictureOfTheDay/SourcePath");
+    }
+
+    private void SetCarouselRotating(bool shouldRotate)
+    {
+        _carouselRotating = shouldRotate;
     }
 }
