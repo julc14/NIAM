@@ -5,6 +5,11 @@ namespace NameItAfterMe.Application.Infrastructure.Files;
 public interface IImageHandler
 {
     /// <summary>
+    ///     The local folder to search. Defaults to 'Images'.
+    /// </summary>
+    string LocalFolder { get; set; }
+
+    /// <summary>
     ///     Persist the content stream to some storage mechanism.
     /// </summary>
     /// <param name="fileIdentifier">

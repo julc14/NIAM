@@ -1,0 +1,87 @@
+﻿<MudOverlay @bind-Visible="IsVisable" DarkBackground="true" ZIndex="9999">
+    <MudTabs Outlined="true"
+             Position="@Position.Left" 
+             Rounded="true" 
+             Border="true"
+             ApplyEffectsToContainer="true" 
+             Class="mt-8" 
+             TabPanelClass="pa-3">
+        <MudTabPanel Text="Exoplanet Details">
+            <MudPaper Height="@Height" Width="@Width" Class="pa-6">
+                <MudStack>
+                    <MudPaper Elevation="PaperElevation" Class="pa-4">
+                        <MudStack Row="true">
+
+                            <MudAvatar Image="@PlanetImagePath" Size="Size.Large" />
+
+                            <MudStack Justify="Justify.Center" Spacing="ContentSpacing">
+                                <MudText Typo="Typo.body1">Exoplanet</MudText>
+                                <MudText Typo="Typo.body2">@Exoplanet.Name</MudText>
+                            </MudStack>
+
+                        </MudStack>
+                    </MudPaper>
+                    <MudPaper Elevation="PaperElevation" Class="pa-4">
+                        <MudStack Row="true">
+
+                            <MudAvatar Image="/Images/Star1.jpeg" Size="Size.Large" />
+
+                            <MudStack Justify="Justify.Center" Spacing="ContentSpacing">
+                                <MudText Typo="Typo.body1">Star's Name</MudText>
+                                <MudText Typo="Typo.body2">@Exoplanet.HostName</MudText>
+                            </MudStack>
+
+                        </MudStack>
+                    </MudPaper>
+                    <MudPaper Elevation="PaperElevation" Class="pa-4">
+                        <MudStack Row="true">
+
+                            <MudStack Justify="Justify.Center" Spacing="ContentSpacing">
+                                <MudText Typo="Typo.body1">Distance From Earth</MudText>
+                                <MudText Typo="Typo.body2">@Exoplanet.Distance Parsecs</MudText>
+                            </MudStack>
+
+                        </MudStack>
+                    </MudPaper>
+                </MudStack>
+            </MudPaper>
+        </MudTabPanel>
+        <MudTabPanel Text="Naming Schemes">
+            <MudPaper Height="@Height" Width="@Width" Class="pa-6">
+                <MudForm>
+                    <MudTextField T="string" Label="Your Name" Required="true" TextChanged=@OnNameChange />
+                </MudForm>
+
+                @if (@_name is not null)
+                {
+                    <MudText Typo="Typo.body1">New Name</MudText>
+                    <MudText Typo="Typo.body2">@_name</MudText>
+                }
+
+            </MudPaper>
+        </MudTabPanel>
+
+    </MudTabs>
+</MudOverlay>
+
+@code {
+    [Parameter, EditorRequired] public string PlanetImagePath { get; set; } = null!;
+    [Parameter, EditorRequired] public ExoplanetDto Exoplanet { get; set; } = null!;
+
+    [Parameter] public bool IsVisable { get; set; }
+
+    [Parameter] public int ContentSpacing { get; set; }
+    [Parameter] public int PaperElevation { get; set; } = 5;
+
+    [Parameter] public string Height { get; set; } = "300px";
+    [Parameter] public string Width { get; set; } = "500px";
+
+
+    private string? _name; 
+
+    private void OnNameChange(string currentValue)
+    {
+        _name = currentValue;
+        StateHasChanged();
+    }
+}
