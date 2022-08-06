@@ -1,4 +1,4 @@
-﻿<MudOverlay @bind-Visible="IsVisable" DarkBackground="true" ZIndex="9999">
+﻿<MudOverlay @bind-Visible="IsVisable" DarkBackground="true">
     <MudTabs Outlined="true"
              Position="@Position.Left" 
              Rounded="true" 
@@ -9,7 +9,7 @@
         <MudTabPanel Text="Exoplanet Details">
             <MudPaper Height="@Height" Width="@Width" Class="pa-6">
                 <MudStack>
-                    <MudPaper Elevation="PaperElevation" Class="pa-4">
+                    <MudPaper Elevation="@PaperElevation" Class="pa-4">
                         <MudStack Row="true">
 
                             <MudAvatar Image="@PlanetImagePath" Size="Size.Large" />
@@ -21,7 +21,7 @@
 
                         </MudStack>
                     </MudPaper>
-                    <MudPaper Elevation="PaperElevation" Class="pa-4">
+                    <MudPaper Elevation="@PaperElevation" Class="pa-4">
                         <MudStack Row="true">
 
                             <MudAvatar Image="/Images/Star1.jpeg" Size="Size.Large" />
@@ -33,7 +33,7 @@
 
                         </MudStack>
                     </MudPaper>
-                    <MudPaper Elevation="PaperElevation" Class="pa-4">
+                    <MudPaper Elevation="@PaperElevation" Class="pa-4">
                         <MudStack Row="true">
 
                             <MudStack Justify="Justify.Center" Spacing="ContentSpacing">
@@ -48,9 +48,32 @@
         </MudTabPanel>
         <MudTabPanel Text="Naming Schemes">
             <MudPaper Height="@Height" Width="@Width" Class="pa-6">
-                <MudForm>
-                    <MudTextField T="string" Label="Your Name" Required="true" TextChanged=@OnNameChange />
-                </MudForm>
+
+                <MudStack Row="true">
+                    <MudForm>
+                        <MudTextField T="string" Label="Your Name" Required="true" TextChanged=@OnNameChange />
+                    </MudForm>
+
+                    <MudRadioGroup Style="padding=6px" @bind-SelectedOption="@_scheme" >
+                        
+                        <div style="overflow:scroll;max-height:300px;sc">
+
+  
+                             <MudStack Spacing=0>
+
+                            @foreach (var scheme in Enum.GetValues<NamingScheme>())
+                            {
+                                 <MudRadio Color="Color.Primary" Option="@scheme">@scheme</MudRadio>
+                            }
+
+                            </MudStack>
+
+                        </div>
+
+                    </MudRadioGroup>
+
+
+                </MudStack>
 
                 @if (@_name is not null)
                 {
@@ -73,15 +96,27 @@
     [Parameter] public int ContentSpacing { get; set; }
     [Parameter] public int PaperElevation { get; set; } = 5;
 
-    [Parameter] public string Height { get; set; } = "300px";
+    [Parameter] public string Height { get; set; } = "350px";
     [Parameter] public string Width { get; set; } = "500px";
 
-
-    private string? _name; 
+    private string? _name;
+    private NamingScheme _scheme;
 
     private void OnNameChange(string currentValue)
     {
         _name = currentValue;
         StateHasChanged();
+    }
+
+    private enum NamingScheme
+    {
+        Endeavor,
+        Exchange,
+        Razor,
+        Creed,
+        Hazard,
+        Horizon,
+        Outcast,
+        Odyssey
     }
 }
