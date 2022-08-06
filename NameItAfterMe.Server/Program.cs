@@ -3,6 +3,7 @@ using MinimalEndpoints;
 using MinimalEndpoints.OpenApi;
 using NameItAfterMe.Application;
 using NameItAfterMe.Application.Domain;
+using NameItAfterMe.Server;
 using NameItAfterMe.Server.Services;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -34,6 +35,8 @@ builder.Services.Configure<BackgroundServiceOptions>(builder.Configuration);
 builder.Services.AddSwaggerGen(x => x.AddMinimalEndpointSupport());
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

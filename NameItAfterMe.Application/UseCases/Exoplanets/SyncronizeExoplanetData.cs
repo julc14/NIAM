@@ -13,13 +13,11 @@ public class SyncronizeExoplanetDataHandler : IRequestHandler<SyncronizeExoplane
 {
     private readonly IExoplanetService _exoplanetApi;
     private readonly ExoplanetContext _db;
-    private readonly ILogger<SyncronizeExoplanetDataHandler> _logger;
 
     public SyncronizeExoplanetDataHandler(
         IExoplanetService exoplanetApi,
-        ExoplanetContext db,
-        ILogger<SyncronizeExoplanetDataHandler> logger)
-            => (_exoplanetApi, _db, _logger) = (exoplanetApi, db, logger);
+        ExoplanetContext db)
+            => (_exoplanetApi, _db) = (exoplanetApi, db);
 
     public async Task<Unit> Handle(SyncronizeExoplanetData request, CancellationToken cancellationToken)
     {

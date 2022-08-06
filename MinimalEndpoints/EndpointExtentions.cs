@@ -11,8 +11,6 @@ namespace MinimalEndpoints;
 
 public static class EndpointExtentions
 {
-    private const int ValidationErrorCode = 422;
-
     /// <summary>
     ///     Automaticlly host mediatr request handlers from the given assembly that contain an Endpoint marker.
     /// </summary>
@@ -31,16 +29,31 @@ public static class EndpointExtentions
     {
         foreach (var endpoint in ScanForEndpoints(assembly))
         {
-            // it would be better to let ASP.net handle the web request => medaitr request binding
-            // This would take advantage of existing and familiar systems (and lead to openAPI working as expected without workarounds)
-            // intead we are creating a class (RequestBuilder) to do it manually
-            // Using asp.net binding would require implementing a Bind/Parse for each medaitr request type.
-            // Forcing each mediatr request type to implement one of these methods is not realy "minimal" so not an option.
-            // todo: investigate source generators to create these methods as an alternative to below
             async Task HandleEndpointAction(HttpContext context, IMediator mediatr, RequestBuilder mediatrRequestBuilder)
             {
+                // there are better ways to hanlder asp.net request => mediatr request binding
+                // ie... IParameter<T> DI which would allow customization of binding by request type if desired
+                // however dotnet 7 will fix this akwardness completly with [FromParameters] attribute so leave it as is for now
                 var request = mediatrRequestBuilder.Build(endpoint.RequestType, context);
-                await ExecuteMediatrUseCase(context, mediatr, request, endpoint.ContentType);
+
+                var content = await mediatr.Send(request, cancellationToken: context.RequestAborted);
+
+                switch (content)
+                {
+                    case Stream streamedResponse:
+                        context.Response.ContentType =
+                            endpoint.ContentType ?? context.Response.ContentType;
+
+                        await streamedResponse.CopyToAsync(context.Response.Body, context.RequestAborted);
+                        await streamedResponse.DisposeAsync();
+
+                        return;
+
+                    // Unit type is fake void from mediatr. Only write if not unit.
+                    case not Unit:
+                        await context.Response.WriteAsJsonAsync(content, context.RequestAborted);
+                        return;
+                }
 
                 var body = context.Response.Body;
                 await body.FlushAsync(cancellationToken: context.RequestAborted);
@@ -49,11 +62,10 @@ public static class EndpointExtentions
             builder
             .Map(endpoint.Route, HandleEndpointAction)
             .Produces(200, endpoint.ResponseType, endpoint.ContentType)
-            .ProducesValidationProblem(ValidationErrorCode, "application/json")
+            .ProducesValidationProblem(422, "application/json")
+            .ConfigureAccepts(endpoint)
             .WithMetadata(new HttpMethodMetadata(new[] { endpoint.HttpMethod.ToString() }))
             .WithMetadata(endpoint);
-
-            // todo: httpposts should accept mediatr request body.
         }
 
         return builder;
@@ -78,37 +90,15 @@ public static class EndpointExtentions
         return services;
     }
 
-    private static async Task ExecuteMediatrUseCase(HttpContext context, IMediator mediatr, object request, string? contentType = null)
+    private static RouteHandlerBuilder ConfigureAccepts(this RouteHandlerBuilder builder, EndpointMetadata endpoint)
     {
-        try
+        // Get+Trace cannot have a request body.
+        if (endpoint.HttpMethod != HttpMethods.Get && endpoint.HttpMethod != HttpMethods.Trace)
         {
-            var content = await mediatr.Send(request, cancellationToken: context.RequestAborted);
-
-            switch (content)
-            {
-                case Stream streamedResponse:
-                    context.Response.ContentType =
-                        contentType ?? context.Response.ContentType;
-
-                    await streamedResponse.CopyToAsync(context.Response.Body, context.RequestAborted);
-                    await streamedResponse.DisposeAsync();
-
-                    return;
-
-                case not Unit:
-                    await context.Response.WriteAsJsonAsync(content, context.RequestAborted);
-                    return;
-            }
+            return builder.Accepts(endpoint.RequestType, "application/json");
         }
-        catch (ValidationException e)
-        {
-            context.Response.StatusCode = ValidationErrorCode;
-            await context.Response.WriteAsJsonAsync(e.Errors);
-        }
-        catch (Exception)
-        {
-            context.Response.StatusCode = 500;
-        }
+
+        return builder;
     }
 
     private static IEnumerable<EndpointMetadata> ScanForEndpoints(
