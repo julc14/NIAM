@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NameItAfterMe.Application.UseCases.Exoplanets;
-using NameItAfterMe.Application.UseCases.PictureOfTheDay;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ public class UseCaseIntegrationTests : IClassFixture<WebApplicationFactory<Progr
     public async Task GetPictureOfTheDayStream_ReturnsStreamOfBitsNotEmpty()
     {
         var client = _host.CreateClient();
-        var soucePath = await client.GetFromJsonAsync<string>("PictureOfTheDay/SourcePath");
+        var soucePath = await client.GetFromJsonAsync<string>("/PictureOfTheDay/SourcePath");
 
         Assert.NotEmpty(soucePath);
     }

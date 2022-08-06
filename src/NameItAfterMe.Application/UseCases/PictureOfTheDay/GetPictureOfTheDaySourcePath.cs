@@ -17,15 +17,20 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
     private readonly IImageHandler _imageHandler;
     private readonly IPictureOfTheDayService _pictureOfTheDayService;
 
-    private const string DefaultPictureOfTheDayPath = "Images/DefaultPictureOfTheDay.jpg";
+    private const string DefaultPictureOfTheDayPath = "Images/Common/DefaultPictureOfTheDay.jpg";
     private const string BaseImageTitle = "NasaPictureOfTheDay";
 
     public GetPictureOfTheDaySourcePathHandler(
         HttpClient httpClient,
         IImageHandler imageHandler,
         IPictureOfTheDayService pictureOfTheDayService)
-            => (_httpClient, _imageHandler, _pictureOfTheDayService)
-            = (httpClient, imageHandler, pictureOfTheDayService);
+    {
+        _httpClient = httpClient;
+        _imageHandler = imageHandler;
+        _pictureOfTheDayService = pictureOfTheDayService;
+
+        imageHandler.LocalFolder = "Images/PictureOfTheDayImages";
+    }
 
     public async Task<string> Handle(GetPictureOfTheDaySourcePath request, CancellationToken cancellationToken)
     {
