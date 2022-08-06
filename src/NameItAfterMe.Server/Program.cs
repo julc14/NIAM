@@ -6,6 +6,7 @@ using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Server;
 using NameItAfterMe.Server.Services;
 using Serilog;
+using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,9 @@ builder.Configuration.AddAzureAppConfiguration(
 
 builder.Host.UseSerilog((context, services, config) =>
 {
+    config.MinimumLevel.Debug()
+          .MinimumLevel.Override("Microsoft", LogEventLevel.Information);
+
     config.WriteTo.ApplicationInsights(
         services.GetRequiredService<TelemetryConfiguration>(),
         TelemetryConverter.Traces);
