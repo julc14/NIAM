@@ -8,15 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\Images\DefaultPictureOfTheDay.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="wwwroot\Images\DefaultPictureOfTheDay.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </EmbeddedResource>
+    <Compile Remove="wwwroot\Images\**" />
+    <Content Remove="wwwroot\Images\**" />
+    <EmbeddedResource Remove="wwwroot\Images\**" />
+    <None Remove="wwwroot\Images\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,16 +24,11 @@
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\MinimalEndpoints\MinimalEndpoints\MinimalEndpoints.csproj" />
     <ProjectReference Include="..\NameItAfterMe\Blazor.Client\NameItAfterMe.Blazor.Client.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Images\Exoplanet\" />
   </ItemGroup>
 
 
