@@ -8,13 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\Images\**" />
-    <Content Remove="wwwroot\Images\**" />
-    <EmbeddedResource Remove="wwwroot\Images\**" />
-    <None Remove="wwwroot\Images\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.1.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.2" />
@@ -29,6 +22,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\MinimalEndpoints\MinimalEndpoints\MinimalEndpoints.csproj" />
     <ProjectReference Include="..\NameItAfterMe\Blazor.Client\NameItAfterMe.Blazor.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 
