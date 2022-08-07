@@ -8,7 +8,7 @@ This solution is primarily a learning excerise to experience with the primary go
 
 It should be pointed out a solution of this size/complexity does not require a defined architecture (and could even be considered counter-productive). We could pack everything into an ASP.Net server project and jam logic in controllers and be fine here. However, this would cut the learning experience short. Instead we will presume this application will be a starting point for a long-term bussiness application. Vertical Slice Architecure is my preferred choice for scenarios like this. 
 
-![](/Docs/Images/Verticalslice.png)
+![](/Docs/Images/VerticalSlice.png)
 
 Vertical Slice architecture style is about organizing code by features and vertical slices instead of organizing by technical concerns. It's about an idea of grouping code according to the business functionality and putting all the relevant code close together. Vertical Slice architecture can be a starting point and can be evolved later when an application become more sophisticated.
 
