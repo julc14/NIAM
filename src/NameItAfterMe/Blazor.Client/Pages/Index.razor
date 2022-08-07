@@ -82,8 +82,7 @@
 
         var rng = Random.Shared.Next(1, 10);
 
-        _exoplanets = await HttpClient
-            .GetFromJsonAsync<IEnumerable<ExoplanetDto>>($"Exoplanet/{rng}/6")
+        _exoplanets = await HttpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>($"Exoplanet/{rng}/6")
             ?? Enumerable.Empty<ExoplanetDto>();
 
         imagePath = await HttpClient.GetFromJsonAsync<string>("PictureOfTheDay/SourcePath");

@@ -15,6 +15,18 @@ namespace NameItAfterMe.Application;
 
 public static class DependencyInjection
 {
+    /// <summary>
+    ///     Add Name It After Me Application Services.
+    /// </summary>
+    /// <param name="services">
+    ///     The services.
+    /// </param>
+    /// <param name="configuration">
+    ///     The configuration.
+    /// </param>
+    /// <returns>
+    ///     Services, for chaining.
+    /// </returns>
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         var assembly = typeof(DependencyInjection).Assembly;

@@ -8,6 +8,7 @@ public class PostExoplanet : IRequest
     public int Distance { get; set; }
 }
 
+// todo
 public class PostExoplanetHandler : IRequestHandler<PostExoplanet>
 {
     public PostExoplanetHandler()

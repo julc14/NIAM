@@ -22,11 +22,15 @@ public class GetExoplanetImageSourcePathHandler : IRequestHandler<GetExoplanetIm
 
     public Task<string> Handle(GetExoplanetImageSourcePath request, CancellationToken cancellationToken)
     {
-        if (_imageHandler.TrySearch($"Exoplanet{Random.Shared.Next(1, 10)}", out var image))
+        // todo: should just associate an image path to DB object.
+        // this is not efficient, making 2 server trips when only one is needed.
+        var index = request.Index ?? Random.Shared.Next(1, 10);
+
+        if (_imageHandler.TrySearch($"Exoplanet{index}", out var image))
         {
             return Task.FromResult(image.LocalRootPath);
         }
 
-        return Task.FromResult("Images\\Exoplanet\\Exoplanet1.jpg");
+        return Task.FromResult("Images/Exoplanet/Exoplanet1.jpg");
     }
 }

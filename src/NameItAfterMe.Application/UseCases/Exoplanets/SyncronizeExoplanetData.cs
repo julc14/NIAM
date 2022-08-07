@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Logging;
 using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
 using NameItAfterMe.Infrastructure.Persistance;
 

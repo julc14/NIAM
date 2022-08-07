@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.Extensions.Logging;
 
 namespace NameItAfterMe.Server;
 
@@ -9,8 +8,8 @@ public class ExceptionHandlingMiddleware
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
     public ExceptionHandlingMiddleware(
-        RequestDelegate next, 
-        ILogger<ExceptionHandlingMiddleware> logger) 
+        RequestDelegate next,
+        ILogger<ExceptionHandlingMiddleware> logger)
             => (_next, _logger) = (next, logger);
 
     public async Task InvokeAsync(HttpContext context)
