@@ -24,10 +24,14 @@
 
     private async Task<IEnumerable<ExoplanetDto>> GetExoplanets(InfiniteScrollingItemsProviderRequest request)
     {
-        var exoplanetRoute = $"Exoplanet/{_currentPage}/{_planetLoadSize}";
+        var exoplanetRequest = new GetExoplanets()
+        {
+            PageNumber = _currentPage,
+            PageSize = _planetLoadSize,         
+        };
 
         var exoplanetGet =
-            await HttpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>(exoplanetRoute, request.CancellationToken);
+            await HttpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>(exoplanetRequest.AsRoute(), request.CancellationToken);
 
         _currentPage++;
 
