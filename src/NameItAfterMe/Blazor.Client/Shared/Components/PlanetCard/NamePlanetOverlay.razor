@@ -58,8 +58,7 @@
                         
                         <div style="overflow:scroll;max-height:300px;sc">
 
-  
-                             <MudStack Spacing=0>
+                            <MudStack Spacing=0>
 
                             @foreach (var scheme in Enum.GetValues<NamingScheme>())
                             {
@@ -72,14 +71,22 @@
 
                     </MudRadioGroup>
 
-
                 </MudStack>
+            </MudPaper>
+        </MudTabPanel>
 
-                @if (@_name is not null)
-                {
-                    <MudText Typo="Typo.body1">New Name</MudText>
-                    <MudText Typo="Typo.body2">@_name</MudText>
-                }
+        <MudTabPanel Text="Background">
+            <MudPaper Height="@Height" Width="@Width" Class="pa-6">
+
+                
+
+            </MudPaper>
+        </MudTabPanel>
+
+        <MudTabPanel Text="Submit">
+            <MudPaper Height="@Height" Width="@Width" Class="pa-6">
+
+                
 
             </MudPaper>
         </MudTabPanel>
@@ -99,8 +106,17 @@
     [Parameter] public string Height { get; set; } = "350px";
     [Parameter] public string Width { get; set; } = "500px";
 
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+
+    private IEnumerable<StoryDto> _stories;
+
     private string? _name;
     private NamingScheme _scheme;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _stories = await HttpClient.GetFromJsonAsync<IEnumerable<StoryDto>>("Story");
+    }
 
     private void OnNameChange(string currentValue)
     {

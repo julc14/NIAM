@@ -8,6 +8,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45310B68-3E4F-4FF2-B2C7-4BFF1CA95660}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		Docs\Images\SolutionDesign.png = Docs\Images\SolutionDesign.png
+		Docs\Images\VerticalSlice.png = Docs\Images\VerticalSlice.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MinimalEndpoints", "MinimalEndpoints", "{A937A7D2-224E-49CA-9DAC-D93BB5A3FB2F}"
@@ -18,11 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameItAfterMe.Blazor.Client
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameItAfterMe.Server", "src\NameItAfterMe.Server\NameItAfterMe.Server.csproj", "{1A137882-90FF-47E3-839E-CFC325883931}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameItAfterMe.IntegrationTests", "Tests\NameItAfterMe.IntegrationTests\NameItAfterMe.IntegrationTests.csproj", "{8EEE1783-AE4F-45B3-87A7-1413489ADDA2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalEndpoints.Abstractions", "MinimalEndpoints\MinimalEndpoints.Abstractions\MinimalEndpoints.Abstractions.csproj", "{DB74B526-9AC3-443B-B2EA-F1F64272384C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalEndpoints", "MinimalEndpoints\MinimalEndpoints\MinimalEndpoints.csproj", "{1709692D-CC62-4552-B60C-338A10044FBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameItAfterMe.IntegrationTests", "src\Tests\NameItAfterMe.IntegrationTests\NameItAfterMe.IntegrationTests.csproj", "{08899394-D503-44B0-8595-B9C8C7BF5D3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,10 +44,6 @@ Global
 		{1A137882-90FF-47E3-839E-CFC325883931}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A137882-90FF-47E3-839E-CFC325883931}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A137882-90FF-47E3-839E-CFC325883931}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EEE1783-AE4F-45B3-87A7-1413489ADDA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EEE1783-AE4F-45B3-87A7-1413489ADDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EEE1783-AE4F-45B3-87A7-1413489ADDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EEE1783-AE4F-45B3-87A7-1413489ADDA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB74B526-9AC3-443B-B2EA-F1F64272384C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DB74B526-9AC3-443B-B2EA-F1F64272384C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB74B526-9AC3-443B-B2EA-F1F64272384C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -54,14 +52,18 @@ Global
 		{1709692D-CC62-4552-B60C-338A10044FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1709692D-CC62-4552-B60C-338A10044FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1709692D-CC62-4552-B60C-338A10044FBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08899394-D503-44B0-8595-B9C8C7BF5D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08899394-D503-44B0-8595-B9C8C7BF5D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08899394-D503-44B0-8595-B9C8C7BF5D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08899394-D503-44B0-8595-B9C8C7BF5D3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8EEE1783-AE4F-45B3-87A7-1413489ADDA2} = {91A5E174-AB8A-44BF-96ED-57EE8D5A6442}
 		{DB74B526-9AC3-443B-B2EA-F1F64272384C} = {A937A7D2-224E-49CA-9DAC-D93BB5A3FB2F}
 		{1709692D-CC62-4552-B60C-338A10044FBF} = {A937A7D2-224E-49CA-9DAC-D93BB5A3FB2F}
+		{08899394-D503-44B0-8595-B9C8C7BF5D3F} = {91A5E174-AB8A-44BF-96ED-57EE8D5A6442}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F21130DB-1098-419E-BBB6-A599F147C522}
