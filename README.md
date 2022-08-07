@@ -1,12 +1,14 @@
 # Name It After Me
 
-This solution is primarily a learning excerise to experience with the primary goal of building an end-to-end application requiring a non-trivial backend. As well employing tooling that is where I lack a depth of experience. The application intent will be to load+store Exoplanet data from Nasa public APIs and give users the ability to name exoplanets after themselves with an interesting backstory. Exoplanets are usually given very boring names (Kepler-55b, p3x500-b)
+This solution is primarily a learning excerise with the primary goal to build an end-to-end application requiring a non-trivial backend. As well, employing tooling where I lack a depth of experience. 
+
+The application intent will be to load+store Exoplanet data from Nasa public APIs and give users the ability to name exoplanets after themselves (with an interesting backstory :)). Exoplanets are usually given very boring names (Kepler-55b, p3x500-b)
 
 ## Architecture and Tooling Decisions:
 
 ### Vertial Slice Architecture:
 
-It should be pointed out a solution of this size/complexity does not require a defined architecture (and could even be considered counter-productive). We could pack everything into an ASP.Net server project and jam logic in controllers and be fine here. However, this would cut the learning experience short. Instead we will presume this application will be a starting point for a long-term bussiness application. Vertical Slice Architecure is my preferred choice for scenarios like this. 
+Given the complexity of the application (not very) it should be pointed out this solution does not require a defined architecture (and could even be considered counter-productive). We could pack everything into an ASP.Net server project and jam logic in controllers and be fine here. However, this would cut the learning experience short. Instead we will presume this application will be a starting point for a long-term bussiness application. Vertical Slice Architecure is my preferred choice for scenarios like this. 
 
 ![](/Docs/Images/VerticalSlice.png)
 
@@ -20,7 +22,7 @@ Blazor WASM will require an ASP.NET backend to support functionality. HttpClient
 
 ### ASP.NET Backend:
 
-I'm not a fan of controllers and want to expirement with alternatives. We will exclusivley use Minimal APIs. In addition I want to develop a package that can automaticlly host mediatr use cases behind an endpoint.
+I'm not a fan of controllers and want to expirement with alternatives. We will exclusivley use Minimal APIs. In addition I want to develop a package that can automaticlly host mediatr use cases behind an endpoint. See [Minimal Endpoints](#minimal-endpoints) below.
 
 ### DB + Azure Hosting:
 
@@ -43,6 +45,7 @@ Putting all the pieces together here is a general system diagram.
 - [x] Page to display NASA's picture of the day
 - [x] Cool Dashboard page
 - [ ] User can name unnamed exoplanet and planet can never be named again (Persist to DB).
+- [ ] User can provide story as part of the naming process.
 - [ ] User can query named exoplanets.
 
 #### ASP.Net Backend:
@@ -55,6 +58,10 @@ Putting all the pieces together here is a general system diagram.
 - [x] Azure App Configuration to host connectionstrings/app configurations
 - [x] Host the backend through Azure App Service
 - [x] Complete a full CI/CD pipeline (ignoring unit tests for now)
+
+#### Tests:
+- [ ] Unit Tests
+- [ ] Integration Tests
 
 # Minimal Endpoints
 
@@ -107,9 +114,10 @@ public async Task<<ActionResult<IEnumerable<ExoplnaetDto>>>> GetPlanets([FromSer
 ```
 
 In this case we could completly eliminate the controller method by:
-- Infering the Http method type from the request name.
-- Validation done in application layer (FluentValidation)
+- Infering the Http method type from the request name (can still be optionally provided).
+- Validation done in application layer (FluentValidation + Mediatr pipeline behavior)
 - Automatically bind request parameters/values to the mediatr request object (and send the request to mediatr).
+- Programaticlly Handle various http return types (streams with special content type)
 - Attribute to let asp.net know which use cases to host.
 
 Now the file may look like this. And we can completly remove the controller.
@@ -142,6 +150,7 @@ public class GetExoplanetHandler : IRequestHandler<GetExoplanets, IEnumerable<Ex
     }
 }
 
+// Not referenced directly, part of pipeline behavior.
 public class GetExoplanetValidator : AbstractValidator<GetExoplanets>
 {
     public GetExoplanetValidator()
