@@ -32,8 +32,9 @@ public static class EndpointExtentions
             async Task HandleEndpointAction(HttpContext context, IMediator mediatr, RequestBuilder mediatrRequestBuilder)
             {
                 // there are better ways to hanlder asp.net request => mediatr request binding
-                // ie... IParameter<T> DI which would allow customization of binding by request type if desired
+                // e.g... IParameter<T> DI which would allow customization of binding by request type if desired
                 // however dotnet 7 will fix this akwardness completly with [FromParameters] attribute so leave it as is for now
+                // this will also remove the need for custom swagger handling.
                 var request = mediatrRequestBuilder.Build(endpoint.RequestType, context);
 
                 var content = await mediatr.Send(request, cancellationToken: context.RequestAborted);

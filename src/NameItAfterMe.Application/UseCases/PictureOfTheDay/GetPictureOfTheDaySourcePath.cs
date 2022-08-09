@@ -9,6 +9,7 @@ namespace NameItAfterMe.Application.UseCases.PictureOfTheDay;
 public class GetPictureOfTheDaySourcePath : IRequest<string>
 {
     public bool PreferHd { get; set; } = true;
+    public bool ReturnDefaultImageOnError { get; set; } = true;
 }
 
 public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfTheDaySourcePath, string>
@@ -17,7 +18,7 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
     private readonly IImageHandler _imageHandler;
     private readonly IPictureOfTheDayService _pictureOfTheDayService;
 
-    private const string DefaultPictureOfTheDayPath = "Images/Common/DefaultPictureOfTheDay.jpg";
+    private const string DefaultPictureOfTheDayPath = "Common/DefaultPictureOfTheDay.jpg";
     private const string BaseImageTitle = "NasaPictureOfTheDay";
 
     public GetPictureOfTheDaySourcePathHandler(
@@ -50,7 +51,12 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
 
         if (string.IsNullOrEmpty(url))
         {
-            return DefaultPictureOfTheDayPath;
+            if (request.ReturnDefaultImageOnError)
+            {
+                return DefaultPictureOfTheDayPath;
+            }
+
+            throw new InvalidOperationException("Failed to locate image of the day url");
         }
 
         var response = await _httpClient.GetAsync(url, cancellationToken);
@@ -62,7 +68,12 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
         // sometimes pic of day is actually a video
         if (!contentTypeIsImage)
         {
-            return DefaultPictureOfTheDayPath;
+            if (request.ReturnDefaultImageOnError)
+            {
+                return DefaultPictureOfTheDayPath;
+            }
+
+            throw new InvalidOperationException("Image of the day is not an image.");
         }
 
         image = await _imageHandler.SaveAsync(BaseImageTitle, () => _httpClient.GetStreamAsync(url));
