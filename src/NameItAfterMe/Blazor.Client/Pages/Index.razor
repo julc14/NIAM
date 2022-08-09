@@ -25,7 +25,7 @@
             {
                 <MudCarousel Style="height:450px;clip-path:initial" ItemsSource=@_exoplanets Context="planet" AutoCycle=@_carouselRotating>
                     <ItemTemplate>
-                        <PlanetCard Exoplanet=@planet OnSave="() => SetCarouselRotating(false)"/>
+                        <PlanetCard Exoplanet=@planet/>
                     </ItemTemplate>
                 </MudCarousel>
             }
@@ -55,6 +55,7 @@
                           Src=@imagePath
                           Class="rounded-lg"
                           ObjectFit="ObjectFit.Contain"
+                          Width = "605"
                           Height="630" />
                 }
             </MudCard>

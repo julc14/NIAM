@@ -54,19 +54,15 @@
                         <MudTextField T="string" Label="Your Name" Required="true" TextChanged=@OnNameChange />
                     </MudForm>
 
-                    <MudRadioGroup Style="padding=6px" @bind-SelectedOption="@_scheme" >
+                    <MudRadioGroup Style="padding=6px" @bind-SelectedOption=@_scheme >
                         
-                        <div style="overflow:scroll;max-height:300px;sc">
-
+                        <div style="overflow:scroll;max-height:300px;">
                             <MudStack Spacing=0>
-
-                            @foreach (var scheme in Enum.GetValues<NamingScheme>())
-                            {
-                                 <MudRadio Color="Color.Primary" Option="@scheme">@scheme</MudRadio>
-                            }
-
+                                @foreach (var scheme in Enum.GetValues<NamingScheme>())
+                                {
+                                     <MudRadio Color="Color.Primary" Option="@scheme">@scheme</MudRadio>
+                                }
                             </MudStack>
-
                         </div>
 
                     </MudRadioGroup>
@@ -95,6 +91,8 @@
 </MudOverlay>
 
 @code {
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+
     [Parameter, EditorRequired] public string PlanetImagePath { get; set; } = null!;
     [Parameter, EditorRequired] public ExoplanetDto Exoplanet { get; set; } = null!;
 
@@ -105,8 +103,6 @@
 
     [Parameter] public string Height { get; set; } = "350px";
     [Parameter] public string Width { get; set; } = "500px";
-
-    [Inject] public HttpClient HttpClient { get; set; } = null!;
 
     private IEnumerable<StoryDto> _stories;
 
@@ -124,6 +120,7 @@
         StateHasChanged();
     }
 
+    // todo: store in DB
     private enum NamingScheme
     {
         Endeavor,

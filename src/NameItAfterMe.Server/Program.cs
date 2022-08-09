@@ -28,7 +28,6 @@ builder.Host.UseSerilog((context, services, config) =>
 
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMinimalEndpointServices();
@@ -51,8 +50,6 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/Error");
-    // see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -68,7 +65,6 @@ app.UseEndpoints(builder =>
     builder.MapUseCasesFromAssembly(typeof(Exoplanet).Assembly);
 });
 
-app.MapRazorPages();
 app.MapFallbackToFile("index.html");
 
 app.Run();

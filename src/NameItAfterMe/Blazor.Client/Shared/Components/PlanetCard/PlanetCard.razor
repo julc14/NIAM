@@ -10,15 +10,13 @@
 <NamePlanetOverlay 
     Exoplanet=@Exoplanet 
     PlanetImagePath=@_imagePath 
-    IsVisable=@_isVisable />
+    IsVisable=@IsVisable/>
 
 @code {
-
     [Inject] HttpClient HttpClient { get; set; } = null!;
 
     [Parameter, EditorRequired] public ExoplanetDto Exoplanet { get; set; } = null!;
-
-    [Parameter] public EventCallback OnSave { get; set; }
+    [Parameter] public bool IsVisable { get; set; }
 
     private string? _imagePath;
     private string? _name;
@@ -32,7 +30,6 @@
 
     private void onSaveClick()
     {
-        _isVisable = true;
-        OnSave.InvokeAsync();
+        IsVisable = true;
     }
 }
