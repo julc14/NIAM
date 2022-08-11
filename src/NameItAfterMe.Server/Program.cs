@@ -70,9 +70,6 @@ app.UseEndpoints(builder =>
 
 app.MapFallbackToFile("index.html");
 
-app.Services.CreateScope().ServiceProvider.GetRequiredService<ExoplanetContext>().Database.EnsureCreated();
-
 app.Run();
-
 
 public partial class Program { }

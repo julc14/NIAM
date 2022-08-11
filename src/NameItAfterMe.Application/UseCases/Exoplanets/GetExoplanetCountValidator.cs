@@ -7,8 +7,9 @@ namespace NameItAfterMe.Application.UseCases.Exoplanets
         public GetExoplanetCountValidator()
         {
             // both cant be true.
-            RuleFor(x => x.ExcludeNamedExoplanets).Must((x, excludeNamedExoplanets) => !(x.ExcludeUnnamedExoplanets && excludeNamedExoplanets));
-            RuleFor(x => x.ExcludeUnnamedExoplanets).Must((x, excludeUnnamedExoplanets) => !(x.ExcludeNamedExoplanets && excludeUnnamedExoplanets));
+            RuleFor(x => x.ExcludeNamedExoplanets)
+                .Must((x, excludeNamedExoplanets) => !(x.ExcludeUnnamedExoplanets && excludeNamedExoplanets))
+                .WithMessage("Cant exclude both unnamed and named planets");
         }
     }
 }

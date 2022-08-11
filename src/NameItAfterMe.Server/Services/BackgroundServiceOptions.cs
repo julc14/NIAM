@@ -2,5 +2,5 @@
 
 public class BackgroundServiceOptions
 {
-    public bool IsEnabled { get; set; } = true;
+    public bool IsEnabled { get; set; }
 }
