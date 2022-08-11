@@ -3,6 +3,7 @@ using MinimalEndpoints;
 using MinimalEndpoints.OpenApi;
 using NameItAfterMe.Application;
 using NameItAfterMe.Application.Domain;
+using NameItAfterMe.Infrastructure.Persistance;
 using NameItAfterMe.Server;
 using NameItAfterMe.Server.Services;
 using Serilog;
@@ -24,6 +25,8 @@ builder.Host.UseSerilog((context, services, config) =>
         TelemetryConverter.Traces);
 
     config.WriteTo.Async(x => x.Console(theme: AnsiConsoleTheme.Code));
+
+    config.Enrich.FromLogContext();
 });
 
 builder.Services.AddApplicationInsightsTelemetry();
@@ -67,6 +70,9 @@ app.UseEndpoints(builder =>
 
 app.MapFallbackToFile("index.html");
 
+app.Services.CreateScope().ServiceProvider.GetRequiredService<ExoplanetContext>().Database.EnsureCreated();
+
 app.Run();
+
 
 public partial class Program { }

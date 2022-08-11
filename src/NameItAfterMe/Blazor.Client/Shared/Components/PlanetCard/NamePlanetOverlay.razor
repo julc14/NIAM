@@ -111,7 +111,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _stories = await HttpClient.GetFromJsonAsync<IEnumerable<StoryDto>>("Story");
+        //_stories = await HttpClient.GetFromJsonAsync<IEnumerable<StoryDto>>("Story");
     }
 
     private void OnNameChange(string currentValue)

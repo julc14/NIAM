@@ -8,15 +8,15 @@ internal class ExoplanetConfiguration : IEntityTypeConfiguration<Exoplanet>
 {
     public void Configure(EntityTypeBuilder<Exoplanet> builder)
     {
-        builder.ToContainer("Exoplanet");
+        builder.ToContainer("ExoplanetContext");
+        builder.HasKey(x => x.Name);
         builder.HasNoDiscriminator();
-        builder.Property(x => x.Id).ToJsonProperty("id").ValueGeneratedOnAdd();
-        builder.HasKey(x => x.Id);
-        builder.HasPartitionKey(x => x.Id);
-        builder.Property(x => x.Distance);
-        builder.Property(x => x.DistanceUnits);
-        builder.Property(x => x.HostName);
+        builder.HasPartitionKey(x => x.Name);
+
         builder.Property(x => x.Name);
         builder.Property(x => x.ProvidedName);
+        builder.Property(x => x.HostName);
+
+        builder.OwnsOne(x => x.Distance);
     }
 }
