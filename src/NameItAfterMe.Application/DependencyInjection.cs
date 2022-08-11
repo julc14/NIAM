@@ -54,6 +54,7 @@ public static class DependencyInjection
 
             .AddDbContext<ExoplanetContext>(options =>
             {
+                options.EnableSensitiveDataLogging();
                 options.UseCosmos(
                     $"AccountEndpoint={settings.AccountEndpoint};AccountKey={settings.AccountKey};",
                     databaseName: settings.Name);

@@ -26,7 +26,12 @@ internal class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
         var timer = new Stopwatch();
         timer.Start();
 
-        var response = await next();
+        TResponse response;
+
+        using (_logger.BeginScope("RequestId: {requestId}", id))
+        {
+            response = await next();
+        }
 
         timer.Stop();
 
@@ -43,11 +48,13 @@ internal class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 internal static partial class Log
 {
     [LoggerMessage(
+        EventId = 0,
         Level = LogLevel.Information,
         Message = "Unique Request Id: {id}, Request name:{requestName}, request json:{requestJson}")]
     public static partial void RequestCreated(ILogger logger, Guid id, string requestName, string requestJson);
 
     [LoggerMessage(
+        EventId = 10,
         Level = LogLevel.Information,
         Message = "End Unique Request Id: {id}, Request name:{requestName}, total request time:{elapsedMilliseconds}ms")]
     public static partial void RequestCompleted(ILogger logger, Guid id, string requestName, long elapsedMilliseconds);

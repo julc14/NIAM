@@ -8,6 +8,7 @@ internal class StoryConfiguration : IEntityTypeConfiguration<Story>
 {
     public void Configure(EntityTypeBuilder<Story> builder)
     {
+        builder.ToContainer("Stories");
         builder.HasPartitionKey(x => x.Id);
         builder.HasKey(x => x.Name);
         builder.Property(x => x.Id).ToJsonProperty("id").ValueGeneratedOnAdd();
