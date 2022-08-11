@@ -4,6 +4,7 @@
 
 <MudContainer MaxWidth=MaxWidth.Large>
     <MudGrid>
+
         <MudItem xs="12">
             <MudCard Outlined=@true>
                 <MudCardContent>
@@ -11,6 +12,7 @@
                 </MudCardContent>
             </MudCard>
         </MudItem>
+
         <MudItem xs="6">
             <MudCard>
                 <MudCardContent>
@@ -19,17 +21,23 @@
                 </MudCardContent>
             </MudCard>
 
+            @*todo: placeholder*@
             <div style="height:230px"></div>
 
-            @if (_exoplanets.Any())
+            @if (_exoplanets?.Any() == true)
             {
-                <MudCarousel Style="height:450px;clip-path:initial" ItemsSource=@_exoplanets Context="planet" AutoCycle=@_carouselRotating>
+                <MudCarousel 
+                        Style="height:450px;clip-path:initial" 
+                        ItemsSource=@_exoplanets 
+                        Context="planet" 
+                        AutoCycle=@_carouselRotating>
                     <ItemTemplate>
                         <PlanetCard Exoplanet=@planet/>
                     </ItemTemplate>
                 </MudCarousel>
             }
         </MudItem>
+
         <MudItem xs="6">
             <MudCard Style="width:min-content; margin:auto;">
                 <MudCardHeader>
@@ -65,32 +73,43 @@
 
 @code
 {
-    private bool _carouselRotating = true;
-
     private int _totalExoplanets;
     private int _namedExoplanets;
 
+    private bool _carouselRotating = true;
+
     private string? imagePath;
 
-    private IEnumerable<ExoplanetDto> _exoplanets = Enumerable.Empty<ExoplanetDto>();
+    private IEnumerable<ExoplanetDto>? _exoplanets;
 
     [Inject] HttpClient HttpClient { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        _namedExoplanets = await HttpClient.GetFromJsonAsync<int>("Exoplanet/Count?excludeunnamedexoplanets=true");
-        _totalExoplanets = await HttpClient.GetFromJsonAsync<int>("Exoplanet/Count");
+        await SetExoplanetCountFields();
 
-        var rng = Random.Shared.Next(1, 10);
-
-        _exoplanets = await HttpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>($"Exoplanet/{rng}/6")
-            ?? Enumerable.Empty<ExoplanetDto>();
-
+        // todo: cache to reduce server hits
         imagePath = await HttpClient.GetFromJsonAsync<string>("PictureOfTheDay/SourcePath");
     }
 
     private void SetCarouselRotating(bool shouldRotate)
     {
         _carouselRotating = shouldRotate;
+    }
+
+    private async ValueTask SetExoplanetCountFields()
+    {
+        _namedExoplanets = await HttpClient.GetFromJsonAsync(new GetExoplanetCount()
+        {
+            ExcludeUnnamedExoplanets = true,
+        });
+
+        _totalExoplanets = await HttpClient.GetFromJsonAsync(new GetExoplanetCount());
+
+        _exoplanets = await HttpClient.GetFromJsonAsync(new GetExoplanets()
+        {
+            PageSize = 6,
+            PageNumber = Random.Shared.Next(1, 10),
+        });
     }
 }

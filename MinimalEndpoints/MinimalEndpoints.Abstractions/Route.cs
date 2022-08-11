@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -23,24 +24,27 @@ public static class RoutingExtentions
     /// </returns>
     public static string AsRoute<T>(this T request) where T : IBaseRequest
     {
-        var endpoint = typeof(T).GetCustomAttribute<EndpointAttribute>();
+        var concreteType = request.GetType();
+        var endpoint = concreteType.GetCustomAttribute<EndpointAttribute>();
 
         if (endpoint is null)
         {
-            throw new InvalidOperationException($"{typeof(T)} does not have an endpoint attribute");
+            throw new InvalidOperationException($"{concreteType} does not have an endpoint attribute");
         }
 
         // route not defined, use request name as route
         // todo: define default route somewhere else.
         if (endpoint.Route is null)
         {
-            return typeof(T).Name;
+            return concreteType.Name;
         }
 
         var route = endpoint.Route;
+        var firstQueryParam = true;
 
-        foreach (var property in typeof(T).GetProperties())
+        foreach (var property in concreteType.GetProperties())
         {
+
             var value = property.GetValue(request);
 
             if (value == default)
@@ -55,11 +59,25 @@ public static class RoutingExtentions
             }
             else
             {
+
                 // query param
-                route += $"?{property.Name}={value}";
+                if (firstQueryParam)
+                {
+                    route += $"?{property.Name}={value}";
+                    firstQueryParam = false;
+                }
+                else
+                {
+                    route += $"&{property.Name}={value}";
+                }
             }
         }
 
         return route;
+    }
+
+    public static Task<T?> GetFromJsonAsync<T>(this HttpClient client, IRequest<T> request, CancellationToken token = default)
+    {
+        return client.GetFromJsonAsync<T>(request.AsRoute(), token);
     }
 }

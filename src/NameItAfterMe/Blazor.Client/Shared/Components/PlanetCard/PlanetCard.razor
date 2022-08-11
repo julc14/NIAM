@@ -1,10 +1,10 @@
-﻿<MudCard Outlined=@true>
+﻿<MudCard Outlined=true>
     <PlanetCardHeader Name=@Exoplanet.Name />
     <MudCardMedia Image="@_imagePath" Height="200" />
     <MudCardContent>
         <MudText Typo="Typo.body2">This photo was taken in a small village in Istra Croatia.</MudText>
     </MudCardContent>
-    <PlanetCardActions OnSaveClick="onSaveClick" />
+    <PlanetCardActions OnSaveClick="() => IsVisable = true" />
 </MudCard>
 
 <NamePlanetOverlay 
@@ -13,23 +13,21 @@
     IsVisable=@IsVisable/>
 
 @code {
-    [Inject] HttpClient HttpClient { get; set; } = null!;
-
-    [Parameter, EditorRequired] public ExoplanetDto Exoplanet { get; set; } = null!;
-    [Parameter] public bool IsVisable { get; set; }
-
     private string? _imagePath;
     private string? _name;
     private bool _isVisable;
+
+    [Inject] HttpClient HttpClient { get; set; } = null!;
+
+    [Parameter, EditorRequired] 
+    public ExoplanetDto Exoplanet { get; set; } = null!;
+
+    [Parameter]
+    public bool IsVisable { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         // ask server for random image path.
         _imagePath = await HttpClient.GetFromJsonAsync<string>("Exoplanet/ImagePath");
-    }
-
-    private void onSaveClick()
-    {
-        IsVisable = true;
     }
 }

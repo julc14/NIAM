@@ -16,32 +16,23 @@
 </div>
 
 @code {
+    private bool _isOverlayVisable = false;
+    private int _currentPage = 1;
 
     [Inject] HttpClient HttpClient { get; set; } = null!;
-
-    private bool _isOverlayVisable = false;
-
-    private readonly int _planetLoadSize = 10;
-    private int _currentPage = 1;
 
     private async Task<IEnumerable<ExoplanetDto>> GetExoplanets(InfiniteScrollingItemsProviderRequest request)
     {
         var exoplanetRequest = new GetExoplanets()
         {
             PageNumber = _currentPage,
-            PageSize = _planetLoadSize,         
+            PageSize = 10,         
         };
 
-        var exoplanetGet =
-            await HttpClient.GetFromJsonAsync<IEnumerable<ExoplanetDto>>(exoplanetRequest.AsRoute(), request.CancellationToken);
+        var exoplanetGet = await HttpClient.GetFromJsonAsync(exoplanetRequest, request.CancellationToken);
 
         _currentPage++;
 
         return exoplanetGet ?? Enumerable.Empty<ExoplanetDto>();
-    }
-
-    private void OnClickOutside ()
-    {
-        _isOverlayVisable = false;
     }
 }
