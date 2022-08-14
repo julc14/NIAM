@@ -2,32 +2,47 @@
     <PlanetCardHeader Name=@Exoplanet.Name />
     <MudCardMedia Image="@_imagePath" Height="200" />
     <MudCardContent>
-        <MudText Typo="Typo.body2">This photo was taken in a small village in Istra Croatia.</MudText>
+        <MudText Typo="Typo.body2"></MudText>
     </MudCardContent>
-    <PlanetCardActions OnSaveClick="() => IsVisable = true" />
+    <PlanetCardActions OnSaveClick="() => IsOverlayVisable = true" />
 </MudCard>
 
-<NamePlanetOverlay 
-    Exoplanet=@Exoplanet 
-    PlanetImagePath=@_imagePath 
-    IsVisable=@IsVisable/>
+<SubmissionOverlay Exoplanet=@Exoplanet
+                   PlanetImagePath=@_imagePath
+                   @bind-IsVisable="@IsOverlayVisable" />
 
 @code {
     private string? _imagePath;
-    private string? _name;
-    private bool _isVisable;
+    private bool _isOverlayVisable;
 
-    [Inject] HttpClient HttpClient { get; set; } = null!;
+    private bool IsOverlayVisable
+    {
+        get => _isOverlayVisable;
+        set
+        {
+            if (_isOverlayVisable == value)
+                return;
 
-    [Parameter, EditorRequired] 
+            _isOverlayVisable = value;
+
+            if (IsOverlayVisableChanged.HasDelegate)
+            {
+                IsOverlayVisableChanged.InvokeAsync(_isOverlayVisable);
+            }
+        }
+    }
+
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+
+    [Parameter, EditorRequired]
     public ExoplanetDto Exoplanet { get; set; } = null!;
 
     [Parameter]
-    public bool IsVisable { get; set; }
+    public EventCallback<bool> IsOverlayVisableChanged { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        // ask server for random image path.
-        _imagePath = await HttpClient.GetFromJsonAsync<string>("Exoplanet/ImagePath");
+        _imagePath = await HttpClient.GetFromJsonAsync(new GetExoplanetImageSourcePath());
     }
 }

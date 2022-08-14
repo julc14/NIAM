@@ -1,0 +1,84 @@
+﻿<MudOverlay @bind-Visible="@IsVisable" DarkBackground="true" >
+    <MudTabs Outlined="true"
+             Position="@Position.Left"
+             Rounded="true"
+             Border="true"
+             ApplyEffectsToContainer="true"
+             Class="mt-8"
+             TabPanelClass="pa-3">
+        <MudTabPanel Text="Exoplanet Details">
+
+            <ExoplanetDetails Elevation="5"
+                              Exoplanet="@Exoplanet"
+                              ImageSource="@PlanetImagePath"
+                              Height="@Height"
+                              Width="@Width" />
+        </MudTabPanel>
+
+        <MudTabPanel Text="Naming Schemes">
+            <NamingSchemes Height="@Height" Width="@Width" />
+        </MudTabPanel>
+
+        <MudTabPanel Text="Background">
+            <MudPaper Height="@Height" Width="@Width" Class="pa-6">
+
+            </MudPaper>
+        </MudTabPanel>
+
+        <MudTabPanel Text="Review">
+            <MudPaper Height="@Height" Width="@Width" Class="pa-6">
+
+            </MudPaper>
+        </MudTabPanel>
+
+        <MudTabPanel Style="background-color:var(--mud-palette-primary-darken);color:var(--mud-palette-text-secondary);align-self:flex-end"
+                     OnClick="() => IsVisable = false"
+                     Text="Close" />
+
+    </MudTabs>
+</MudOverlay>
+
+@code {
+    private IEnumerable<StoryDto> _stories;
+    private string? _name;
+
+    private bool _isVisable;
+
+    [Inject] 
+    public HttpClient HttpClient { get; set; } = null!;
+
+    [Parameter, EditorRequired] 
+    public string PlanetImagePath { get; set; } = null!;
+
+    [Parameter, EditorRequired] 
+    public ExoplanetDto Exoplanet { get; set; } = null!;
+
+    [Parameter] 
+    public string Height { get; set; } = "350px";
+
+    [Parameter] 
+    public string Width { get; set; } = "500px";
+
+    [Parameter] 
+    public bool IsVisable 
+    {
+        get => _isVisable;
+        set
+        {
+            if (_isVisable == value)
+                return;
+
+            _isVisable = value;
+
+            IsVisableChanged.InvokeAsync(_isVisable);
+        }
+    }
+
+    [Parameter] 
+    public EventCallback<bool> IsVisableChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //_stories = await HttpClient.GetFromJsonAsync<IEnumerable<StoryDto>>("Story");
+    }
+}

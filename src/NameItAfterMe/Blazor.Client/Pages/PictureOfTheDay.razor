@@ -31,10 +31,10 @@
 </div>
 
 @code {
-
-    [Inject] HttpClient HttpClient { get; set; } = null!;
-
     private string? imagePath;
+
+    [Inject] 
+    public HttpClient HttpClient { get; set; } = null!;
 
     protected async override Task OnInitializedAsync()
     {

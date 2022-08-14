@@ -22,7 +22,8 @@
     private IJSObjectReference? _module;
     private IJSObjectReference? _instance;
 
-    [Inject] public IJSRuntime JsRuntime { get; set; } = null!;
+    [Inject] 
+    public IJSRuntime JsRuntime { get; set; } = null!;
 
     [Parameter, EditorRequired]
     public InfiniteScrollingItemsProviderRequestDelegate<T> ItemsProvider { get; set; } = null!;
