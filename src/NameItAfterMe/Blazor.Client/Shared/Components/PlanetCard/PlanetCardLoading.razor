@@ -1,36 +1,23 @@
-﻿<MudCard>
-    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="218.03px" />
-    <MudCardContent>
-        <MudSkeleton Width="30%" Height="42px;" />
-        <MudSkeleton Width="80%" />
-        <MudSkeleton Width="100%" />
-    </MudCardContent>
-    <MudCardActions>
-        <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
-        <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
-    </MudCardActions>
-</MudCard>
-<MudCard>
-    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="218.03px" />
-    <MudCardContent>
-        <MudSkeleton Width="30%" Height="42px;" />
-        <MudSkeleton Width="80%" />
-        <MudSkeleton Width="100%" />
-    </MudCardContent>
-    <MudCardActions>
-        <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
-        <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
-    </MudCardActions>
-</MudCard>
-<MudCard>
-    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="218.03px" />
-    <MudCardContent>
-        <MudSkeleton Width="30%" Height="42px;" />
-        <MudSkeleton Width="80%" />
-        <MudSkeleton Width="100%" />
-    </MudCardContent>
-    <MudCardActions>
-        <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
-        <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
-    </MudCardActions>
-</MudCard>
+﻿<MudStack Spacing="3">
+
+    @foreach (var _ in Enumerable.Range(1, _skeletonCardRenderCount))
+    {
+        <MudCard>
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="218.03px" />
+            <MudCardContent>
+                <MudSkeleton Width="30%" Height="42px;" />
+                <MudSkeleton Width="80%" />
+                <MudSkeleton Width="100%" />
+            </MudCardContent>
+            <MudCardActions>
+                <MudSkeleton Width="64px" Height="40px" Class="ml-2" />
+                <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+            </MudCardActions>
+        </MudCard >
+    }
+
+</MudStack>
+
+@code {
+    private int _skeletonCardRenderCount = 3;
+}

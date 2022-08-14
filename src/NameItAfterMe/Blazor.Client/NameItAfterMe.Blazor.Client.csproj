@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Content Update="wwwroot\infinite-scrolling.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

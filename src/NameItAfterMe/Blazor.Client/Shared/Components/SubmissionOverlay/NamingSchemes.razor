@@ -1,0 +1,43 @@
+﻿<MudPaper Height="@Height" Width="@Width" Class="pa-6">
+
+    <MudStack Row="true">
+        <MudForm>
+            <MudTextField T="string" Label="Your Name" Required="true" />
+        </MudForm>
+
+        <MudRadioGroup Style="padding=6px" @bind-SelectedOption=@_scheme>
+
+            <div style="overflow:scroll;max-height:300px;">
+                <MudStack Spacing=0>
+                    @foreach (var scheme in Enum.GetValues<NamingScheme>())
+                    {
+                        <MudRadio Color="Color.Primary" Option="@scheme">@scheme</MudRadio>
+                    }
+                </MudStack>
+            </div>
+
+        </MudRadioGroup>
+    </MudStack>
+</MudPaper>
+
+@code {
+    private NamingScheme _scheme;
+
+    [Parameter]
+    public string Height { get; set; } = "350px";
+
+    [Parameter]
+    public string Width { get; set; } = "500px";
+
+    private enum NamingScheme
+    {
+        Endeavor,
+        Exchange,
+        Razor,
+        Creed,
+        Hazard,
+        Horizon,
+        Outcast,
+        Odyssey
+    }
+}

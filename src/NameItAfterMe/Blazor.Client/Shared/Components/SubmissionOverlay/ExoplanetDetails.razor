@@ -1,0 +1,58 @@
+﻿<MudPaper Height="@Height" Width="@Width" Class="pa-6">
+    <MudStack>
+        <MudPaper Elevation="@Elevation" Class="pa-4">
+            <MudStack Row="true">
+
+                <MudAvatar Image="@ImageSource" Size="Size.Large" />
+
+                <MudStack Justify="Justify.Center" Spacing="ContentSpacing">
+                    <MudText Typo="Typo.body1">Exoplanet</MudText>
+                    <MudText Typo="Typo.body2">@Exoplanet.Name</MudText>
+                </MudStack>
+
+            </MudStack>
+        </MudPaper>
+        <MudPaper Elevation="@Elevation" Class="pa-4">
+            <MudStack Row="true">
+
+                <MudAvatar Image="/Images/Star1.jpeg" Size="Size.Large" />
+
+                <MudStack Justify="Justify.Center" Spacing="ContentSpacing">
+                    <MudText Typo="Typo.body1">Star's Name</MudText>
+                    <MudText Typo="Typo.body2">@Exoplanet.HostName</MudText>
+                </MudStack>
+
+            </MudStack>
+        </MudPaper>
+        <MudPaper Elevation="@Elevation" Class="pa-4">
+            <MudStack Row="true">
+
+                <MudStack Justify="Justify.Center" Spacing="ContentSpacing">
+                    <MudText Typo="Typo.body1">Distance From Earth</MudText>
+                    <MudText Typo="Typo.body2">@Exoplanet.Distance Parsecs</MudText>
+                </MudStack>
+
+            </MudStack>
+        </MudPaper>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired]
+    public string ImageSource { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public ExoplanetDto Exoplanet { get; set; } = null!;
+
+    [Parameter] 
+    public int Elevation { get; set; }
+
+    [Parameter]
+    public int ContentSpacing { get; set; }
+
+    [Parameter]
+    public string Height { get; set; } = "350px";
+
+    [Parameter]
+    public string Width { get; set; } = "500px";
+}
