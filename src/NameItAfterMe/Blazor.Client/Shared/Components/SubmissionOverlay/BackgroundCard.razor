@@ -1,21 +1,32 @@
-﻿<OverlayTabTemplate >
-    <MudSelect T="string" >
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem  Value=@("Test") />
-        <MudSelectItem Value=@("Test") />
+﻿@using NameItAfterMe.Application.Domain
+<OverlayTabTemplate >
 
+    <MudSelect T="StoryDto" Value=@_currentStory>
+        @foreach (var story in _stories ?? Enumerable.Empty<StoryDto>())
+        {
+            <MudSelectItem Value=story />
+        }
     </MudSelect>
+
+    <MudForm>
+        @foreach (var word in _currentStory?.WordDescriptor ?? Enumerable.Empty<string>())
+        {
+            <MudTextField T="string" Label="word" Required="true" />
+        }
+    </MudForm>
+
 </OverlayTabTemplate >
 
 @code {
-    
+    private IEnumerable<StoryDto>? _stories;
+    private StoryDto? _currentStory;
+
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // todo: low frequency changes to db content, cache client side?
+        _stories = await HttpClient.GetFromJsonAsync(new GetStories());
+    }
 }

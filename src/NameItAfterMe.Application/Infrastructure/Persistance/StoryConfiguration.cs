@@ -12,5 +12,7 @@ internal class StoryConfiguration : IEntityTypeConfiguration<Story>
         builder.HasPartitionKey(x => x.Id);
         builder.HasKey(x => x.Name);
         builder.Property(x => x.Id).ToJsonProperty("id").ValueGeneratedOnAdd();
+
+        builder.OwnsMany(x => x.WordDescriptor);
     }
 }
