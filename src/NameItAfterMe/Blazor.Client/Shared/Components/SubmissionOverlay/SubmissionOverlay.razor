@@ -1,48 +1,52 @@
 ﻿<MudOverlay @bind-Visible="@IsVisable" DarkBackground="true" >
-    <MudTabs Outlined="true"
-             Position="@Position.Left"
-             Rounded="true"
-             Border="true"
-             ApplyEffectsToContainer="true"
-             Class="mt-8"
-             TabPanelClass="pa-3">
-        <MudTabPanel Text="Exoplanet Details">
+    <CascadingValue Value="@Width" Name="Width">
+        <CascadingValue Value="@Height" Name="Height">
+            
+            <MudTabs Outlined="true"
+                     Position="@Position.Left"
+                     Rounded="true"
+                     Border="true"
+                     ApplyEffectsToContainer="true"
+                     Class="mt-8"
+                     TabPanelClass="pa-3">
+                <MudTabPanel Text="Exoplanet Details">
 
-            <ExoplanetDetails Elevation="5"
-                              Exoplanet="@Exoplanet"
-                              ImageSource="@PlanetImagePath"
-                              Height="@Height"
-                              Width="@Width" />
-        </MudTabPanel>
+                    <ExoplanetDetails 
+                            Elevation="5"
+                            Exoplanet="@Exoplanet"
+                            ImageSource="@PlanetImagePath" />
 
-        <MudTabPanel Text="Naming Schemes">
-            <NamingSchemes Height="@Height" Width="@Width" />
-        </MudTabPanel>
+                </MudTabPanel>
 
-        <MudTabPanel Text="Background">
-            <MudPaper Height="@Height" Width="@Width" Class="pa-6">
+                <MudTabPanel Text="Naming Schemes">
+                    <NamingSchemes State="@_state" />
+                </MudTabPanel>
 
-            </MudPaper>
-        </MudTabPanel>
+                <MudTabPanel Text="Background">
+                    <BackgroundCard />
+                </MudTabPanel>
 
-        <MudTabPanel Text="Review">
-            <MudPaper Height="@Height" Width="@Width" Class="pa-6">
+                <MudTabPanel Text="Review">
+                    <ReviewCard State="@_state" />
+                </MudTabPanel>
 
-            </MudPaper>
-        </MudTabPanel>
+                <MudTabPanel 
+                        Style="background-color:var(--mud-palette-primary-darken);color:var(--mud-palette-text-secondary);align-self:flex-end;margin-top:68%"
+                        OnClick="() => IsVisable = false"
+                        Text="Close" />
 
-        <MudTabPanel Style="background-color:var(--mud-palette-primary-darken);color:var(--mud-palette-text-secondary);align-self:flex-end"
-                     OnClick="() => IsVisable = false"
-                     Text="Close" />
+            </MudTabs>
 
-    </MudTabs>
+        </CascadingValue>
+    </CascadingValue>
 </MudOverlay>
 
 @code {
     private IEnumerable<StoryDto> _stories;
     private string? _name;
-
     private bool _isVisable;
+    private NameExoplanet _nameExoplanetRequest = new ();
+    private NameExoplanetOperationState _state = new();
 
     [Inject] 
     public HttpClient HttpClient { get; set; } = null!;
@@ -79,6 +83,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _nameExoplanetRequest.Name = Exoplanet.Name;
+
         //_stories = await HttpClient.GetFromJsonAsync<IEnumerable<StoryDto>>("Story");
     }
 }

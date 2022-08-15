@@ -1,11 +1,20 @@
-﻿<MudPaper Height="@Height" Width="@Width" Class="pa-6">
-
+﻿<OverlayTabTemplate>
     <MudStack Row="true">
+
         <MudForm>
-            <MudTextField T="string" Label="Your Name" Required="true" />
+            <MudTextField 
+                    T="string" 
+                    Label="Your Name" 
+                    Required="true"
+                    Value="State.PersonsName"
+                    ValueChanged="(name) => State.PersonsName = name" />
         </MudForm>
 
-        <MudRadioGroup Style="padding=6px" @bind-SelectedOption=@_scheme>
+        <MudRadioGroup 
+                T="@NamingScheme" 
+                SelectedOptionChanged="(scheme) => State.Scheme = scheme" 
+                Style="padding=6px" 
+                SelectedOption=@State.Scheme>
 
             <div style="overflow:scroll;max-height:300px;">
                 <MudStack Spacing=0>
@@ -15,29 +24,12 @@
                     }
                 </MudStack>
             </div>
-
         </MudRadioGroup>
+
     </MudStack>
-</MudPaper>
+</OverlayTabTemplate>
 
 @code {
-    private NamingScheme _scheme;
-
     [Parameter]
-    public string Height { get; set; } = "350px";
-
-    [Parameter]
-    public string Width { get; set; } = "500px";
-
-    private enum NamingScheme
-    {
-        Endeavor,
-        Exchange,
-        Razor,
-        Creed,
-        Hazard,
-        Horizon,
-        Outcast,
-        Odyssey
-    }
+    public NameExoplanetOperationState State { get; set; } = null!;
 }

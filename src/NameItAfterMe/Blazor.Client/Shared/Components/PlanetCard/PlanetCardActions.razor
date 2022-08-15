@@ -1,7 +1,7 @@
 ﻿<MudCardActions>
     <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
     <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
-    <MudButton 
+    <MudButton        
         OnClick="OnSaveClick" 
         Style="margin-left:auto" 
         Variant="Variant.Filled" 
@@ -15,9 +15,4 @@
 @code {
     [Parameter] 
     public EventCallback OnSaveClick { get; set; }
-
-    private void onSaveClick()
-    {
-        //isVisible = true;
-    }
 }
