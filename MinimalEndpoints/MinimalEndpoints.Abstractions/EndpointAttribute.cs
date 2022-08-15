@@ -21,4 +21,11 @@ public class EndpointAttribute : Attribute
     ///     The type of content this endpoint will return to the caller.
     /// </summary>
     public string? ContentType { get; init; }
+
+    public EndpointAttribute() { }
+
+    public EndpointAttribute(HttpMethods httpMethod)
+    {
+        HttpMethod = httpMethod;
+    }
 }

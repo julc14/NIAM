@@ -99,4 +99,12 @@ public static class RoutingExtentions
     {
         return client.GetFromJsonAsync<T>(request.AsRoute(), token);
     }
+
+    public static Task<HttpResponseMessage> PostAsJsonAsync<T>(
+        this HttpClient client,
+        IRequest<T> request,
+        CancellationToken token = default)
+    {
+        return client.PostAsJsonAsync(request.AsRoute(), request, token);
+    }
 }

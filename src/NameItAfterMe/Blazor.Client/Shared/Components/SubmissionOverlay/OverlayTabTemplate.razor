@@ -1,0 +1,14 @@
+﻿<MudPaper Height="@Height" Width="@Width" Class="pa-6" >
+    @ChildContent
+</MudPaper>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [CascadingParameter(Name = nameof(Width))]
+    public string Width { get; set; } = "500px";
+
+    [CascadingParameter(Name = nameof(Height))]
+    public string Height { get; set; } = "350px";
+}

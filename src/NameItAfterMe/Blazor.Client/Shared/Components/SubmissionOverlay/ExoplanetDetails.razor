@@ -1,4 +1,4 @@
-﻿<MudPaper Height="@Height" Width="@Width" Class="pa-6">
+﻿<OverlayTabTemplate>
     <MudStack>
         <MudPaper Elevation="@Elevation" Class="pa-4">
             <MudStack Row="true">
@@ -29,13 +29,13 @@
 
                 <MudStack Justify="Justify.Center" Spacing="ContentSpacing">
                     <MudText Typo="Typo.body1">Distance From Earth</MudText>
-                    <MudText Typo="Typo.body2">@Exoplanet.Distance Parsecs</MudText>
+                    <MudText Typo="Typo.body2">@Exoplanet.Distance</MudText>
                 </MudStack>
 
             </MudStack>
         </MudPaper>
     </MudStack>
-</MudPaper>
+</OverlayTabTemplate>
 
 @code {
     [Parameter, EditorRequired]
@@ -49,10 +49,4 @@
 
     [Parameter]
     public int ContentSpacing { get; set; }
-
-    [Parameter]
-    public string Height { get; set; } = "350px";
-
-    [Parameter]
-    public string Width { get; set; } = "500px";
 }

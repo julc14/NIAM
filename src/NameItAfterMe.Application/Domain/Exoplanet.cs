@@ -1,4 +1,6 @@
-﻿namespace NameItAfterMe.Application.Domain;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace NameItAfterMe.Application.Domain;
 
 public class Exoplanet
 {
@@ -19,7 +21,7 @@ public class Exoplanet
         Name = name;
     }
 
-    public void NameIt(string name)
+    public void NameIt(string name, string? backstory = null)
     {
         ProvidedName = name;
     }
