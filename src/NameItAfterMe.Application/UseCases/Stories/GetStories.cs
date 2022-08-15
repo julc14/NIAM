@@ -28,6 +28,7 @@ public class GetStoriesHandler : IRequestHandler<GetStories, IEnumerable<StoryDt
     public async Task<IEnumerable<StoryDto>> Handle(GetStories request, CancellationToken cancellationToken)
     {
         var stories = await _db.Set<Story>()
+            .AsNoTracking()
             .Where(x => string.IsNullOrEmpty(request.Name) || x.Name.Equals(request.Name))
             .ProjectTo<StoryDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

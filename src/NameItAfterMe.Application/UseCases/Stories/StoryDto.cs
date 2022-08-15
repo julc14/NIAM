@@ -3,7 +3,8 @@ using NameItAfterMe.Application.Domain;
 
 namespace NameItAfterMe.Application.UseCases.Stories;
 
-[AutoMap(typeof(Story))]
-public class StoryDto
+public record StoryDto
 {
+    public string Name { get; set; }
+    public IEnumerable<string> WordDescriptor { get; set; }
 }
