@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Infrastructure.Persistance;
+using Newtonsoft.Json;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanetCounts;
 
@@ -19,6 +20,8 @@ public class GetExoplanetCountHandler : IRequestHandler<GetExoplanetCount, Exopl
 
     public async Task<ExoplanetCountDto> Handle(GetExoplanetCount request, CancellationToken cancellationToken)
     {
+        var test = JsonConvert.SerializeObject(request);
+
         var exoplanets = _db.Set<Exoplanet>();
 
         return new ExoplanetCountDto()
