@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace NameItAfterMe.Application.UseCases.Exoplanets;
+namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanets;
 
 public class GetExoplanetValidator : AbstractValidator<GetExoplanets>
 {

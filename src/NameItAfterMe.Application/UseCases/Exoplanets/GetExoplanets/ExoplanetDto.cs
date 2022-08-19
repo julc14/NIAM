@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using NameItAfterMe.Application.Domain;
 
-namespace NameItAfterMe.Application.UseCases.Exoplanets;
+namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanets;
 
 public class ExoplanetDto
 {

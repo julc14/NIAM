@@ -3,7 +3,7 @@ using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Infrastructure.Persistance;
 
-namespace NameItAfterMe.Application.UseCases.Exoplanets;
+namespace NameItAfterMe.Application.UseCases.Exoplanets.NameExoplanet;
 
 [Endpoint(HttpMethods.Post, Route = "Exoplanet/Name")]
 public class NameExoplanet : IRequest

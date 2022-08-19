@@ -5,7 +5,7 @@ using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Infrastructure.Persistance;
 
-namespace NameItAfterMe.Application.UseCases.Exoplanets;
+namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanets;
 
 [Endpoint(Route = "Exoplanet/{PageNumber:int}/{PageSize:int}")]
 public class GetExoplanets : IRequest<IEnumerable<ExoplanetDto>>

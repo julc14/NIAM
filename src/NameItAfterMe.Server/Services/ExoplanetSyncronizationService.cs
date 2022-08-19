@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Options;
-using NameItAfterMe.Application.UseCases.Exoplanets;
+using NameItAfterMe.Application.UseCases.Exoplanets.SyncronizeExoplanets;
 
 namespace NameItAfterMe.Server.Services;
 
