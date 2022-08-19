@@ -51,53 +51,20 @@
             </MudItem>
 
             <MudItem xs="6">
-
                 @if (_imagePath is not null)
                 {
-                    <MudCard Style="width:97%; margin-right:20px; margin-top:20px; margin-botton:20px;" Elevation="10" Square="true" >
-                        <MudCardHeader>
-                            <CardHeaderAvatar>
-                                <MudIcon 
-                                    Color="Color.Dark"
-                                    Icon="@Icons.Material.Filled.RocketLaunch"
-                                    Size="Size.Large" />
-                            </CardHeaderAvatar>
-                            <CardHeaderContent>
-                                <MudText Typo="Typo.body1">Nasa's Picture Of The Day</MudText>
-                                <MudText Typo="Typo.caption">@DateTime.Now.ToShortDateString()</MudText>
-                            </CardHeaderContent>
-                            <CardHeaderActions>
-                                <MudIconButton 
-                                    Icon="@Icons.Material.Filled.Download"
-                                    Color="Color.Default"
-                                    Href="@_imagePath" />
-                            </CardHeaderActions>
-                        </MudCardHeader>
-
-                        <MudImage 
-                            ObjectFit="ObjectFit.Cover"
-                            Style="width:100%; padding:10px;"    
-                            Src=@_imagePath
-                            Height="590" />
-                        </MudCard>
-                    }
-                    else
-                    {
-                        <MudCard Style="width:97; margin-right:20px; margin-top:20px; margin-botton:20px;" Elevation="10" Square="true" >
-                            <MudCardHeader>
-                                <CardHeaderAvatar>
-                                    <MudSkeleton SkeletonType="SkeletonType.Circle" Animation="Animation.Wave" Height="40px" Width="40px"/>
-                                </CardHeaderAvatar>
-                                <CardHeaderContent>
-                                    <MudSkeleton Animation="Animation.Wave" Width="40%" />
-                                    <MudSkeleton Animation="Animation.Wave" Width="60%" />
-                                </CardHeaderContent>
-                            </MudCardHeader>
-
-                            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Wave" Height="590px" />
-                        </MudCard>
-                    }
-                </MudItem>
+                    <PictureOfTheDayCard 
+                        ObjectFit="ObjectFit.Cover"
+                        Source="@_imagePath"
+                        Height="590"
+                        Style="width:97%; margin-right:20px; margin-top:20px; margin-botton:20px"
+                        ImageStyle="width:100%;padding:10px;" />
+                }
+                else
+                {
+                    <PictureOfTheDayCardLoading />
+                }
+            </MudItem>
         </MudGrid>
     </MudPaper>
 </MudContainer>

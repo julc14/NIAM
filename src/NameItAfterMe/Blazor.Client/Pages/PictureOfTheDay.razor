@@ -1,43 +1,15 @@
 ﻿@page "/pictureoftheday"
 
-<div class="page-background-class">
-    <MudCard Style="width:min-content; margin:auto;">
-        <MudCardHeader>
-            <CardHeaderAvatar>
-                <MudIcon Color="Color.Dark"
-                         Icon="@Icons.Material.Filled.RocketLaunch"
-                         Size="Size.Large" />
-            </CardHeaderAvatar>
-            <CardHeaderContent>
-                <MudText Typo="Typo.body1">Nasa's Picture Of The Day</MudText>
-                <MudText Typo="Typo.caption">@DateTime.Now.ToShortDateString()</MudText>
-            </CardHeaderContent>
-            <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Filled.Download"
-                               Color="Color.Default"
-                               Href="@imagePath" />
-            </CardHeaderActions>
-        </MudCardHeader>
-
-        @if (@imagePath is not null)
-        {
-            <MudImage Style="display:flex; margin:auto; padding:10px"
-                  Src=@imagePath
-                  Class="rounded-lg"
-                  ObjectFit="ObjectFit.Contain"
-                  Height="800" />
-        }
-    </MudCard>
-</div>
+<PictureOfTheDayCard Source="@_imagePath" />
 
 @code {
-    private string? imagePath;
+    private string? _imagePath;
 
     [Inject] 
     public HttpClient HttpClient { get; set; } = null!;
 
     protected async override Task OnInitializedAsync()
     {
-        imagePath = await HttpClient.GetFromJsonAsync<string>("PictureOfTheDay/SourcePath");
+        _imagePath = await HttpClient.GetFromJsonAsync<string>("PictureOfTheDay/SourcePath");
     }
 }
