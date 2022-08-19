@@ -1,0 +1,47 @@
+﻿<MudCard Elevation=10 Style="@Style" Square="true">
+    <MudCardHeader>
+        <CardHeaderAvatar>
+            <MudIcon 
+                Color="Color.Primary"
+                Icon="@Icons.Material.Filled.RocketLaunch"
+                Size="Size.Large" />
+        </CardHeaderAvatar>
+        <CardHeaderContent>
+            <MudText Typo="Typo.body1">Nasa's Picture Of The Day</MudText>
+            <MudText Typo="Typo.caption">@DateTime.Now.ToShortDateString()</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton 
+                Icon="@Icons.Material.Filled.Download"
+                Color="Color.Default"
+                Href="@Source" />
+        </CardHeaderActions>
+    </MudCardHeader>
+
+    <MudImage 
+        Style="@ImageStyle"
+        Src=@Source
+        ObjectFit="@ObjectFit"
+        Height="@Height" />
+
+</MudCard>
+
+@code {
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public string Source { get; set; } = null!;
+
+    [Parameter]
+    public int Height { get; set; } = 800;
+
+    [Parameter]
+    public ObjectFit ObjectFit { get; set; } = ObjectFit.Contain;
+
+    [Parameter]
+    public string ImageStyle { get; set; } = "display:flex; margin:auto; padding:10px";
+
+    [Parameter]
+    public string Style { get; set; } = "width:min-content; margin:auto";
+}
