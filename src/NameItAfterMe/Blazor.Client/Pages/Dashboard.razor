@@ -57,18 +57,20 @@
                     <MudCard Style="width:97%; margin-right:20px; margin-top:20px; margin-botton:20px;" Elevation="10" Square="true" >
                         <MudCardHeader>
                             <CardHeaderAvatar>
-                                <MudIcon Color="Color.Dark"
-                                            Icon="@Icons.Material.Filled.RocketLaunch"
-                                            Size="Size.Large" />
+                                <MudIcon 
+                                    Color="Color.Dark"
+                                    Icon="@Icons.Material.Filled.RocketLaunch"
+                                    Size="Size.Large" />
                             </CardHeaderAvatar>
                             <CardHeaderContent>
                                 <MudText Typo="Typo.body1">Nasa's Picture Of The Day</MudText>
                                 <MudText Typo="Typo.caption">@DateTime.Now.ToShortDateString()</MudText>
-                                </CardHeaderContent>
+                            </CardHeaderContent>
                             <CardHeaderActions>
-                                <MudIconButton Icon="@Icons.Material.Filled.Download"
-                                                Color="Color.Default"
-                                                Href="@_imagePath" />
+                                <MudIconButton 
+                                    Icon="@Icons.Material.Filled.Download"
+                                    Color="Color.Default"
+                                    Href="@_imagePath" />
                             </CardHeaderActions>
                         </MudCardHeader>
 
@@ -77,7 +79,7 @@
                             Style="width:100%; padding:10px;"    
                             Src=@_imagePath
                             Height="590" />
-                    </MudCard>
+                        </MudCard>
                     }
                     else
                     {
