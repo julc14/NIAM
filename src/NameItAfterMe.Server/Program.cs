@@ -71,8 +71,6 @@ app.UseEndpoints(builder =>
 
 app.MapFallbackToFile("index.html");
 
-JsonConvert.SerializeObject(new { Test = "test" });
-
 app.Run();
 
 public partial class Program { }

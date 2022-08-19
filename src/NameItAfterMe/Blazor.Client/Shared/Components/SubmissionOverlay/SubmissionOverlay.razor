@@ -1,6 +1,6 @@
 ﻿<MudOverlay @bind-Visible="@IsVisable" DarkBackground="true" >
-    <CascadingValue Value="@Width" Name="Width">
-        <CascadingValue Value="@Height" Name="Height">
+    <CascadingValue Value="@Width" Name="Width" IsFixed="true">
+        <CascadingValue Value="@Height" Name="Height" IsFixed="true">
             
             <MudTabs Outlined="true"
                      Position="@Position.Left"
