@@ -1,19 +1,17 @@
 ﻿@page "/exoplanet"
 
-<div class="page-background" >
-    <InfiniteScrolling ItemsProvider=@GetExoplanets>
-        <ItemTemplate Context="item">
-            <MudContainer MaxWidth="MaxWidth.Small" Class="pa-2">
-                <PlanetCard Exoplanet=@item  />
-            </MudContainer>
-        </ItemTemplate>
-        <LoadingTemplate>
-            <MudContainer MaxWidth="MaxWidth.Small" Class="pa-2">
-                <PlanetCardLoading />
-            </MudContainer>
-        </LoadingTemplate>
-    </InfiniteScrolling>
-</div>
+<InfiniteScrolling ItemsProvider=@GetExoplanets>
+    <ItemTemplate Context="item">
+        <MudContainer MaxWidth="MaxWidth.Small" Class="pa-2">
+            <PlanetCard Outlined=@true Exoplanet=@item  />
+        </MudContainer>
+    </ItemTemplate>
+    <LoadingTemplate>
+        <MudContainer MaxWidth="MaxWidth.Small" Class="pa-2">
+            <PlanetCardLoading />
+        </MudContainer>
+    </LoadingTemplate>
+</InfiniteScrolling>
 
 @code {
     private int _currentPage = 1;
