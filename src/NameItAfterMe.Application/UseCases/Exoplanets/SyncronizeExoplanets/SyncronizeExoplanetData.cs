@@ -4,7 +4,7 @@ using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
 using NameItAfterMe.Infrastructure.Persistance;
 
-namespace NameItAfterMe.Application.UseCases.Exoplanets;
+namespace NameItAfterMe.Application.UseCases.Exoplanets.SyncronizeExoplanets;
 
 public class SyncronizeExoplanetData : IRequest
 {

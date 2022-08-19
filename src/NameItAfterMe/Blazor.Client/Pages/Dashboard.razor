@@ -18,10 +18,13 @@
             <MudItem xs="6">
 
                 <MudCard Style="margin:20px" Elevation="10" Square="true">
-                    <MudCardContent>
-                        <MudText Typo=Typo.body1>Total Exoplanets: @_totalExoplanets</MudText>
-                        <MudText Typo=Typo.body1>Named Exoplanets: @_namedExoplanets</MudText>
-                    </MudCardContent>
+                    @if (_exoplanetCount is not null)
+                    {
+                        <MudCardContent>
+                            <MudText Typo=Typo.body1>Total Exoplanets: @_exoplanetCount.TotalExoplanets</MudText>
+                            <MudText Typo=Typo.body1>Named Exoplanets: @_exoplanetCount.NamedExoplanets</MudText>
+                        </MudCardContent>
+                    }
                 </MudCard>
 
                 <MudCard Style="margin:20px; height:180px" Elevation="10" Square="true" />
@@ -99,8 +102,7 @@
 
 @code
 {
-    private int _totalExoplanets;
-    private int _namedExoplanets;
+    private ExoplanetCountDto? _exoplanetCount;
     private bool _carouselRotating = true;
     private string? _imagePath;
 
@@ -111,7 +113,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await SetExoplanetCountFields();
+        _exoplanetCount = await HttpClient.GetFromJsonAsync(new GetExoplanetCount());
 
         _exoplanets = await HttpClient.GetFromJsonAsync(new GetExoplanets()
         {
@@ -126,14 +128,4 @@
     }
 
     private void SetCarouselRotating(bool shouldRotate) => _carouselRotating = shouldRotate;
-
-    private async ValueTask SetExoplanetCountFields()
-    {
-        _namedExoplanets = await HttpClient.GetFromJsonAsync(new GetExoplanetCount()
-        {
-            ExcludeUnnamedExoplanets = true,
-        });
-
-        _totalExoplanets = await HttpClient.GetFromJsonAsync(new GetExoplanetCount());
-    }
 }
