@@ -23,12 +23,10 @@
     {
         var planets = await HttpClient.GetFromJsonAsync(new GetExoplanets()
         {
-            PageNumber = _currentPage,
+            PageNumber = _currentPage++,
             PageSize = 10,         
         }, 
         request.CancellationToken);
-
-        _currentPage++;
 
         return planets ?? Enumerable.Empty<ExoplanetDto>();
     }

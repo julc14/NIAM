@@ -6,6 +6,7 @@ using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Infrastructure.Persistance;
 using NameItAfterMe.Server;
 using NameItAfterMe.Server.Services;
+using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -69,6 +70,8 @@ app.UseEndpoints(builder =>
 });
 
 app.MapFallbackToFile("index.html");
+
+JsonConvert.SerializeObject(new { Test = "test" });
 
 app.Run();
 

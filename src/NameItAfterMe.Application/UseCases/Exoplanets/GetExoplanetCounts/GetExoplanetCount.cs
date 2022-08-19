@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Infrastructure.Persistance;
@@ -15,12 +16,17 @@ public class GetExoplanetCount : IRequest<ExoplanetCountDto>
 public class GetExoplanetCountHandler : IRequestHandler<GetExoplanetCount, ExoplanetCountDto>
 {
     private readonly ExoplanetContext _db;
+    private readonly ILogger<GetExoplanetCountHandler> _logger;
 
-    public GetExoplanetCountHandler(ExoplanetContext db) => _db = db;
+    public GetExoplanetCountHandler(ExoplanetContext db, ILogger<GetExoplanetCountHandler> logger)
+    {
+        _db = db;
+        _logger = logger;
+    }
 
     public async Task<ExoplanetCountDto> Handle(GetExoplanetCount request, CancellationToken cancellationToken)
     {
-        var test = JsonConvert.SerializeObject(request);
+        _logger.LogInformation(JsonConvert.SerializeObject(request));
 
         var exoplanets = _db.Set<Exoplanet>();
 
