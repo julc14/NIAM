@@ -5,6 +5,7 @@ using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Infrastructure.Persistance;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanetCounts;
 
