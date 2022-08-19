@@ -1,4 +1,4 @@
-﻿<MudCard Outlined=true>
+﻿<MudCard Elevation="@Elevation" Outlined=@Outlined Style="@Style" Square=@Square>
     <PlanetCardHeader Name=@Exoplanet.Name />
     <MudCardMedia Image="@_imagePath" Height="200" />
     <MudCardContent>
@@ -40,6 +40,18 @@
 
     [Parameter]
     public EventCallback<bool> IsOverlayVisableChanged { get; set; }
+
+    [Parameter]
+    public int Elevation { get; set; }
+
+    [Parameter]
+    public bool Outlined { get; set; }
+
+    [Parameter]
+    public bool Square { get; set;  }
+
+    [Parameter]
+    public string Style { get; set; } = "";
 
     protected override async Task OnInitializedAsync()
     {

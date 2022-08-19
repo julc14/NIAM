@@ -26,9 +26,9 @@ internal static class Util
     ///     The evaluated result.
     /// </returns>
     public static async Task<PagedResult<T>> ToPaginatedResult<T>(
-        this IQueryable<T> source, 
-        int pageNumber, 
-        int pageSize, 
+        this IQueryable<T> source,
+        int pageNumber,
+        int pageSize,
         CancellationToken token = default)
     {
         var content = await source.ToListAsync(token);
