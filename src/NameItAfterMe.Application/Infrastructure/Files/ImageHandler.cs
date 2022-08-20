@@ -14,6 +14,11 @@ internal class ImageHandler : IImageHandler
     /// <inheritdoc/>
     public bool TrySearch(string fileName, [MaybeNullWhen(false)] out ImageMetadata image)
     {
+        if (!Directory.Exists(SearchPath))
+        {
+            Directory.CreateDirectory(SearchPath);
+        }
+
         var fileSearch =
             from filePath in Directory.EnumerateFiles(SearchPath, $"*{fileName}*", SearchOption.TopDirectoryOnly)
             let fileInfo = new FileInfo(filePath)
