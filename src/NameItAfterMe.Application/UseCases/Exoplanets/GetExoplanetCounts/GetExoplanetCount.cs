@@ -29,6 +29,7 @@ public class GetExoplanetCountHandler : IRequestHandler<GetExoplanetCount, Exopl
     {
         _logger.LogInformation(JsonConvert.SerializeObject(request));
 
+        Assembly.LoadFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/Newtonsoft.Json.dll");
         var exoplanets = _db.Set<Exoplanet>();
 
         return new ExoplanetCountDto()

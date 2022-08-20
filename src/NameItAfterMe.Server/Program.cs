@@ -69,6 +69,8 @@ app.UseEndpoints(builder =>
 
 app.MapFallbackToFile("index.html");
 
+Console.WriteLine(app.Environment);
+
 app.Run();
 
 public partial class Program { }
