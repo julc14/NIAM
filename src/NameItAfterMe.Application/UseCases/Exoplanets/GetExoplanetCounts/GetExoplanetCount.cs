@@ -27,8 +27,12 @@ public class GetExoplanetCountHandler : IRequestHandler<GetExoplanetCount, Exopl
 
     public async Task<ExoplanetCountDto> Handle(GetExoplanetCount request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/Newtonsoft.Json.dll");
-        Assembly.LoadFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/Newtonsoft.Json.dll");
+        _logger.LogInformation($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll");
+        _logger.LogInformation(File.Exists($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll").ToString());
+
+        Assembly.LoadFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll");
+
+
         var exoplanets = _db.Set<Exoplanet>();
 
         return new ExoplanetCountDto()
