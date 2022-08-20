@@ -4,8 +4,6 @@ using Microsoft.Extensions.Logging;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
 using NameItAfterMe.Infrastructure.Persistance;
-using Newtonsoft.Json;
-using System.Reflection;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanetCounts;
 
@@ -17,23 +15,11 @@ public class GetExoplanetCount : IRequest<ExoplanetCountDto>
 public class GetExoplanetCountHandler : IRequestHandler<GetExoplanetCount, ExoplanetCountDto>
 {
     private readonly ExoplanetContext _db;
-    private readonly ILogger<GetExoplanetCountHandler> _logger;
 
-    public GetExoplanetCountHandler(ExoplanetContext db, ILogger<GetExoplanetCountHandler> logger)
-    {
-        _db = db;
-        _logger = logger;
-    }
+    public GetExoplanetCountHandler(ExoplanetContext db) => _db = db;
 
     public async Task<ExoplanetCountDto> Handle(GetExoplanetCount request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll");
-        _logger.LogInformation(File.Exists($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll").ToString());
-
-        var assemlby = Assembly.LoadFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll");
-
-        _logger.LogInformation(assemlby.GetName().Version.Major.ToString());
-
         var exoplanets = _db.Set<Exoplanet>();
 
         return new ExoplanetCountDto()
