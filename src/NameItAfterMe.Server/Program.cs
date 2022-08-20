@@ -1,5 +1,4 @@
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Azure.Cosmos;
 using MinimalEndpoints;
 using MinimalEndpoints.OpenApi;
 using NameItAfterMe.Application;
@@ -69,8 +68,6 @@ app.UseEndpoints(builder =>
 });
 
 app.MapFallbackToFile("index.html");
-
-app.Services.GetRequiredService<ILogger<Program>>().LogInformation(builder.Configuration.GetConnectionString("AppConfig"));
 
 app.Run();
 
