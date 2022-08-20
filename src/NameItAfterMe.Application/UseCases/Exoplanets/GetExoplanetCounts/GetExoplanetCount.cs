@@ -30,8 +30,9 @@ public class GetExoplanetCountHandler : IRequestHandler<GetExoplanetCount, Exopl
         _logger.LogInformation($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll");
         _logger.LogInformation(File.Exists($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll").ToString());
 
-        Assembly.LoadFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll");
+        var assemlby = Assembly.LoadFile($"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\Newtonsoft.Json.dll");
 
+        _logger.LogInformation(assemlby.GetName().Version.Major.ToString());
 
         var exoplanets = _db.Set<Exoplanet>();
 
