@@ -50,7 +50,7 @@ public static class DependencyInjection
             .AddRefitClient<IExoplanetService>()
             .SetHttpBaseAddress("https://exoplanetarchive.ipac.caltech.edu")
 
-            .AddTransient<IImageHandler, ImageHandler>()
+            .AddTransient<IImageHandler, StaticImageHandler>()
 
             .AddDbContext<ExoplanetContext>(options =>
             {

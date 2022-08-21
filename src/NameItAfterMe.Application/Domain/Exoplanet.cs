@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace NameItAfterMe.Application.Domain;
+﻿namespace NameItAfterMe.Application.Domain;
 
 public class Exoplanet
 {
@@ -9,16 +7,19 @@ public class Exoplanet
     public string? ProvidedName { get; private set; }
     public string HostName { get; private set; }
     public Distance Distance { get; private set; }
+    public string ImageUrl { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    // EF Constructor
     private Exoplanet() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    public Exoplanet(Distance distance, string hostName, string name)
+    public Exoplanet(Distance distance, string hostName, string name, string imageUrl)
     {
         Distance = distance;
         HostName = hostName;
         Name = name;
+        ImageUrl = imageUrl;
     }
 
     public void NameIt(string name, string? backstory = null)

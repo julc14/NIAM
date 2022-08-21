@@ -31,15 +31,20 @@
 
                 @if (_exoplanets is not null)
                 {
-                    <MudCarousel Style="height:450px;clip-path:initial" ItemsSource=@_exoplanets Context="planet" AutoCycle=@_carouselRotating>
-                        <ItemTemplate>
-                            <PlanetCard
-                                Square="true"
-                                Style="margin-right:20px;margin-left:20px"
-                                Elevation="10"
-                                Exoplanet=@planet
-                                IsOverlayVisableChanged="isVisable => SetCarouselRotating(!isVisable)" />
-                        </ItemTemplate>
+                    <MudCarousel TData=PlanetCard Style="height:450px;clip-path:initial" AutoCycle=@_carouselRotating >
+
+                        @foreach (var planet in _exoplanets)
+                        {
+                            <MudCarouselItem Transition="Transition.Fade">
+                                <PlanetCard Square="true"
+                                    Style="margin-right:20px;margin-left:20px"
+                                    Elevation="10"
+                                    Exoplanet=@planet
+                                    IsOverlayVisableChanged="isVisable => SetCarouselRotating(!isVisable)" />
+
+                            </MudCarouselItem>
+                        }
+
                     </MudCarousel>
                 }
                 else

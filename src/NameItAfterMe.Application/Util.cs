@@ -34,4 +34,13 @@ internal static class Util
         var content = await source.ToListAsync(token);
         return new PagedResult<T>(pageNumber, pageSize, content);
     }
+
+    public static T PickRandom<T>(this IEnumerable<T> enumerable)
+    {
+        int index = Random.Shared.Next(0, enumerable.Count());
+        return enumerable.ElementAt(index);
+    }
+
+    public static DateOnly AsDateOnly(this DateTime dateTime) 
+        => DateOnly.FromDateTime(dateTime);
 }

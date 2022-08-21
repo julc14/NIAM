@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NameItAfterMe.Application.Domain;
+using NameItAfterMe.Application.Infrastructure.Files;
 using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
 using NameItAfterMe.Infrastructure.Persistance;
 
@@ -14,27 +15,39 @@ public class SyncronizeExoplanetDataHandler : IRequestHandler<SyncronizeExoplane
 {
     private readonly IExoplanetService _exoplanetApi;
     private readonly ExoplanetContext _db;
+    private readonly IImageHandler _imageHandler;
 
     public SyncronizeExoplanetDataHandler(
+        IImageHandler imageHandler,
         IExoplanetService exoplanetApi,
         ExoplanetContext db)
-            => (_exoplanetApi, _db) = (exoplanetApi, db);
+            => (_exoplanetApi, _db, _imageHandler) = (exoplanetApi, db, imageHandler);
 
     public async Task<Unit> Handle(SyncronizeExoplanetData request, CancellationToken cancellationToken)
     {
+        if (_imageHandler is StaticImageHandler staticImageHandler)
+        {
+            staticImageHandler.LocalFolder = "Images\\Exoplanet";
+        }
+
         var exoplanets =
             from response in await _exoplanetApi.GetAllExoplanets()
             where response.Distance.HasValue
             where response.HostName is not null
             where response.Name is not null
-            let distance = new Distance("Parsecs", response.Distance!.Value)
-            select new Exoplanet(distance, response.HostName!, response.Name!);
+            select new SyncronizeExoplanetDto(response.Name!, response.HostName!, response.Distance!.Value, "Parsecs");
 
         await _db.Set<Exoplanet>().LoadAsync(cancellationToken);
 
-        foreach (var planet in exoplanets.Distinct())
+        foreach (var (name, hostName, distance, unit) in exoplanets.Distinct())
         {
-            var dbitem = await _db.FindAsync<Exoplanet>(planet.Name);
+            var dbitem = await _db.FindAsync<Exoplanet>(name);
+
+            var imageUrl = dbitem is null
+                ? _imageHandler.EnumerateImages().PickRandom().LocalRootPath
+                : dbitem.ImageUrl;
+
+            var planet = new Exoplanet(new Distance(unit, distance), hostName, name, imageUrl);
 
             if (dbitem is null)
             {
