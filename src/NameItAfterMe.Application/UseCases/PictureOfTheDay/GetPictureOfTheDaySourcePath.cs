@@ -30,7 +30,10 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
         _imageHandler = imageHandler;
         _pictureOfTheDayService = pictureOfTheDayService;
 
-        imageHandler.LocalFolder = "Images/PictureOfTheDayImages";
+        if (_imageHandler is StaticImageHandler staticImageHandler)
+        {
+            staticImageHandler.LocalFolder = "Images\\PictureOfTheDayImages";
+        }
     }
 
     public async Task<string> Handle(GetPictureOfTheDaySourcePath request, CancellationToken cancellationToken)

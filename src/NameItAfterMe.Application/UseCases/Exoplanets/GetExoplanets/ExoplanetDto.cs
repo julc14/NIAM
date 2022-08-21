@@ -10,4 +10,5 @@ public class ExoplanetDto
     public string DistanceUnits { get; set; } = string.Empty;
     public string ProvidedName { get; set; } = string.Empty;
     public string HostName { get; set; } = string.Empty;
+    public string ImageUrl { get; set; }
 }

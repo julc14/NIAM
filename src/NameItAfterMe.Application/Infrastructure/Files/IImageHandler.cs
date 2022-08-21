@@ -5,11 +5,6 @@ namespace NameItAfterMe.Application.Infrastructure.Files;
 public interface IImageHandler
 {
     /// <summary>
-    ///     The local folder to search. Defaults to 'Images'.
-    /// </summary>
-    string LocalFolder { get; set; }
-
-    /// <summary>
     ///     Persist the content stream to some storage mechanism.
     /// </summary>
     /// <param name="fileIdentifier">
@@ -36,4 +31,11 @@ public interface IImageHandler
     ///     Whether the search was succesfull.
     /// </returns>
     bool TrySearch(string fileIdentifier, [MaybeNullWhen(false)] out ImageMetadata image);
+
+    /// <summary>
+    ///     Enumerates all images matching provided fileName
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    IEnumerable<ImageMetadata> EnumerateImages(string? searchPattern = null);
 }
