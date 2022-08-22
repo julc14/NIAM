@@ -42,7 +42,6 @@
 </MudOverlay>
 
 @code {
-    private IEnumerable<StoryDto> _stories;
     private string? _name;
     private bool _isVisable;
     private NameExoplanet _nameExoplanetRequest = new ();
@@ -81,10 +80,8 @@
     [Parameter] 
     public EventCallback<bool> IsVisableChanged { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         _nameExoplanetRequest.Name = Exoplanet.Name;
-
-        //_stories = await HttpClient.GetFromJsonAsync<IEnumerable<StoryDto>>("Story");
     }
 }
