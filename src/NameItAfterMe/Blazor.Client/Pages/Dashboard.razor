@@ -21,8 +21,14 @@
                     @if (_exoplanetCount is not null)
                     {
                         <MudCardContent>
-                            <MudText Typo=Typo.body1>Total Exoplanets: @_exoplanetCount.TotalExoplanets</MudText>
-                            <MudText Typo=Typo.body1>Named Exoplanets: @_exoplanetCount.NamedExoplanets</MudText>
+                            <MudStack Justify="Justify.SpaceEvenly" Row="true">
+                                <MudStack Justify="Justify.Center">
+                                     <MudText Typo=Typo.h5>@_exoplanetCount.TotalExoplanets</MudText>
+                                     <MudText Typo=Typo.body1>Total Exoplanets </MudText>
+                                </MudStack>
+
+                                <MudText Typo=Typo.body1>Named Exoplanets: @_exoplanetCount.NamedExoplanets</MudText>
+                            </MudStack>
                         </MudCardContent>
                     }
                 </MudCard>
@@ -31,7 +37,7 @@
 
                 @if (_exoplanets is not null)
                 {
-                    <MudCarousel TData=PlanetCard Style="height:450px;clip-path:initial" AutoCycle=@_carouselRotating >
+                    <MudCarousel TData=PlanetCard Style="height:440px;clip-path:initial" AutoCycle=@_carouselRotating >
 
                         @foreach (var planet in _exoplanets)
                         {
