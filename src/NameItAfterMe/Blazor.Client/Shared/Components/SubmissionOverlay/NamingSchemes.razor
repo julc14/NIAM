@@ -1,5 +1,5 @@
 ﻿<OverlayTabTemplate>
-    <MudStack Row="true">
+    <MudStack>
 
         <MudForm>
             <MudTextField 
@@ -10,21 +10,16 @@
                     ValueChanged="(name) => State.PersonsName = name" />
         </MudForm>
 
-        <MudRadioGroup 
-                T="@NamingScheme" 
-                SelectedOptionChanged="(scheme) => State.Scheme = scheme" 
-                Style="padding=6px" 
-                SelectedOption=@State.Scheme>
+        <MudSelect 
+            T="@NamingScheme"
+            ValueChanged="(scheme) => State.Scheme = scheme">
 
-            <div style="overflow:scroll;max-height:300px;">
-                <MudStack Spacing=0>
-                    @foreach (var scheme in Enum.GetValues<NamingScheme>())
-                    {
-                        <MudRadio Color="Color.Primary" Option="@scheme">@scheme</MudRadio>
-                    }
-                </MudStack>
-            </div>
-        </MudRadioGroup>
+            @foreach (var scheme in Enum.GetValues<NamingScheme>())
+            {
+                <MudSelectItem Value="@scheme" T="@NamingScheme" />
+            }
+
+        </MudSelect>
 
     </MudStack>
 </OverlayTabTemplate>
