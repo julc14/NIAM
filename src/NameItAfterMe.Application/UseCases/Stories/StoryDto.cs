@@ -5,6 +5,6 @@ namespace NameItAfterMe.Application.UseCases.Stories;
 
 public record StoryDto
 {
-    public string Name { get; set; }
-    public IEnumerable<string> WordDescriptor { get; set; }
+    public required string Name { get; init; }
+    public required IEnumerable<string> WordDescriptor { get; init; }
 }

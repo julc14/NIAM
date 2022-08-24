@@ -7,12 +7,12 @@
     <PlanetCardActions OnSaveClick="() => IsOverlayVisable = true" />
 </MudCard>
 
-<SubmissionOverlay Exoplanet=@Exoplanet
-                   PlanetImagePath=@Exoplanet.ImageUrl
-                   @bind-IsVisable="@IsOverlayVisable" />
+<SubmissionOverlay 
+    Exoplanet=@Exoplanet
+    PlanetImagePath=@Exoplanet.ImageUrl
+    @bind-IsVisable="@IsOverlayVisable" />
 
 @code {
-    private string? _imagePath;
     private bool _isOverlayVisable;
 
     private bool IsOverlayVisable
@@ -32,11 +32,8 @@
         }
     }
 
-    [Inject]
-    public HttpClient HttpClient { get; set; } = null!;
-
     [Parameter, EditorRequired]
-    public ExoplanetDto Exoplanet { get; set; } = null!;
+    public required ExoplanetDto Exoplanet { get; set; }
 
     [Parameter]
     public EventCallback<bool> IsOverlayVisableChanged { get; set; }

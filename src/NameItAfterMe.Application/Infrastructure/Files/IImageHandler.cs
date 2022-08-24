@@ -1,41 +1,36 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using NameItAfterMe.Application.Abstractions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NameItAfterMe.Application.Infrastructure.Files;
 
-public interface IImageHandler
+public interface IImageHandler<T>
+    where T : IImage, new()
 {
     /// <summary>
-    ///     Persist the content stream to some storage mechanism.
+    ///     Enumerates the images,
     /// </summary>
-    /// <param name="fileIdentifier">
-    ///     The desired file identifier.
-    /// </param>
-    /// <param name="getStreamContent">
-    ///     How to aquire the desired content to save.
+    /// <param name="token">
+    ///     The cancellation token.
     /// </param>
     /// <returns>
-    ///     Result describing the saved image.
+    ///     A stream of images.
     /// </returns>
-    Task<ImageMetadata> SaveAsync(string fileIdentifier, Func<Task<Stream>> getStreamContent);
+    IAsyncEnumerable<T> EnumerateImagesAsync(CancellationToken token = default);
 
     /// <summary>
-    ///     Search for a file matching the given identifer.
+    ///     Uploads the provided stream as an image.
     /// </summary>
-    /// <param name="fileIdentifier">
-    ///     The file identifier.
+    /// <param name="stream">
+    ///     The content stream.
     /// </param>
-    /// <param name="image">
-    ///     The found image, if any.
+    /// <param name="name">
+    ///     The name to give the image, or a random guid if not provided.
+    /// </param>
+    /// <param name="token">
+    ///     The cancellation token.
     /// </param>
     /// <returns>
-    ///     Whether the search was succesfull.
+    ///     The uploaded image metadata.
     /// </returns>
-    bool TrySearch(string fileIdentifier, [MaybeNullWhen(false)] out ImageMetadata image);
-
-    /// <summary>
-    ///     Enumerates all images matching provided fileName
-    /// </summary>
-    /// <param name="fileName"></param>
-    /// <returns></returns>
-    IEnumerable<ImageMetadata> EnumerateImages(string? searchPattern = null);
+    Task<T> UploadAsync(Stream stream, string? name = null, CancellationToken token = default);
 }

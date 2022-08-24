@@ -48,13 +48,13 @@
     private NameExoplanetOperationState _state = new();
 
     [Inject] 
-    public HttpClient HttpClient { get; set; } = null!;
+    public required HttpClient HttpClient { get; set; }
 
     [Parameter, EditorRequired] 
-    public string PlanetImagePath { get; set; } = null!;
+    public required string PlanetImagePath { get; set; }
 
     [Parameter, EditorRequired] 
-    public ExoplanetDto Exoplanet { get; set; } = null!;
+    public required ExoplanetDto Exoplanet { get; set; }
 
     [Parameter] 
     public string Height { get; set; } = "350px";

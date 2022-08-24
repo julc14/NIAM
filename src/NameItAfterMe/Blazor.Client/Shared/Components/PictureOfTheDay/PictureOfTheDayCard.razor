@@ -28,10 +28,10 @@
 
 @code {
     [Inject]
-    public HttpClient HttpClient { get; set; } = null!;
+    public required HttpClient HttpClient { get; set; }
 
     [Parameter, EditorRequired]
-    public string Source { get; set; } = null!;
+    public required string Source { get; set; }
 
     [Parameter]
     public int Height { get; set; } = 800;

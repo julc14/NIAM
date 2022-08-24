@@ -24,7 +24,7 @@ internal class QueryParametersParser : IComponentParser
 
         if (values.Count >= 1)
         {
-            var firstItem = values[0];
+            var firstItem = values[0] ?? throw new InvalidOperationException("Unexpected null valued key");
 
             if (values.Count > 1)
             {

@@ -15,39 +15,49 @@ public class SyncronizeExoplanetDataHandler : IRequestHandler<SyncronizeExoplane
 {
     private readonly IExoplanetService _exoplanetApi;
     private readonly ExoplanetContext _db;
-    private readonly IImageHandler _imageHandler;
+    private readonly IImageHandler<ExoplanetImage> _exoplanetImageHandler;
 
     public SyncronizeExoplanetDataHandler(
-        IImageHandler imageHandler,
+        IImageHandler<ExoplanetImage> exoplanetImageHandler,
         IExoplanetService exoplanetApi,
         ExoplanetContext db)
-            => (_exoplanetApi, _db, _imageHandler) = (exoplanetApi, db, imageHandler);
+            => (_exoplanetApi, _db, _exoplanetImageHandler) = (exoplanetApi, db, exoplanetImageHandler);
 
     public async Task<Unit> Handle(SyncronizeExoplanetData request, CancellationToken cancellationToken)
     {
-        if (_imageHandler is StaticImageHandler staticImageHandler)
-        {
-            staticImageHandler.LocalFolder = "Images\\Exoplanet";
-        }
+        // todo: lazy initialization
+        var exoplanetImages = await _exoplanetImageHandler
+            .EnumerateImagesAsync(cancellationToken)
+            .ToListAsync(cancellationToken);
 
-        var exoplanets =
+        // let FindAsync below check the locally loaded cache avoiding db roundtrips
+        await _db
+            .Set<Exoplanet>()
+            .LoadAsync(cancellationToken);
+
+        var nasaExoplanets =
             from response in await _exoplanetApi.GetAllExoplanets()
             where response.Distance.HasValue
             where response.HostName is not null
             where response.Name is not null
-            select new SyncronizeExoplanetDto(response.Name!, response.HostName!, response.Distance!.Value, "Parsecs");
+            let distance = new Distance() 
+            { 
+                Unit = "Parsecs", 
+                Value = response.Distance!.Value 
+            }
+            select (response.Name!, response.HostName!, distance);
 
-        await _db.Set<Exoplanet>().LoadAsync(cancellationToken);
-
-        foreach (var (name, hostName, distance, unit) in exoplanets.Distinct())
+        foreach (var (name, hostName, distance) in nasaExoplanets.Distinct())
         {
             var dbitem = await _db.FindAsync<Exoplanet>(name);
 
-            var imageUrl = dbitem is null
-                ? _imageHandler.EnumerateImages().PickRandom().LocalRootPath
-                : dbitem.ImageUrl;
-
-            var planet = new Exoplanet(new Distance(unit, distance), hostName, name, imageUrl);
+            var planet = new Exoplanet(
+                distance,
+                hostName,
+                name,
+                // since we are randomly assigning each planet an image, only assign if null.
+                // otherwise we will update each item to pointlessly assign a different random image
+                dbitem?.ImageUrl ?? exoplanetImages.PickRandom().Url);
 
             if (dbitem is null)
             {
