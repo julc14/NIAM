@@ -8,12 +8,6 @@ namespace NameItAfterMe.Application.Domain;
 
 public class Distance
 {
-    public decimal Value { get; set; }
-    public string Unit { get; set; }
-
-    public Distance(string unit, decimal value)
-    {
-        Unit = unit;
-        Value = value;
-    }
+    public required decimal Value { get; init; }
+    public required string Unit { get; init; }
 }

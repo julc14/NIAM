@@ -5,7 +5,6 @@
     <MudButton Color="Color.Primary"
                Variant="Variant.Filled" 
                ButtonType="ButtonType.Submit" 
-               OnClick="NameExoplanet"
                Style ="top:90%;left:78%"
                Size="Size.Large">
             Submit
@@ -14,13 +13,8 @@
 
 @code {
     [Inject]
-    public HttpClient HttpClient { get; set; } = null!;
+    public required HttpClient HttpClient { get; set; }
 
     [Parameter, EditorRequired]
-    public NameExoplanetOperationState State { get; set; } = null!;
-
-    private async Task NameExoplanet()
-    {
-        //await HttpClient.PostAsJsonAsync(NameExoplanetRequest);
-    }
+    public required NameExoplanetOperationState State { get; set; }
 }

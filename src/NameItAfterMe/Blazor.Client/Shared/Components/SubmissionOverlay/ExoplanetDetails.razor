@@ -39,10 +39,10 @@
 
 @code {
     [Parameter, EditorRequired]
-    public string ImageSource { get; set; } = null!;
+    public required string ImageSource { get; set; }
 
     [Parameter, EditorRequired]
-    public ExoplanetDto Exoplanet { get; set; } = null!;
+    public required ExoplanetDto Exoplanet { get; set; }
 
     [Parameter] 
     public int Elevation { get; set; }

@@ -2,6 +2,6 @@
 
 public class NameExoplanetOperationState
 {
-    public string PersonsName { get; set; }
+    public string? PersonsName { get; set; }
     public NamingScheme Scheme { get; set; }
 }

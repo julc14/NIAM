@@ -23,13 +23,13 @@
     private IJSObjectReference? _instance;
 
     [Inject] 
-    public IJSRuntime JsRuntime { get; set; } = null!;
+    public required IJSRuntime JsRuntime { get; set; }
 
     [Parameter, EditorRequired]
-    public InfiniteScrollingItemsProviderRequestDelegate<T> ItemsProvider { get; set; } = null!;
+    public required InfiniteScrollingItemsProviderRequestDelegate<T> ItemsProvider { get; set; }
 
     [Parameter, EditorRequired]
-    public RenderFragment<T> ItemTemplate { get; set; } = null!;
+    public required RenderFragment<T> ItemTemplate { get; set; }
 
     [Parameter]
     public RenderFragment? LoadingTemplate { get; set; }
@@ -53,8 +53,7 @@
             if (!newItems.Any())
             {
                 // if no items are returned assume we haved reached last item we could load
-                // dispose JS intersection observer
-                // this will not affect already-rendered items.
+                // dispose JS intersection observer as its no longer needed
                 await DisposeAsync();
             }
 

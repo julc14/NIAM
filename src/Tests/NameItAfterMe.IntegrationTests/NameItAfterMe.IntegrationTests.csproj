@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     
     <!--https://stackoverflow.com/questions/72185494/github-actions-deploys-wrong-version-of-newtonsoft-json-nuget-package-to-azure-->
