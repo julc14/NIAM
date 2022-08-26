@@ -25,7 +25,9 @@ public class NameExoplanetHandler : IRequestHandler<NameExoplanet>
 
     public async Task<Unit> Handle(NameExoplanet request, CancellationToken cancellationToken)
     {
-        var planet = await _db.Set<Exoplanet>().FindAsync(request.Name);
+        var planet = await _db
+            .Set<Exoplanet>()
+            .FindAsync(request.Name);
 
         if (planet is null)
         {

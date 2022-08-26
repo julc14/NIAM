@@ -102,6 +102,25 @@ public static class RoutingExtentions
         return client.GetFromJsonAsync<T>(request.AsRoute(), token);
     }
 
+    /// <summary>
+    ///     Sends a POST request to the url consturctured from this request with
+    ///     the request serialized as JSON in the request body.
+    /// </summary>
+    /// <typeparam name="T">
+    ///     The type of request.
+    /// </typeparam>
+    /// <param name="client">
+    ///     The Http client.
+    /// </param>
+    /// <param name="request">
+    ///     The medaitr request.
+    /// </param>
+    /// <param name="token">
+    ///     The cancellation token, if any
+    /// </param>
+    /// <returns>
+    ///     A Task representing an asyncronous operation.
+    /// </returns>
     public static Task<HttpResponseMessage> PostAsJsonAsync<T>(
         this HttpClient client,
         IRequest<T> request,

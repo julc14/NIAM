@@ -40,10 +40,10 @@ public class SyncronizeExoplanetDataHandler : IRequestHandler<SyncronizeExoplane
             where response.Distance.HasValue
             where response.HostName is not null
             where response.Name is not null
-            let distance = new Distance() 
-            { 
-                Unit = "Parsecs", 
-                Value = response.Distance!.Value 
+            let distance = new Distance()
+            {
+                Unit = "Parsecs",
+                Value = response.Distance!.Value
             }
             select (response.Name!, response.HostName!, distance);
 
