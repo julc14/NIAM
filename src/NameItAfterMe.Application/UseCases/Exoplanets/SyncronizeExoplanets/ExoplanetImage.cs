@@ -2,7 +2,7 @@
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets.SyncronizeExoplanets;
 
-public class ExoplanetImage : IImage
+public class ExoplanetImage : IImage, IImageRepositoryConfiguration
 {
     public static string ContainerName => "exoplanets";
 

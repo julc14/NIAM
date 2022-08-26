@@ -42,31 +42,33 @@ public static class RoutingExtentions
         }
 
         var routeBuilder = new StringBuilder(endpoint.Route);
-        var firstQueryParam = true;
+        var isFirstQueryParam = true;
 
         foreach (var property in concreteType.GetProperties())
         {
-            var value = property.GetValue(request);
+            var value = property.GetValue(request)?.ToString();
 
-            if (value == default)
+            if (value is null)
                 continue;
 
+            // regex match anyting between brackets with property Name
+            // {propertyName:int} will be matched
+            // todo: type check where :type is provided on route.
             var match = Regex.Match(endpoint.Route, $@"{{({property.Name}.*?)\}}");
 
             if (match.Success)
             {
-                // route param
-                routeBuilder.Replace(match.Value, value.ToString());
+                routeBuilder.Replace(match.Value, value);
             }
             else
             {
-                // query param
-                var leadingChar = firstQueryParam
-                    ? '?'
-                    : '&';
+                routeBuilder
+                    .Append(isFirstQueryParam ? '?' : '&')
+                    .Append(property.Name)
+                    .Append('=')
+                    .Append(value);
 
-                firstQueryParam = false;
-                routeBuilder.Append(leadingChar).Append(property.Name).Append('=').Append(value);
+                isFirstQueryParam = false;
             }
         }
 

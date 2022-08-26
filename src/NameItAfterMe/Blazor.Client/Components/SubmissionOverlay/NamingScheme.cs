@@ -1,4 +1,4 @@
-﻿namespace NameItAfterMe.Blazor.Client.Shared.Components.SubmissionOverlay;
+﻿namespace NameItAfterMe.Blazor.Client.Components.SubmissionOverlay;
 
 // todo: store in db.
 public enum NamingScheme

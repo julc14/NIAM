@@ -37,7 +37,7 @@
 
                 @if (_exoplanets is not null)
                 {
-                    <MudCarousel TData=PlanetCard Style="height:440px;clip-path:initial" AutoCycle=@_carouselRotating >
+                    <MudCarousel TData=PlanetCard Style="height:420px;clip-path:initial" AutoCycle=@_carouselRotating >
 
                         @foreach (var planet in _exoplanets)
                         {
@@ -67,8 +67,8 @@
                     <PictureOfTheDayCard 
                         ObjectFit="ObjectFit.Cover"
                         Source="@_imagePath"
-                        Height="590"
-                        Style="width:97%; margin-right:20px; margin-top:20px; margin-botton:20px"
+                        Height="610"
+                        Style="width:97%; margin-right:20px; margin-top:20px; margin-bottom:20px"
                         ImageStyle="width:100%;padding:10px;" />
                 }
                 else

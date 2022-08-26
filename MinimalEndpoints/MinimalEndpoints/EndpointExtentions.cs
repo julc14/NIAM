@@ -128,13 +128,28 @@ public static class EndpointExtentions
             let medaitrInterface = mediatrInterfaces.First()
             let responseType = medaitrInterface.GetGenericArguments().First()
 
-            select new EndpointMetadata(
-                requestType,
-                responseType,
-                endpointAttribute.Route ?? requestType.Name,
-                endpointAttribute.HttpMethod)
+            let httpMethod = endpointAttribute.HttpMethod
+                ?? InferHttpMethodFromRequestType(requestType)
+                ?? throw new InvalidOperationException($"Cannot select any HttpProtocal for {requestType}")
+
+            select new EndpointMetadata()
             {
+                RequestType = requestType,
+                ResponseType = responseType,
                 ContentType = endpointAttribute.ContentType,
+                HttpMethod = httpMethod,
+                Route = endpointAttribute.Route ?? requestType.Name
             };
+    }
+
+    private static HttpMethods? InferHttpMethodFromRequestType(Type requestType)
+    {
+        var httpNames = Enum.GetNames<HttpMethods>();
+        var httpMethod = Array.Find(httpNames, httpMethod => requestType.Name.StartsWith(httpMethod));
+
+        if (httpMethod is null)
+            return null;
+
+        return Enum.Parse<HttpMethods>(httpMethod);
     }
 }

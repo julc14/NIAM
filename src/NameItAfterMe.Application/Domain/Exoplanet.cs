@@ -3,7 +3,7 @@
 public class Exoplanet
 {
     public string Id { get; set; } = null!;
-    public string Name { get; private set; }
+    public required string Name { get; init; }
     public string? ProvidedName { get; private set; }
     public string HostName { get; private set; }
     public Distance Distance { get; private set; }
@@ -14,11 +14,10 @@ public class Exoplanet
     private Exoplanet() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    public Exoplanet(Distance distance, string hostName, string name, string imageUrl)
+    public Exoplanet(Distance distance, string hostName, string imageUrl)
     {
         Distance = distance;
         HostName = hostName;
-        Name = name;
         ImageUrl = imageUrl;
     }
 

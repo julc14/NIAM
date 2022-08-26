@@ -54,10 +54,12 @@ public class SyncronizeExoplanetDataHandler : IRequestHandler<SyncronizeExoplane
             var planet = new Exoplanet(
                 distance,
                 hostName,
-                name,
                 // since we are randomly assigning each planet an image, only assign if null.
                 // otherwise we will update each item to pointlessly assign a different random image
-                dbitem?.ImageUrl ?? exoplanetImages.PickRandom().Url);
+                dbitem?.ImageUrl ?? exoplanetImages.PickRandom().Url)
+            {
+                Name = name,
+            };
 
             if (dbitem is null)
             {
