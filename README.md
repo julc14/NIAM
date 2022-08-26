@@ -66,7 +66,7 @@ Putting all the pieces together here is a general system diagram.
 
 (MinimalEndpoints could be its own package but is left here for simplicity)
 
-Controllers are dinosaurs. Rather than hosting the mediatr use case behind controllers lets us MinimalAPIs introduced in .NET6 and host it behind an automatically generated endpoint. Generating the endpoint like this has its down-sides and will restrict usage of some neat functionality MVC will give you, but its not needed for this project anyways.
+Controllers are dinosaurs. Rather than hosting the mediatr use case behind controllers lets use MinimalAPIs introduced in .NET6 and host it behind an automatically generated endpoint. 
 
 Here is an example of a mediatr use case:
 
@@ -112,7 +112,7 @@ public async Task<<ActionResult<IEnumerable<ExoplnaetDto>>>> GetPlanets([FromSer
 }
 ```
 
-As you can see the controller method is performing simple validation and forwarding the requet to mediatr. Many controller method will look similar and boiler-platey.
+As you can see the controller method is performing simple validation and forwarding the requet to mediatr. Many controller method will look similar and boiler-platey when using Mediatr.
 
 If we handle validation with mediatr directly the only thing that is left is forwarding to mediatr. We can introduce an attribute and at startup automaticlly create an endpoint for each use case marked with this attribute.
 
@@ -176,3 +176,10 @@ Now the endpoint will be automatically generated at startup and the controller c
 1. Request Body
 2. Route Values
 3. Query Parameters
+
+There are still downsides to this approach vs controllers that are not worked out yet, but should be able to once I have time:
+1. Authentication/Authorization
+2. Attributes are not very flexible and slow 
+3. Incentivises server-level validation where validation could be offloaded to the client
+4. API versioning
+5. Writing to request body with anything other than JSON/Streams
