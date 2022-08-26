@@ -1,4 +1,4 @@
-﻿namespace NameItAfterMe.Blazor.Client.Shared.Components.InfiniteScrolling;
+﻿namespace NameItAfterMe.Blazor.Client.Components.InfiniteScrolling;
 
 public sealed class InfiniteScrollingItemsProviderRequest
 {

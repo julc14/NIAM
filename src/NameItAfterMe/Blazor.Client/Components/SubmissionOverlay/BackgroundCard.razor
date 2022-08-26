@@ -1,11 +1,14 @@
-﻿@using NameItAfterMe.Application.Domain
-<OverlayTabTemplate >
+﻿<OverlayTabTemplate >
 
-    <MudSelect T="string" Value=@_currentStory?.Name ValueChanged="(story) => _currentStory = _stories?.FirstOrDefault(x => x.Name == story)">
+    <MudSelect T="string" 
+        Value=@_currentStory?.Name 
+        ValueChanged="(story) => _currentStory = _stories?.FirstOrDefault(x => x.Name == story)" >
+
         @foreach (var story in _stories ?? Enumerable.Empty<StoryDto>())
         {
             <MudSelectItem Value=story.Name />
         }
+
     </MudSelect>
 
     <MudForm>

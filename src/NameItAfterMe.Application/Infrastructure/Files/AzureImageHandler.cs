@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 namespace NameItAfterMe.Application.Infrastructure.Files;
 
 internal class AzureImageHandler<T> : IImageHandler<T>
-    where T : IImage, new()
+    where T : IImage, IImageRepositoryConfiguration, new()
 {
     private readonly Lazy<BlobContainerClient> _container;
 
@@ -17,7 +17,7 @@ internal class AzureImageHandler<T> : IImageHandler<T>
     }
 
     ///<inheritdoc/>
-    public async IAsyncEnumerable<T> EnumerateImagesAsync([EnumeratorCancellation] CancellationToken token = default)
+    public async IAsyncEnumerable<IImage> EnumerateImagesAsync([EnumeratorCancellation] CancellationToken token = default)
     {
         var container = _container.Value;
         await container.CreateIfNotExistsAsync(cancellationToken: token);
@@ -36,7 +36,7 @@ internal class AzureImageHandler<T> : IImageHandler<T>
     }
 
     ///<inheritdoc/>
-    public async Task<T> UploadAsync(Stream stream, string? name = null, CancellationToken token = default)
+    public async Task<IImage> UploadAsync(Stream stream, string? name = null, CancellationToken token = default)
     {
         var container = _container.Value;
         await container.CreateIfNotExistsAsync(cancellationToken: token);

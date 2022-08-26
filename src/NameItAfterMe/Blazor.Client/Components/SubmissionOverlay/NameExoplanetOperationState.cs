@@ -1,4 +1,4 @@
-﻿namespace NameItAfterMe.Blazor.Client.Shared.Components.SubmissionOverlay;
+﻿namespace NameItAfterMe.Blazor.Client.Components.SubmissionOverlay;
 
 public class NameExoplanetOperationState
 {

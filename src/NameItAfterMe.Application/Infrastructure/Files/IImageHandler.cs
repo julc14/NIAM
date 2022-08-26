@@ -15,7 +15,7 @@ public interface IImageHandler<T>
     /// <returns>
     ///     A stream of images.
     /// </returns>
-    IAsyncEnumerable<T> EnumerateImagesAsync(CancellationToken token = default);
+    IAsyncEnumerable<IImage> EnumerateImagesAsync(CancellationToken token = default);
 
     /// <summary>
     ///     Uploads the provided stream as an image.
@@ -32,5 +32,5 @@ public interface IImageHandler<T>
     /// <returns>
     ///     The uploaded image metadata.
     /// </returns>
-    Task<T> UploadAsync(Stream stream, string? name = null, CancellationToken token = default);
+    Task<IImage> UploadAsync(Stream stream, string? name = null, CancellationToken token = default);
 }

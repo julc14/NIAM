@@ -1,32 +1,24 @@
 # Name It After Me
 
-This solution is primarily a learning excerise with the primary goal to build an end-to-end application requiring a non-trivial backend. As well, employing tooling where I lack a depth of experience. 
+This solution is a learning excerise where the primary goal is to build an end-to-end application with a non-trivial backend and cloud based hosting/tooling. 
 
 The application intent will be to load+store Exoplanet data from Nasa public APIs and give users the ability to name exoplanets after themselves (with an interesting backstory :)). Exoplanets are usually given very boring names (Kepler-55b, p3x500-b)
 
-## Architecture and Tooling Decisions:
+## Vertial Slice Architecture:
 
-### Vertial Slice Architecture:
-
-Given the complexity of the application (not very) it should be pointed out this solution does not require a defined architecture (and could even be considered counter-productive). We could pack everything into an ASP.Net server project and jam logic in controllers and be fine here. However, this would cut the learning experience short. Instead we will presume this application will be a starting point for a long-term bussiness application. Vertical Slice Architecure is my preferred choice for scenarios like this. 
+Given the complexity of the application (not very) it should be pointed out this solution does not require a defined backend architecture (and could even be considered counter-productive). We could jam all application logic into an ASP.Net server backend and be fine. However, this would cut the learning experience short. Instead we will presume this application will be a starting point for a long-term bussiness application. Vertical Slice Architecure is my preferred choice. 
 
 ![](/Docs/Images/VerticalSlice.png)
 
-Vertical Slice architecture style is about organizing code by features and vertical slices instead of organizing by technical concerns. It's about an idea of grouping code according to the business functionality and putting all the relevant code close together. Vertical Slice architecture can be a starting point and can be evolved later when an application become more sophisticated.
+Vertical Slice architecture style is about organizing code by features and vertical slices instead of organizing by technical concerns. We will model each feature as a transaction script (mediatr use case) and maximize coupling within the use case.
 
-### Blazor Web Assembly (WASM):
+However, we will still hold on to some layering for infastructure services
 
-We will use Blazor WASM as opposed to Server for the UI. Some day I may rewrite the UI with typescript and WASM will be more analagous than a Blazor Server implementation.
+### Other Notes:
+- Blazar WASM over Blazor Server: To experiment with client-side spa frameworks.
+- ASP.NET Server: Required for WASM... Cant access NasaAPIs directly due to CORs restriction on Nasa's side.
+- Will use Azure app service hosting and Azure Cosmos + EFCore
 
-Blazor WASM will require an ASP.NET backend to support functionality. HttpClient cannot access Nasa APIs directly due to CORS restrictions.
-
-### ASP.NET Backend:
-
-I'm not a fan of controllers and want to expirement with alternatives. We will exclusivley use Minimal APIs. In addition I want to develop a package that can automaticlly host mediatr use cases behind an endpoint. See [Minimal Endpoints](#minimal-endpoints) below.
-
-### DB + Azure Hosting:
-
-Cloud-based hosting is a must in 2022. Lets use (free) Azure-Cosmos for storage and (free) Azure app service for hosting.
 
 ### Summary:
 
@@ -65,11 +57,11 @@ Putting all the pieces together here is a general system diagram.
 
 # Minimal Endpoints
 
-(Minimal Endpoint should be its own solution but is left here for simplicity)
+(MinimalEndpoints could be its own package but is left here for simplicity)
 
-Employing medaitr with Vertical Slice Architecture gives rise to a system where application concerns live in the application layer and the controller responsibilities are minimized.
+Controllers are dinosaurs. Rather than hosting the mediatr use case behind controllers lets us MinimalAPIs introduced in .NET6 and host it behind an automatically generated endpoint. Generating the endpoint like this has its down-sides and will restrict usage of some neat functionality MVC will give you, but its not needed for this project anyways.
 
-Here is an example use case living in the application layer:
+Here is an example of a mediatr use case:
 
 ```cs
 public class GetExoplanets : IRequest<IEnumerable<ExoplanetDto>> 
@@ -113,14 +105,23 @@ public async Task<<ActionResult<IEnumerable<ExoplnaetDto>>>> GetPlanets([FromSer
 }
 ```
 
-In this case we could completly eliminate the controller method by:
-- Infering the Http method type from the request name (can still be optionally provided).
-- Validation done in application layer (FluentValidation + Mediatr pipeline behavior)
-- Automatically bind request parameters/values to the mediatr request object (and send the request to mediatr).
-- Programaticlly Handle various http return types (streams with special content type)
-- Attribute to let asp.net know which use cases to host.
+As you can see the controller method is performing simple validation and forwarding the requet to mediatr. Many controller method will look similar and boiler-platey.
 
-Now the file may look like this. And we can completly remove the controller.
+If we handle validation with mediatr directly the only thing that is left is forwarding to mediatr. We can introduce an attribute and at startup automaticlly create an endpoint for each use case marked with this attribute.
+
+```cs
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+app.UseEndpoints(builder =>
+{
+    builder.MapUseCasesFromAssembly(typeof(ApplicationService).Assembly);
+});
+
+app.Run();
+```
+
+Use case now with *Endpoint* attribute:
 
 ```cs
 [Endpoint(Route = "Exoplanet/{PageNumber}/{PageSize}")]
@@ -160,3 +161,11 @@ public class GetExoplanetValidator : AbstractValidator<GetExoplanets>
     }
 }
 ```
+
+Endpoint attribute can specify the Http method (HttpGet, post.. etc) or if absent can be inferred from the request type. **Get**Exoplanets will be map to an HttpGet.
+
+
+Now the endpoint will be automatically generated at startup and the controller can be deleted! The mediatr request properties will be bound from the following sources in order of priority
+1. Request Body
+2. Route Values
+3. Query Parameters

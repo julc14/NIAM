@@ -9,7 +9,6 @@ using NameItAfterMe.Server.Services;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,10 +37,10 @@ builder.Services.AddMinimalEndpointServices();
 builder.Services.AddHostedService<ExoplanetSyncronizationService>();
 
 builder.Services.Configure<BackgroundServiceOptions>(builder.Configuration);
+
 builder.Services.AddSwaggerGen(x => x.AddMinimalEndpointSupport());
 
 builder.Services.Configure<AzureImageHandlerOptions>(builder.Configuration.GetSection(nameof(AzureImageHandlerOptions)));
-
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();

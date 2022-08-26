@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanets;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace NameItAfterMe.IntegrationTests;
