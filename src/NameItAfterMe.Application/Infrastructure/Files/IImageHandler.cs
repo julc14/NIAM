@@ -1,5 +1,4 @@
 ﻿using NameItAfterMe.Application.Abstractions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NameItAfterMe.Application.Infrastructure.Files;
 
