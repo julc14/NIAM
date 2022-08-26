@@ -1,6 +1,13 @@
 # Name It After Me
 
-This solution is a learning excerise where the primary goal is to build an end-to-end application with a non-trivial backend and cloud based hosting/tooling. 
+This solution is a learning excerise designed to cover alot of bases of ASP.NET application development.
+- Create working end-to-end application, 
+- Functional UI, 
+- ASP.NET Server Backend, 
+- Coherent Solution Architecture Design, 
+- Unit and Integration tests, 
+- Clould based hosting and Infra 
+- More!
 
 The application intent will be to load+store Exoplanet data from Nasa public APIs and give users the ability to name exoplanets after themselves (with an interesting backstory :)). Exoplanets are usually given very boring names (Kepler-55b, p3x500-b)
 
@@ -33,10 +40,10 @@ Putting all the pieces together here is a general system diagram.
 - [x] Define use cases with Mediatr
 
 #### Blazor UI:
-- [x] Build Infinite Scrolling shared component to load unnamed exoplanets 
-- [x] Page to display NASA's picture of the day
+- [x] Infinite Scrolling component to load unnamed exoplanets 
+- [ ] Display and Download NASA's picture of the day (Waiting for dotnet 7)
 - [x] Cool Dashboard page
-- [ ] User can name unnamed exoplanet and planet can never be named again (Persist to DB).
+- [ ] User can name unnamed exoplanet and planet can never be named again (Persists to DB).
 - [ ] User can provide story as part of the naming process.
 - [ ] User can query named exoplanets.
 
