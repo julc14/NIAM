@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MinimalEndpoints.OpenApi;
 
-public static class SwaggerExtention
+public static class SwaggerExtensions
 {
     /// <summary>
     ///     Add swagger support for minimal endpoints.

@@ -9,7 +9,7 @@ using FluentValidation;
 
 namespace MinimalEndpoints;
 
-public static class EndpointExtentions
+public static class EndpointExtensions
 {
     /// <summary>
     ///     Automaticlly host mediatr request handlers from the given assembly that contain an Endpoint marker.

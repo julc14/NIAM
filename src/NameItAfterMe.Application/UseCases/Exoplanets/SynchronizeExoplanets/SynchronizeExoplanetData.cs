@@ -5,25 +5,25 @@ using NameItAfterMe.Application.Infrastructure.Files;
 using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
 using NameItAfterMe.Infrastructure.Persistance;
 
-namespace NameItAfterMe.Application.UseCases.Exoplanets.SyncronizeExoplanets;
+namespace NameItAfterMe.Application.UseCases.Exoplanets.SynchronizeExoplanets;
 
-public class SyncronizeExoplanetData : IRequest
+public class SynchronizeExoplanetData : IRequest
 {
 }
 
-public class SyncronizeExoplanetDataHandler : IRequestHandler<SyncronizeExoplanetData>
+public class SynchronizeExoplanetDataHandler : IRequestHandler<SynchronizeExoplanetData>
 {
     private readonly IExoplanetService _exoplanetApi;
     private readonly ExoplanetContext _db;
     private readonly IImageHandler<ExoplanetImage> _exoplanetImageHandler;
 
-    public SyncronizeExoplanetDataHandler(
+    public SynchronizeExoplanetDataHandler(
         IImageHandler<ExoplanetImage> exoplanetImageHandler,
         IExoplanetService exoplanetApi,
         ExoplanetContext db)
             => (_exoplanetApi, _db, _exoplanetImageHandler) = (exoplanetApi, db, exoplanetImageHandler);
 
-    public async Task<Unit> Handle(SyncronizeExoplanetData request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SynchronizeExoplanetData request, CancellationToken cancellationToken)
     {
         // todo: lazy initialization
         var exoplanetImages = await _exoplanetImageHandler

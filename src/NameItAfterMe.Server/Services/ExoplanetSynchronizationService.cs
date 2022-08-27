@@ -4,11 +4,11 @@ using NameItAfterMe.Application.UseCases.Exoplanets.SyncronizeExoplanets;
 
 namespace NameItAfterMe.Server.Services;
 
-public class ExoplanetSyncronizationService : BackgroundService
+public class ExoplanetSynchronizationService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public ExoplanetSyncronizationService(IServiceScopeFactory serviceScopeFactory)
+    public ExoplanetSynchronizationService(IServiceScopeFactory serviceScopeFactory)
         => _serviceScopeFactory = serviceScopeFactory;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
