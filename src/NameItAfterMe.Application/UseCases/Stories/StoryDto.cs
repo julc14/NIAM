@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using NameItAfterMe.Application.Domain;
-
-namespace NameItAfterMe.Application.UseCases.Stories;
+﻿namespace NameItAfterMe.Application.UseCases.Stories;
 
 public record StoryDto
 {
