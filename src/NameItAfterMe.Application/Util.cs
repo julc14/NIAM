@@ -37,7 +37,7 @@ internal static class Util
 
     public static T PickRandom<T>(this IEnumerable<T> enumerable)
     {
-        int index = Random.Shared.Next(0, enumerable.Count());
+        var index = Random.Shared.Next(0, enumerable.Count());
         return enumerable.ElementAt(index);
     }
 

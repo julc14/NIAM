@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NameItAfterMe.Application.Domain;
 using System.Security.Cryptography.X509Certificates;
 
-namespace NameItAfterMe.Application.Infrastructure.Persistance;
+namespace NameItAfterMe.Application.Infrastructure.Persistence;
 
 internal class ExoplanetConfiguration : IEntityTypeConfiguration<Exoplanet>
 {

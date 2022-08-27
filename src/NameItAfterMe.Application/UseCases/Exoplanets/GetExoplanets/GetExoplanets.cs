@@ -3,15 +3,15 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
-using NameItAfterMe.Infrastructure.Persistance;
+using NameItAfterMe.Application.Infrastructure.Persistence;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanets;
 
 [Endpoint(Route = "Exoplanet/{PageNumber:int}/{PageSize:int}")]
 public class GetExoplanets : IRequest<IEnumerable<ExoplanetDto>>
 {
-    public int PageNumber { get; set; } = 1;
-    public int PageSize { get; set; } = 15;
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 15;
 }
 
 public class GetExoplanetHandler : IRequestHandler<GetExoplanets, IEnumerable<ExoplanetDto>>

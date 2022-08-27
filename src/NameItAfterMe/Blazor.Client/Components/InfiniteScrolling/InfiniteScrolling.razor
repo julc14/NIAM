@@ -1,7 +1,7 @@
 ﻿@typeparam T
 @implements IAsyncDisposable
 
-<MudVirtualize Items=@_items ChildContent=@ItemTemplate IsEnabled=@true />
+<MudVirtualize Items="@_items" ChildContent="@ItemTemplate" IsEnabled="@true" />
 
 @if (@LoadingTemplate is not null && @_isLoading)
 {

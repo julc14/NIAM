@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NameItAfterMe.Application.Abstractions;
 using NameItAfterMe.Application.Domain;
-using NameItAfterMe.Application.Infrastructure.Files;
 using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
-using NameItAfterMe.Infrastructure.Persistance;
+using NameItAfterMe.Application.Infrastructure.Persistence;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets.SynchronizeExoplanets;
 
@@ -49,25 +49,25 @@ public class SynchronizeExoplanetDataHandler : IRequestHandler<SynchronizeExopla
 
         foreach (var (name, hostName, distance) in nasaExoplanets.Distinct())
         {
-            var dbitem = await _db.FindAsync<Exoplanet>(name);
+            var dbItem = await _db.FindAsync<Exoplanet>(name);
 
             var planet = new Exoplanet(
                 distance,
                 hostName,
                 // since we are randomly assigning each planet an image, only assign if null.
                 // otherwise we will update each item to pointlessly assign a different random image
-                dbitem?.ImageUrl ?? exoplanetImages.PickRandom().Url)
+                dbItem?.ImageUrl ?? exoplanetImages.PickRandom().Url)
             {
                 Name = name,
             };
 
-            if (dbitem is null)
+            if (dbItem is null)
             {
                 _db.Add(planet);
             }
             else
             {
-                _db.Entry(dbitem).CurrentValues.SetValues(planet);
+                _db.Entry(dbItem).CurrentValues.SetValues(planet);
             }
         }
 

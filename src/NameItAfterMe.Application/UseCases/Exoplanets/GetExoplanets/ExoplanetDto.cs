@@ -5,10 +5,10 @@ namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanets;
 
 public class ExoplanetDto
 {
-    public required string Distance { get; set; }
-    public required string Name { get; set; }
-    public required string DistanceUnits { get; set; }
-    public required string ProvidedName { get; set; }
-    public required string HostName { get; set; }
-    public required string ImageUrl { get; set; }
+    public required string Distance { get; init; }
+    public required string Name { get; init; }
+    public required string DistanceUnits { get; init; }
+    public required string ProvidedName { get; init; }
+    public required string HostName { get; init; }
+    public required string ImageUrl { get; init; }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace NameItAfterMe.Infrastructure.Persistance;
+namespace NameItAfterMe.Application.Infrastructure.Persistence;
 
 public class ExoplanetContext : DbContext
 {

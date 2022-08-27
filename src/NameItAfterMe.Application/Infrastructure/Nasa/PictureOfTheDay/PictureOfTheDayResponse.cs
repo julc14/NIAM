@@ -1,4 +1,4 @@
-﻿namespace NameItAfterMe.Application.Infrastructure.PictureOfTheDay;
+﻿namespace NameItAfterMe.Application.Infrastructure.Nasa.PictureOfTheDay;
 
 public class PictureOfTheDayResponse
 {

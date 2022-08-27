@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
-using NameItAfterMe.Infrastructure.Persistance;
+using NameItAfterMe.Application.Infrastructure.Persistence;
 
 namespace NameItAfterMe.Application.UseCases.Stories;
 

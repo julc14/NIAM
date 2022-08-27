@@ -34,7 +34,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMinimalEndpointServices();
-builder.Services.AddHostedService<ExoplanetSyncronizationService>();
+builder.Services.AddHostedService<ExoplanetSynchronizationService>();
 
 builder.Services.Configure<BackgroundServiceOptions>(builder.Configuration);
 

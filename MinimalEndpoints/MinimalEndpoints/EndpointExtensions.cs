@@ -12,7 +12,7 @@ namespace MinimalEndpoints;
 public static class EndpointExtensions
 {
     /// <summary>
-    ///     Automaticlly host mediatr request handlers from the given assembly that contain an Endpoint marker.
+    ///     Automatically host mediatr request handlers from the given assembly that contain an Endpoint marker.
     /// </summary>
     /// <param name="builder">
     ///     The endpoint route builder.
@@ -31,9 +31,9 @@ public static class EndpointExtensions
         {
             async Task HandleEndpointAction(HttpContext context, IMediator mediatr, RequestBuilder mediatrRequestBuilder)
             {
-                // there are better ways to hanlder asp.net request => mediatr request binding
+                // there are better ways to handler asp.net request => mediatr request binding
                 // e.g... IParameter<T> DI which would allow customization of binding by request type if desired
-                // however dotnet 7 will fix this akwardness completly with [FromParameters] attribute so leave it as is for now
+                // however dotnet 7 will fix this awkwardness completely with [FromParameters] attribute so leave it as is for now
                 // this will also remove the need for custom swagger handling.
                 var request = mediatrRequestBuilder.Build(endpoint.RequestType, context);
 

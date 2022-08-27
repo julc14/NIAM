@@ -22,20 +22,20 @@ internal class QueryParametersParser : IComponentParser
         // It is not case sensitive
         var values = context.Request.Query[property.Name];
 
-        if (values.Count >= 1)
+        if (values.Count < 1) 
+            return false;
+        
+        var firstItem = values[0] ?? throw new InvalidOperationException("Unexpected null valued key");
+
+        if (values.Count > 1)
         {
-            var firstItem = values[0] ?? throw new InvalidOperationException("Unexpected null valued key");
-
-            if (values.Count > 1)
-            {
-                _logger.LogWarning("Two query values mapped to same key: {PropertyName}. Choosing first: {FirstPropertyValue}",
-                    property.Name,
-                    firstItem);
-            }
-
-            var convertor = TypeDescriptor.GetConverter(property.PropertyType);
-            item = convertor.ConvertFromString(firstItem);
+            _logger.LogWarning("Two query values mapped to same key: {PropertyName}. Choosing first: {FirstPropertyValue}",
+                property.Name,
+                firstItem);
         }
+
+        var convertor = TypeDescriptor.GetConverter(property.PropertyType);
+        item = convertor.ConvertFromString(firstItem);
 
         return item is not null;
     }

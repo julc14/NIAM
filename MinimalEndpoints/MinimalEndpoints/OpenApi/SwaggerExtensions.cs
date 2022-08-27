@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NameItAfterMe.Server.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace MinimalEndpoints.OpenApi;

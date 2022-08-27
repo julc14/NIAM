@@ -1,6 +1,6 @@
 ﻿using Refit;
 
-namespace NameItAfterMe.Application.Infrastructure.PictureOfTheDay;
+namespace NameItAfterMe.Application.Infrastructure.Nasa.PictureOfTheDay;
 
 public interface IPictureOfTheDayService
 {

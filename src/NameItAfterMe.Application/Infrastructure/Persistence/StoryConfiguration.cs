@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NameItAfterMe.Application.Domain;
 
-namespace NameItAfterMe.Application.Infrastructure.Persistance;
+namespace NameItAfterMe.Application.Infrastructure.Persistence;
 
 internal class StoryConfiguration : IEntityTypeConfiguration<Story>
 {
