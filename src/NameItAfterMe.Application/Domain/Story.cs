@@ -5,10 +5,10 @@ public class Story
     public string Id { get; set; } = null!;
     public string Name { get; set; } = null!;
     public string Body { get; set; } = string.Empty;
-    public IEnumerable<WordDescriptor> WordDescriptor { get; set; } = Enumerable.Empty<WordDescriptor>();
+    public ICollection<WordDescriptor> WordDescriptor { get; set; }
 
     public string Format(IEnumerable<string> values)
     {
-        return string.Format(Body, values);
+        return string.Format(Body, values.ToArray());
     }
 }

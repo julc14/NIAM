@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace MinimalEndpoints.RequestBinding;
 
 public class RouteValuesParser : IComponentParser
 {
-    /// <inheritdoc/>
-    public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object propertyValue)
+    public ValueTask<object?> ParseAsync(HttpContext context, PropertyInfo property)
     {
-        propertyValue = null;
-
         // RouteValueDictionary does not throw when key is missing
         // instead it returns null
         // It is not case sensitive
@@ -19,12 +15,11 @@ public class RouteValuesParser : IComponentParser
 
         var valueAsString = value?.ToString();
 
-        if (valueAsString is null) 
-            return false;
-        
-        var convertor = TypeDescriptor.GetConverter(property.PropertyType);
-        propertyValue = convertor.ConvertFromString(valueAsString);
+        if (valueAsString is null)
+            return ValueTask.FromResult<object?>(null);
 
-        return propertyValue is not null;
+        var convertor = TypeDescriptor.GetConverter(property.PropertyType);
+
+        return ValueTask.FromResult(convertor.ConvertFromString(valueAsString));
     }
 }

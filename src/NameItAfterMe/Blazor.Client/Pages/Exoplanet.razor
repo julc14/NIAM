@@ -21,7 +21,7 @@
 
     private async Task<IEnumerable<ExoplanetDto>> GetExoplanets(InfiniteScrollingItemsProviderRequest request)
     {
-        var planets = await HttpClient.GetFromJsonAsync(new GetExoplanets()
+        var planets = await HttpClient.GetFromJsonAsync(new GetUnnamedExoplanets()
         {
             PageNumber = _currentPage++,
             PageSize = 10,         

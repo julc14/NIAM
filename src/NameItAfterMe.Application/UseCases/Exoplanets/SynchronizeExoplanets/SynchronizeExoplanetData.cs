@@ -51,14 +51,16 @@ public class SynchronizeExoplanetDataHandler : IRequestHandler<SynchronizeExopla
         {
             var dbItem = await _db.FindAsync<Exoplanet>(name);
 
-            var planet = new Exoplanet(
-                distance,
-                hostName,
-                // since we are randomly assigning each planet an image, only assign if null.
-                // otherwise we will update each item to pointlessly assign a different random image
-                dbItem?.ImageUrl ?? exoplanetImages.PickRandom().Url)
+            var planet = new Exoplanet()
             {
                 Name = name,
+                HostName = hostName,
+                Distance = distance,
+                ProvidedName = dbItem?.ProvidedName,
+                Story = dbItem?.Story,
+                // since we are randomly assigning each planet an image, only assign if null.
+                // otherwise we will update each item to pointlessly assign a different random image
+                ImageUrl = dbItem?.ImageUrl ?? exoplanetImages.PickRandom().Url
             };
 
             if (dbItem is null)

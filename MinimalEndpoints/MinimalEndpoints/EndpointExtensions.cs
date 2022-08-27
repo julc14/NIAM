@@ -35,7 +35,7 @@ public static class EndpointExtensions
                 // e.g... IParameter<T> DI which would allow customization of binding by request type if desired
                 // however dotnet 7 will fix this awkwardness completely with [FromParameters] attribute so leave it as is for now
                 // this will also remove the need for custom swagger handling.
-                var request = mediatrRequestBuilder.Build(endpoint.RequestType, context);
+                var request = await mediatrRequestBuilder.Build(endpoint.RequestType, context);
 
                 var content = await mediatr.Send(request, cancellationToken: context.RequestAborted);
 
@@ -83,7 +83,7 @@ public static class EndpointExtensions
     /// </returns>
     public static IServiceCollection AddMinimalEndpointServices(this IServiceCollection services)
     {
-        services.AddScoped<IComponentParser, RequestBodyParser>();
+        //services.AddScoped<IComponentParser, RequestBodyParser>();
         services.AddScoped<IComponentParser, QueryParametersParser>();
         services.AddScoped<IComponentParser, RouteValuesParser>();
         services.AddScoped<RequestBuilder>();

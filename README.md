@@ -43,8 +43,8 @@ Putting all the pieces together here is a general system diagram.
 - [x] Infinite Scrolling component to load unnamed exoplanets 
 - [ ] Display and Download NASA's picture of the day (Waiting for dotnet 7)
 - [x] Cool Dashboard page
-- [ ] User can name unnamed exoplanet and planet can never be named again (Persists to DB).
-- [ ] User can provide story as part of the naming process.
+- [x] User can name unnamed exoplanet and planet can never be named again (Persists to DB).
+- [x] User can provide story as part of the naming process.
 - [ ] User can query named exoplanets.
 
 #### ASP.Net Backend:

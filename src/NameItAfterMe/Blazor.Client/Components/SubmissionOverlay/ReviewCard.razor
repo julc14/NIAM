@@ -5,16 +5,49 @@
     <MudButton Color="Color.Primary"
                Variant="Variant.Filled" 
                ButtonType="ButtonType.Submit" 
-               Style="top:80%;margin-left:80%"
-               Size="Size.Large">
-            Submit
+               Style="top:80%;margin-left:78%"
+               OnClick="NameExoplanet"
+               Size="Size.Large"
+               Disabled="_processing">
+        @if (_processing)
+        {
+            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+            <MudText Class="ms-2">Submit</MudText>
+        }
+        else
+        {
+            <MudText Class="ms-2">Submit</MudText>
+        }
     </MudButton>
 </OverlayTabTemplate>
 
 @code {
+    private bool _processing;
+
     [Inject]
     public required HttpClient HttpClient { get; set; }
 
     [Parameter, EditorRequired]
     public required NameExoplanetOperationState State { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnExoplanetNamed { get; set; }
+
+    public async Task NameExoplanet()
+    {
+        _processing = true;
+        //todo: validate state before submission
+
+        await HttpClient.PostAsJsonAsync(new NameExoplanet()
+        {
+            GivenName = $"{State.PersonsName}'s {State.Scheme}",
+            SelectedWords = State.WordDescriptors.Select(x => x.Value),
+            StoryName = State.StoryName,
+            Name = State.ExoplanetName,
+        });
+
+        await OnExoplanetNamed.InvokeAsync(State.ExoplanetName);
+
+        _processing = false;
+    }
 }

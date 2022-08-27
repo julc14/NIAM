@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using System.Reflection;
 
 namespace MinimalEndpoints.RequestBinding;
@@ -6,6 +7,7 @@ namespace MinimalEndpoints.RequestBinding;
 internal class RequestBuilder
 {
     private readonly IEnumerable<IComponentParser> _componentParsers;
+    private object? _requestBodyDeserialized;
 
     public RequestBuilder(
         IEnumerable<IComponentParser> componentParsers) => _componentParsers = componentParsers;
@@ -25,7 +27,7 @@ internal class RequestBuilder
     /// <exception cref="InvalidOperationException">
     ///     When the request type does not have a public parameterless constructor.
     /// </exception>
-    public object Build(Type requestType, HttpContext context)
+    public async ValueTask<object> Build(Type requestType, HttpContext context)
     {
         // todo: almost certainly more performant to cache the ctor delegate instead of using activator.
         var request = Activator.CreateInstance(requestType)
@@ -36,20 +38,38 @@ internal class RequestBuilder
 
         foreach (var property in propertiesWithAccessibleSetters)
         {
-            SetPropertyValue(context, property, request);
+            await SetPropertyValue(context, property, request);
         }
 
         return request;
     }
 
-    private void SetPropertyValue(HttpContext context, PropertyInfo property, object request)
+    private async ValueTask SetPropertyValue(HttpContext context, PropertyInfo property, object request)
     {
         foreach (var component in _componentParsers)
         {
-            if (component.TryParse(context, property, out var propertyValue))
+            var parsedValue = await component.ParseAsync(context, property);
+
+            if (parsedValue is not null)
+                property.SetValue(request, parsedValue);
+        }
+
+        _requestBodyDeserialized ??= ShouldParseRequestBody(context.Request)
+            ? await context.Request.ReadFromJsonAsync(request.GetType())
+            : null;
+
+        // todo: perf test heavy use of reflection, optimize
+        if (_requestBodyDeserialized is not null)
+        {
+            var requestBodyPropertyValue = property.GetValue(_requestBodyDeserialized);
+
+            if (requestBodyPropertyValue is not null or 0 or "")
             {
-                property.SetValue(request, propertyValue);
+                property.SetValue(request, requestBodyPropertyValue);
             }
         }
     }
+
+    private static bool ShouldParseRequestBody(HttpRequest request)
+        => request.ContentLength is not null or 0 && request.HasJsonContentType();
 }
