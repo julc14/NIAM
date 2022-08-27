@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MinimalEndpoints;
 using NameItAfterMe.Application.Domain;
-using NameItAfterMe.Infrastructure.Persistance;
+using NameItAfterMe.Application.Infrastructure.Persistence;
 
 namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanetCounts;
 

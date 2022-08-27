@@ -3,12 +3,12 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NameItAfterMe.Application.Abstractions;
 using NameItAfterMe.Application.Behavior;
 using NameItAfterMe.Application.Infrastructure.Files;
 using NameItAfterMe.Application.Infrastructure.Nasa.Exoplanet;
 using NameItAfterMe.Application.Infrastructure.Nasa.PictureOfTheDay;
-using NameItAfterMe.Application.Infrastructure.PictureOfTheDay;
-using NameItAfterMe.Infrastructure.Persistance;
+using NameItAfterMe.Application.Infrastructure.Persistence;
 using Refit;
 
 namespace NameItAfterMe.Application;

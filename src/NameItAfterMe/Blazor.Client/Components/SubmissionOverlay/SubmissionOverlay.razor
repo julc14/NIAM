@@ -1,4 +1,4 @@
-﻿<MudOverlay @bind-Visible="@IsVisable" DarkBackground="true" >
+﻿<MudOverlay @bind-Visible="@IsVisible" DarkBackground="true" >
     <CascadingValue Value="@Width" Name="Width" IsFixed="true">
         <CascadingValue Value="@Height" Name="Height" IsFixed="true">
             
@@ -32,7 +32,7 @@
 
                 <MudTabPanel 
                         Style="background-color:var(--mud-palette-primary-darken);color:var(--mud-palette-text-secondary);align-self:flex-end;margin-top:68%"
-                        OnClick="() => IsVisable = false"
+                        OnClick="() => IsVisible = false"
                         Text="Close" />
 
             </MudTabs>
@@ -43,7 +43,7 @@
 
 @code {
     //private string? _name;
-    private bool _isVisable;
+    private bool _isVisible;
     private NameExoplanet _nameExoplanetRequest = new ();
     private NameExoplanetOperationState _state = new();
 
@@ -63,22 +63,22 @@
     public string Width { get; set; } = "500px";
 
     [Parameter] 
-    public bool IsVisable 
+    public bool IsVisible 
     {
-        get => _isVisable;
+        get => _isVisible;
         set
         {
-            if (_isVisable == value)
+            if (_isVisible == value)
                 return;
 
-            _isVisable = value;
+            _isVisible = value;
 
-            IsVisableChanged.InvokeAsync(_isVisable);
+            IsVisibleChanged.InvokeAsync(_isVisible);
         }
     }
 
     [Parameter] 
-    public EventCallback<bool> IsVisableChanged { get; set; }
+    public EventCallback<bool> IsVisibleChanged { get; set; }
 
     protected override void OnInitialized()
     {

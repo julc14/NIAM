@@ -12,8 +12,7 @@ internal class RequestBodyParser : IComponentParser
     {
         propertyValue = null;
 
-        if (context.Request.ContentLength is null
-            || context.Request.ContentLength == 0
+        if (context.Request.ContentLength is null or 0 
             || !context.Request.HasJsonContentType())
         {
             return false;

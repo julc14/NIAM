@@ -1,33 +1,33 @@
-﻿<MudCard Elevation="@Elevation" Outlined=@Outlined Style="@Style" Square=@Square>
-    <PlanetCardHeader Name=@Exoplanet.Name />
+﻿<MudCard Elevation="@Elevation" Outlined="@Outlined" Style="@Style" Square="@Square">
+    <PlanetCardHeader Name="@Exoplanet.Name" />
     <MudCardMedia Image="@Exoplanet.ImageUrl" Height="200" />
     <MudCardContent>
         <MudText Typo="Typo.body2"></MudText>
     </MudCardContent>
-    <PlanetCardActions OnSaveClick="() => IsOverlayVisable = true" />
+    <PlanetCardActions OnSaveClick="() => IsOverlayVisible = true" />
 </MudCard>
 
 <SubmissionOverlay 
-    Exoplanet=@Exoplanet
-    PlanetImagePath=@Exoplanet.ImageUrl
-    @bind-IsVisable="@IsOverlayVisable" />
+    Exoplanet="@Exoplanet"
+    PlanetImagePath="@Exoplanet.ImageUrl"
+    @bind-IsVisible="@IsOverlayVisible" />
 
 @code {
-    private bool _isOverlayVisable;
+    private bool _isOverlayVisible;
 
-    private bool IsOverlayVisable
+    private bool IsOverlayVisible
     {
-        get => _isOverlayVisable;
+        get => _isOverlayVisible;
         set
         {
-            if (_isOverlayVisable == value)
+            if (_isOverlayVisible == value)
                 return;
 
-            _isOverlayVisable = value;
+            _isOverlayVisible = value;
 
-            if (IsOverlayVisableChanged.HasDelegate)
+            if (IsOverlayVisibleChanged.HasDelegate)
             {
-                IsOverlayVisableChanged.InvokeAsync(_isOverlayVisable);
+                IsOverlayVisibleChanged.InvokeAsync(_isOverlayVisible);
             }
         }
     }
@@ -36,7 +36,7 @@
     public required ExoplanetDto Exoplanet { get; set; }
 
     [Parameter]
-    public EventCallback<bool> IsOverlayVisableChanged { get; set; }
+    public EventCallback<bool> IsOverlayVisibleChanged { get; set; }
 
     [Parameter]
     public int Elevation { get; set; }

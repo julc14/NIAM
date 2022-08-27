@@ -1,8 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
-using MinimalEndpoints;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace NameItAfterMe.Server.OpenApi;
+namespace MinimalEndpoints.OpenApi;
 
 /// <summary>
 ///     Manually add mediatr request properties as swagger optional parameters.

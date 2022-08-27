@@ -1,4 +1,4 @@
-﻿namespace NameItAfterMe.Infrastructure.Persistance;
+﻿namespace NameItAfterMe.Application.Infrastructure.Persistence;
 
 internal class ExoplanetSettings
 {

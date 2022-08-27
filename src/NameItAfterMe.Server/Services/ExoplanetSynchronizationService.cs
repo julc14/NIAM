@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Options;
-using NameItAfterMe.Application.UseCases.Exoplanets.SyncronizeExoplanets;
+using NameItAfterMe.Application.UseCases.Exoplanets.SynchronizeExoplanets;
 
 namespace NameItAfterMe.Server.Services;
 
-public class ExoplanetSyncronizationService : BackgroundService
+public class ExoplanetSynchronizationService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public ExoplanetSyncronizationService(IServiceScopeFactory serviceScopeFactory)
+    public ExoplanetSynchronizationService(IServiceScopeFactory serviceScopeFactory)
         => _serviceScopeFactory = serviceScopeFactory;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -22,7 +22,7 @@ public class ExoplanetSyncronizationService : BackgroundService
                 if (options.Value.IsEnabled)
                 {
                     var medaitr = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    await medaitr.Send(new SyncronizeExoplanetData(), stoppingToken);
+                    await medaitr.Send(new SynchronizeExoplanetData(), stoppingToken);
                 }
             }
 

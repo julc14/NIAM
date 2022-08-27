@@ -1,6 +1,4 @@
-﻿using NameItAfterMe.Application.Abstractions;
-
-namespace NameItAfterMe.Application.Infrastructure.Files;
+﻿namespace NameItAfterMe.Application.Abstractions;
 
 public interface IImageHandler<T>
     where T : IImage, new()

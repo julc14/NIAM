@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using MinimalEndpoints;
-using NameItAfterMe.Application.Infrastructure.Files;
-using NameItAfterMe.Application.Infrastructure.PictureOfTheDay;
+using NameItAfterMe.Application.Abstractions;
+using NameItAfterMe.Application.Infrastructure.Nasa.PictureOfTheDay;
+
 
 namespace NameItAfterMe.Application.UseCases.PictureOfTheDay;
 

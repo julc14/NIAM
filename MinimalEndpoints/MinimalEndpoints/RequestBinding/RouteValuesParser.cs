@@ -13,20 +13,17 @@ public class RouteValuesParser : IComponentParser
         propertyValue = null;
 
         // RouteValueDictionary does not throw when key is missing
-        // intead it returns null
+        // instead it returns null
         // It is not case sensitive
         var value = context.Request.RouteValues[property.Name];
 
-        if (value is not null)
-        {
-            var valueAsString = value.ToString();
+        var valueAsString = value?.ToString();
 
-            if (valueAsString is not null)
-            {
-                var convertor = TypeDescriptor.GetConverter(property.PropertyType);
-                propertyValue = convertor.ConvertFromString(valueAsString);
-            }
-        }
+        if (valueAsString is null) 
+            return false;
+        
+        var convertor = TypeDescriptor.GetConverter(property.PropertyType);
+        propertyValue = convertor.ConvertFromString(valueAsString);
 
         return propertyValue is not null;
     }

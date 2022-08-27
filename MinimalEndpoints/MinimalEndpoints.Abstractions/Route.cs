@@ -9,7 +9,7 @@ namespace MinimalEndpoints.Abstractions;
 // todo: this needs revised before its ready.
 // todo: perf concerns, cache properties + attributes ?
 // todo: handle requets with non-trivial properties.
-public static class RoutingExtentions
+public static class RoutingExtensions
 {
     /// <summary>
     ///     Project a medaitr request to an HttpRoute

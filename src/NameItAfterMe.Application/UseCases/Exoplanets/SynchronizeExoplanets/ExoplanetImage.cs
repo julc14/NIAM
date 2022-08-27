@@ -1,6 +1,6 @@
 ﻿using NameItAfterMe.Application.Abstractions;
 
-namespace NameItAfterMe.Application.UseCases.Exoplanets.SyncronizeExoplanets;
+namespace NameItAfterMe.Application.UseCases.Exoplanets.SynchronizeExoplanets;
 
 public class ExoplanetImage : IImage, IImageRepositoryConfiguration
 {

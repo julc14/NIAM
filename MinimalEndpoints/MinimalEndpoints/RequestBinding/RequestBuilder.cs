@@ -29,7 +29,7 @@ internal class RequestBuilder
     {
         // todo: almost certainly more performant to cache the ctor delegate instead of using activator.
         var request = Activator.CreateInstance(requestType)
-            ?? throw new InvalidOperationException($"{requestType} does not have a public paramaterless constructor.");
+            ?? throw new InvalidOperationException($"{requestType} does not have a public parameterless constructor.");
 
         var propertiesWithAccessibleSetters =
             requestType.GetProperties().Where(x => x.GetSetMethod() is not null);
