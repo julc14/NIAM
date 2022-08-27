@@ -1,10 +1,12 @@
 ﻿<OverlayTabTemplate >
 
-    <MudSelect T="string" 
-        Value=@_currentStory?.Name 
-        ValueChanged="(story) => _currentStory = _stories?.FirstOrDefault(x => x.Name == story)" >
+    <MudSelect 
+        Variant="Variant.Outlined" 
+        T="string" 
+        Value="State.StoryName ?? string.Empty"
+        ValueChanged="StoryChanged" >
 
-        @foreach (var story in _stories ?? Enumerable.Empty<StoryDto>())
+        @foreach (var story in _stories)
         {
             <MudSelectItem Value=story.Name />
         }
@@ -12,11 +14,15 @@
     </MudSelect>
 
     <MudForm>
-        <MudGrid Style="margin:20px">
-            @foreach (var word in _currentStory?.WordDescriptor ?? Enumerable.Empty<string>())
+        <MudGrid Spacing="1" Style="margin-top:20px">
+            @foreach (var descriptor in State.WordDescriptors)
             {
                 <MudItem xs="4">
-                    <MudTextField T="string" Label="@word" Required="true" />
+                    <MudTextField ValueChanged="(value) => descriptor.Value = value"
+                        Value="descriptor.Value" 
+                        Variant=" Variant.Outlined" 
+                        T="string" 
+                        Label="@descriptor.Key" />
                 </MudItem>
             }
         </MudGrid>
@@ -25,15 +31,25 @@
 </OverlayTabTemplate >
 
 @code {
-    private IEnumerable<StoryDto>? _stories;
-    private StoryDto? _currentStory;
+    private IEnumerable<StoryDto> _stories = Enumerable.Empty<StoryDto>();
 
     [Inject]
     public required HttpClient HttpClient { get; set; }
 
+    [Parameter, EditorRequired]
+    public required NameExoplanetOperationState State { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // todo: low frequency changes to db content, cache client side?
-        _stories = await HttpClient.GetFromJsonAsync(new GetStories());
+        _stories = await HttpClient.GetFromJsonAsync(new GetStories()) ?? Enumerable.Empty<StoryDto>();
+    }
+
+    private void StoryChanged(string story)
+    {
+        var dto = _stories.First(x => x.Name == story);
+
+        State.StoryName = dto.Name;
+        State.WordDescriptors = dto.WordDescriptor.Select(x => new WordDescriptor { Key = x, Value = string.Empty }).ToList();
     }
 }

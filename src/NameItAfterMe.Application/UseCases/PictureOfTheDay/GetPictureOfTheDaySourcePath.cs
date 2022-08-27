@@ -34,7 +34,7 @@ public class GetPictureOfTheDaySourcePathHandler : IRequestHandler<GetPictureOfT
     {
         var imageOfTheDay = await _imageHandler
             .EnumerateImagesAsync(cancellationToken)
-            .FirstOrDefaultAsync(x => (DateTime.UtcNow - x.CreatedOn).Hours <= 24, cancellationToken);
+            .FirstOrDefaultAsync(x => (DateTime.UtcNow - x.CreatedOn).TotalHours <= 24.0, cancellationToken);
 
         if (imageOfTheDay is not null)
         {
