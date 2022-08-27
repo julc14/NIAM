@@ -27,7 +27,7 @@
                 </MudTabPanel>
 
                 <MudTabPanel Text="Review">
-                    <ReviewCard State="@_state" />
+                    <ReviewCard State="@_state" OnExoplanetNamed="OnExoplanetNamedCore" />
                 </MudTabPanel>
 
                 <MudTabPanel 
@@ -44,17 +44,22 @@
 @code {
     //private string? _name;
     private bool _isVisible;
-    private NameExoplanet _nameExoplanetRequest = new ();
-    private NameExoplanetOperationState _state = new();
+    private NameExoplanetOperationState _state;
 
     [Inject] 
     public required HttpClient HttpClient { get; set; }
+
+    [Inject] 
+    public required ISnackbar Snackbar { get; set; }
 
     [Parameter, EditorRequired] 
     public required string PlanetImagePath { get; set; }
 
     [Parameter, EditorRequired] 
     public required ExoplanetDto Exoplanet { get; set; }
+
+    [Parameter] 
+    public EventCallback<string> OnExoplanetNamed { get; set; }
 
     [Parameter] 
     public string Height { get; set; } = "350px";
@@ -82,6 +87,22 @@
 
     protected override void OnInitialized()
     {
-        _nameExoplanetRequest.Name = Exoplanet.Name;
+        _state = new()
+        {
+            ExoplanetName = Exoplanet.Name,
+        };
+    }
+
+    private async Task OnExoplanetNamedCore(string name)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+        Snackbar.Add("Planet Named Succesfully!", Severity.Info, c => 
+        {
+            c.ActionColor = Color.Primary;
+            c.SnackbarVariant = Variant.Filled;
+        });
+
+        await OnExoplanetNamed.InvokeAsync(name);
+        IsVisible = false;
     }
 }

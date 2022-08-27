@@ -8,9 +8,9 @@ namespace NameItAfterMe.Application.UseCases.Exoplanets.NameExoplanet;
 [Endpoint(HttpMethods.Post, Route = "Exoplanet/Name")]
 public class NameExoplanet : IRequest
 {
-    public string Name { get; set; } = string.Empty;
-    public string GivenName { get; set; } = string.Empty;
-    public string StoryId { get; set; } = string.Empty;
+    public required string Name { get; set; }
+    public required string GivenName { get; set; }
+    public required string StoryName { get; set; }
     public IEnumerable<string> SelectedWords { get; set; } = Enumerable.Empty<string>();
 }
 
@@ -36,9 +36,9 @@ public class NameExoplanetHandler : IRequestHandler<NameExoplanet>
 
         string? storyBody = null;
 
-        if (!string.IsNullOrEmpty(request.StoryId))
+        if (!string.IsNullOrEmpty(request.StoryName))
         {
-            var story = await _db.Set<Story>().FindAsync(request.StoryId);
+            var story = await _db.Set<Story>().FindAsync(request.StoryName);
 
             if (story is null)
             {
@@ -49,6 +49,8 @@ public class NameExoplanetHandler : IRequestHandler<NameExoplanet>
         }
 
         planet.NameIt(request.GivenName, storyBody);
+
+        await _db.SaveChangesAsync();
         return Unit.Value;
     }
 }

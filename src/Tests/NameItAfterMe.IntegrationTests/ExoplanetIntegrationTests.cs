@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanetCounts;
-using NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanets;
+using NameItAfterMe.Application.UseCases.Exoplanets.GetUnnamedExoplanets;
 
 namespace NameItAfterMe.IntegrationTests;
 
@@ -24,7 +24,7 @@ public class ExoplanetIntegrationTests : IClassFixture<WebApplicationFactory<Pro
     [Fact]
     public async Task GetExoplanetUseCase_ReturnsRequestedExoplanets()
     {
-        var planets = await _host.CreateClient().GetFromJsonAsync(new GetExoplanets()
+        var planets = await _host.CreateClient().GetFromJsonAsync(new GetUnnamedExoplanets()
         {
             PageNumber = 1,
             PageSize = 5
@@ -38,7 +38,7 @@ public class ExoplanetIntegrationTests : IClassFixture<WebApplicationFactory<Pro
     [Fact]
     public async Task GetExoplanetUseCase_ThrowsOnNegateRequests()
     {
-        var request = async () => await _host.CreateClient().GetFromJsonAsync(new GetExoplanets()
+        var request = async () => await _host.CreateClient().GetFromJsonAsync(new GetUnnamedExoplanets()
         {
             PageNumber = -1,
             PageSize = -1

@@ -43,6 +43,7 @@
                         {
                             <MudCarouselItem Transition="Transition.Fade">
                                 <PlanetCard Square="true"
+                                    OnExoplanetNamed="OnExoplanetNamed"
                                     Style="margin-right:20px;margin-left:20px"
                                     Elevation="10"
                                     Exoplanet=@planet
@@ -95,7 +96,7 @@
     {
         _exoplanetCount = await HttpClient.GetFromJsonAsync(new GetExoplanetCount());
 
-        _exoplanets = await HttpClient.GetFromJsonAsync(new GetExoplanets()
+        _exoplanets = await HttpClient.GetFromJsonAsync(new GetUnnamedExoplanets()
         {
             PageSize = 6,
             PageNumber = Random.Shared.Next(1, 10),
@@ -108,4 +109,11 @@
     }
 
     private void SetCarouselRotating(bool shouldRotate) => _carouselRotating = shouldRotate;
+
+    private async Task OnExoplanetNamed(string name)
+    {
+        _exoplanetCount = await HttpClient.GetFromJsonAsync(new GetExoplanetCount());
+        _exoplanets = _exoplanets?.Where(x => !x.Name.Equals(name, StringComparison.OrdinalIgnoreCase))?.ToList();
+        StateHasChanged();
+    }
 }

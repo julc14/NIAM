@@ -12,19 +12,16 @@ internal class QueryParametersParser : IComponentParser
 
     public QueryParametersParser(ILogger<QueryParametersParser> logger) => _logger = logger;
 
-    /// <inheritdoc/>
-    public bool TryParse(HttpContext context, PropertyInfo property, [MaybeNullWhen(false)] out object item)
+    public ValueTask<object?> ParseAsync(HttpContext context, PropertyInfo property)
     {
-        item = null;
-
         // IQueryCollection does not throw when key is missing
         // intead it returns an empty string
         // It is not case sensitive
         var values = context.Request.Query[property.Name];
 
-        if (values.Count < 1) 
-            return false;
-        
+        if (values.Count < 1)
+            return ValueTask.FromResult<object?>(null);
+
         var firstItem = values[0] ?? throw new InvalidOperationException("Unexpected null valued key");
 
         if (values.Count > 1)
@@ -35,8 +32,7 @@ internal class QueryParametersParser : IComponentParser
         }
 
         var convertor = TypeDescriptor.GetConverter(property.PropertyType);
-        item = convertor.ConvertFromString(firstItem);
 
-        return item is not null;
+        return ValueTask.FromResult(convertor.ConvertFromString(firstItem));
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using NameItAfterMe.Application.Domain;
 
-namespace NameItAfterMe.Application.UseCases.Exoplanets.GetExoplanets;
+namespace NameItAfterMe.Application.UseCases.Exoplanets.GetUnnamedExoplanets;
 
 internal class ExoplanetProfile : Profile
 {

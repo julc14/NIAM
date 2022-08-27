@@ -4,26 +4,16 @@ public class Exoplanet
 {
     public string Id { get; set; } = null!;
     public required string Name { get; init; }
-    public string? ProvidedName { get; private set; }
-    public string HostName { get; private set; }
-    public Distance Distance { get; private set; }
-    public string ImageUrl { get; private set; }
+    public required string HostName { get; init; }
+    public required Distance Distance { get; init; }
+    public required string ImageUrl { get; init; }
+    public string? ProvidedName { get; set; }
+    public string? Story { get; set; }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    // EF Constructor
-    private Exoplanet() { }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
-    public Exoplanet(Distance distance, string hostName, string imageUrl)
+    public void NameIt(string providedName, string story)
     {
-        Distance = distance;
-        HostName = hostName;
-        ImageUrl = imageUrl;
-    }
-
-    public void NameIt(string name, string? backstory = null)
-    {
-        ProvidedName = name;
+        ProvidedName = providedName;
+        Story = story;
     }
 
     public override bool Equals(object? obj)

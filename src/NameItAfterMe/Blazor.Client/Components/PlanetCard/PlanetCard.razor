@@ -9,6 +9,7 @@
 
 <SubmissionOverlay 
     Exoplanet="@Exoplanet"
+    OnExoplanetNamed="@OnExoplanetNamed"
     PlanetImagePath="@Exoplanet.ImageUrl"
     @bind-IsVisible="@IsOverlayVisible" />
 
@@ -37,6 +38,9 @@
 
     [Parameter]
     public EventCallback<bool> IsOverlayVisibleChanged { get; set; }
+
+    [Parameter] 
+    public EventCallback<string> OnExoplanetNamed { get; set; }
 
     [Parameter]
     public int Elevation { get; set; }

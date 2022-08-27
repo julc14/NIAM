@@ -123,9 +123,10 @@ public static class RoutingExtensions
     /// </returns>
     public static Task<HttpResponseMessage> PostAsJsonAsync<T>(
         this HttpClient client,
-        IRequest<T> request,
-        CancellationToken token = default)
+        T request,
+        CancellationToken token = default) 
+        where T : IBaseRequest
     {
-        return client.PostAsJsonAsync(request.AsRoute(), request, token);
+        return client.PostAsJsonAsync<T>(request.AsRoute(), request, token);
     }
 }
