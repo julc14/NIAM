@@ -1,11 +1,16 @@
 ﻿<OverlayTabTemplate>
-    <MudStack>
-        <MudText>"@State.PersonsName @State.Scheme"</MudText>
-    </MudStack>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudText Align="Align.Center" >@GetName()</MudText>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Align="Align.Center">@GetStory()</MudText>
+        </MudItem>
+    </MudGrid>
     <MudButton Color="Color.Primary"
-               Variant="Variant.Filled" 
+               Variant="Variant.Outlined" 
                ButtonType="ButtonType.Submit" 
-               Style="top:80%;margin-left:78%"
+               Style="margin-left:65%;min-width:130px;position:absolute;bottom:5%"
                OnClick="NameExoplanet"
                Size="Size.Large"
                Disabled="_processing">
@@ -49,5 +54,16 @@
         await OnExoplanetNamed.InvokeAsync(State.ExoplanetName);
 
         _processing = false;
+    }
+
+    private string GetName() => $"{State.PersonsName}'s {State.Scheme}";
+
+    private string GetStory() 
+    {
+        //todo: rework state object
+        if (State.StoryBody is null)
+            return string.Empty;
+
+        return string.Format(State.StoryBody, State.WordDescriptors.Select(x => x.Value).ToArray());
     }
 }

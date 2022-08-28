@@ -7,6 +7,7 @@ public class NameExoplanetOperationState
     public string? StoryName { get; set; }
     public required string ExoplanetName { get; set; }
     public IEnumerable<WordDescriptor> WordDescriptors { get; set; } = Enumerable.Empty<WordDescriptor>();
+    public string? StoryBody { get; set; }
 }
 
 public class WordDescriptor
