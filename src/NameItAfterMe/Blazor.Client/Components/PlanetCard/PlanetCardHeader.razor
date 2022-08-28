@@ -6,17 +6,12 @@
             Size="Size.Large" />
     </CardHeaderAvatar>
     <CardHeaderContent>
-        <MudText Typo="Typo.body1">@Name</MudText>
+        <MudText Typo="Typo.body1">@Exoplanet.Name</MudText>
         <MudText Typo="Typo.body2">Current Name</MudText>
     </CardHeaderContent>
-    <CardHeaderActions>
-        <MudIconButton 
-            Icon="@Icons.Material.Filled.Settings" 
-            Color="Color.Default" />
-    </CardHeaderActions>
 </MudCardHeader>
 
 @code {
-    [Parameter, EditorRequired] 
-    public required string Name { get; set; }
+    [Parameter, EditorRequired]
+    public required ExoplanetDto Exoplanet { get; set; }
 }

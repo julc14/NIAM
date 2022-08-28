@@ -51,5 +51,6 @@
 
         State.StoryName = dto.Name;
         State.WordDescriptors = dto.WordDescriptor.Select(x => new WordDescriptor { Key = x, Value = string.Empty }).ToList();
+        State.StoryBody = dto.Body;
     }
 }

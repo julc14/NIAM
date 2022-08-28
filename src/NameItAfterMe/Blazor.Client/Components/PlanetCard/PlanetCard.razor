@@ -1,8 +1,8 @@
 ﻿<MudCard Elevation="@Elevation" Outlined="@Outlined" Style="@Style" Square="@Square">
-    <PlanetCardHeader Name="@Exoplanet.Name" />
+    <PlanetCardHeader Exoplanet="@Exoplanet" />
     <MudCardMedia Image="@Exoplanet.ImageUrl" Height="200" />
     <MudCardContent>
-        <MudText Typo="Typo.body2"></MudText>
+        <MudText Inline="true" Color="Color.Primary" Typo="Typo.body2">@Exoplanet.Name</MudText> is orbiting @Exoplanet.HostName at a distance of <MudText Inline="true" Color="Color.Primary" Typo="Typo.body2">@Exoplanet.Distance @Exoplanet.DistanceUnits</MudText> from Earth!
     </MudCardContent>
     <PlanetCardActions OnSaveClick="() => IsOverlayVisible = true" />
 </MudCard>

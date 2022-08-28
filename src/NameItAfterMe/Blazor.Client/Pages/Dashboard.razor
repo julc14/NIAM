@@ -21,23 +21,34 @@
                     @if (_exoplanetCount is not null)
                     {
                         <MudCardContent>
-                            <MudStack Justify="Justify.SpaceEvenly" Row="true">
-                                <MudStack Justify="Justify.Center">
-                                     <MudText Typo=Typo.h5>@_exoplanetCount.TotalExoplanets</MudText>
-                                     <MudText Typo=Typo.body1>Total Exoplanets </MudText>
-                                </MudStack>
 
-                                <MudText Typo=Typo.body1>Named Exoplanets: @_exoplanetCount.NamedExoplanets</MudText>
-                            </MudStack>
+                            <MudGrid Spacing="0">
+                                <MudItem xs="6">
+                                    <MudText Align="Align.Center" Typo=Typo.h5>@_exoplanetCount.TotalExoplanets</MudText>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudText Align="Align.Center" Typo=Typo.h5>@_exoplanetCount.NamedExoplanets</MudText>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudText Align="Align.Center" Typo=Typo.body1>Total Exoplanets </MudText>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudText Align="Align.Center" Typo=Typo.body1>Named Exoplanets </MudText>
+                                </MudItem>
+                            </MudGrid>
+
+
                         </MudCardContent>
                     }
                 </MudCard>
 
-                <MudCard Style="margin:20px; height:180px" Elevation="10" Square="true" />
+                <MudCard Style="margin:20px; height:170px" Elevation="10" Square="true"> 
+                    Todo
+                </MudCard>
 
                 @if (_exoplanets is not null)
                 {
-                    <MudCarousel TData=PlanetCard Style="height:420px;clip-path:initial" AutoCycle=@_carouselRotating >
+                    <MudCarousel TData=PlanetCard Style="height:440px;clip-path:initial" AutoCycle=@_carouselRotating >
 
                         @foreach (var planet in _exoplanets)
                         {
